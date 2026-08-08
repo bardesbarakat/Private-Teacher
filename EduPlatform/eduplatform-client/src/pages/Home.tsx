@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Star, Users, Code, Zap, BookOpen, Award, Clock, ChevronRight, Play, Shield, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Star, Users, Code, BookOpen, Clock, ChevronRight, Play, Shield } from 'lucide-react';
 import { coursesApi } from '../api/client';
 import CourseCard from '../components/CourseCard';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -66,9 +66,6 @@ const Home = () => {
     { icon: Code,       color1: '#3B6EF8', color2: '#6366F1', titleKey: 'why1Title', descKey: 'why1Desc' },
     { icon: Users,      color1: '#06B6D4', color2: '#3B6EF8', titleKey: 'why2Title', descKey: 'why2Desc' },
     { icon: Star,       color1: '#F59E0B', color2: '#EF4444', titleKey: 'why3Title', descKey: 'why3Desc' },
-    { icon: Award,      color1: '#10B981', color2: '#06B6D4', titleKey: 'why4Title', descKey: 'why4Desc' },
-    { icon: Zap,        color1: '#8B5CF6', color2: '#6366F1', titleKey: 'why5Title', descKey: 'why5Desc' },
-    { icon: TrendingUp, color1: '#EF4444', color2: '#F59E0B', titleKey: 'why6Title', descKey: 'why6Desc' },
   ];
 
   // ── Steps data ────────────────────────────────────────────────
