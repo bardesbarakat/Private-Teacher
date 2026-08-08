@@ -1,175 +1,93 @@
 import React from 'react';
 
 interface BeduLogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'full' | 'icon' | 'horizontal';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   showSlogan?: boolean;
 }
 
-const sizes = {
-  sm:  { icon: 32,  text: 16, slogan: 10 },
-  md:  { icon: 44,  text: 22, slogan: 12 },
-  lg:  { icon: 64,  text: 32, slogan: 14 },
-  xl:  { icon: 100, text: 48, slogan: 16 },
-};
+const BeduLogo: React.FC<BeduLogoProps> = ({ size = 'sm', showSlogan = false }) => {
+  const scale = { xs: 0.65, sm: 1, md: 1.35, lg: 1.8 }[size];
 
-// The BEDU "B" icon — circuit traces + open book
-const BeduIcon: React.FC<{ size: number }> = ({ size }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 100 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-label="BEDU Logo Icon"
-  >
-    <defs>
-      <linearGradient id="bedu-grad-b" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"   stopColor="#00C6FF" />
-        <stop offset="50%"  stopColor="#4F8EF7" />
-        <stop offset="100%" stopColor="#7B2FBE" />
-      </linearGradient>
-      <linearGradient id="bedu-grad-book" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stopColor="#00C6FF" />
-        <stop offset="100%" stopColor="#4F8EF7" />
-      </linearGradient>
-    </defs>
+  const iconW  = Math.round(36 * scale);
+  const nameFs = Math.round(18 * scale);
+  const subFs  = Math.round(10 * scale);
 
-    {/* ── Circuit traces (left side of B) ── */}
-    {/* Horizontal lines with circles */}
-    <circle cx="8"  cy="20" r="3.5" stroke="#00C6FF" strokeWidth="2" fill="none" />
-    <line   x1="11.5" y1="20" x2="32" y2="20" stroke="#00C6FF" strokeWidth="2" />
-
-    <circle cx="8"  cy="32" r="3.5" stroke="#4F8EF7" strokeWidth="2" fill="none" />
-    <line   x1="11.5" y1="32" x2="28" y2="32" stroke="#4F8EF7" strokeWidth="2" />
-
-    <circle cx="8"  cy="44" r="3.5" stroke="#7B2FBE" strokeWidth="2" fill="none" />
-    <line   x1="11.5" y1="44" x2="30" y2="44" stroke="#7B2FBE" strokeWidth="2" />
-
-    {/* ── Letter B ── */}
-    <path
-      d="M32 14 L32 58 L52 58 C62 58 68 52 68 45 C68 40 65 36 60 34 C64 32 66 28 66 23 C66 17 61 14 52 14 Z
-         M40 22 L50 22 C54 22 57 24 57 28 C57 32 54 34 50 34 L40 34 Z
-         M40 42 L52 42 C57 42 60 44.5 60 49 C60 53.5 57 56 52 56 L40 56 Z"
-      fill="url(#bedu-grad-b)"
-    />
-
-    {/* ── Open Book ── */}
-    {/* Left page */}
-    <path
-      d="M18 62 Q35 56 50 60 L50 80 Q35 76 18 82 Z"
-      fill="url(#bedu-grad-book)"
-      opacity="0.85"
-    />
-    {/* Right page */}
-    <path
-      d="M82 62 Q65 56 50 60 L50 80 Q65 76 82 82 Z"
-      fill="#4F8EF7"
-      opacity="0.75"
-    />
-    {/* Book spine */}
-    <line x1="50" y1="60" x2="50" y2="80" stroke="#0D1B4B" strokeWidth="2" />
-    {/* Book bottom curve */}
-    <path d="M18 82 Q50 86 82 82" stroke="#0D1B4B" strokeWidth="2" fill="none" />
-  </svg>
-);
-
-// Full BEDU wordmark
-const BeduWordmark: React.FC<{ fontSize: number }> = ({ fontSize }) => (
-  <svg
-    width={fontSize * 4.2}
-    height={fontSize * 1.4}
-    viewBox="0 0 210 70"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-label="BEDU"
-  >
-    <defs>
-      <linearGradient id="bedu-underline" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stopColor="#00C6FF" />
-        <stop offset="50%"  stopColor="#4F8EF7" />
-        <stop offset="100%" stopColor="#7B2FBE" />
-      </linearGradient>
-    </defs>
-    {/* BEDU text */}
-    <text
-      x="0" y="52"
-      fontFamily="'Space Grotesk', 'Cairo', sans-serif"
-      fontWeight="800"
-      fontSize="56"
-      fill="#0D1B4B"
-      letterSpacing="-1"
-    >BEDU</text>
-    {/* Gradient underline */}
-    <rect x="0" y="60" width="210" height="4" rx="2" fill="url(#bedu-underline)" />
-  </svg>
-);
-
-// ── Main Component ────────────────────────────────────────────────────────────
-const BeduLogo: React.FC<BeduLogoProps> = ({
-  size = 'md',
-  variant = 'horizontal',
-  showSlogan = false,
-}) => {
-  const s = sizes[size];
-
-  if (variant === 'icon') {
-    return <BeduIcon size={s.icon} />;
-  }
-
-  if (variant === 'full') {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-        <BeduIcon size={s.icon * 1.5} />
-        <BeduWordmark fontSize={s.text} />
-        {showSlogan && (
-          <div style={{ textAlign: 'center', marginTop: '4px' }}>
-            <div style={{
-              fontSize: `${s.slogan + 1}px`,
-              color: '#334E68',
-              fontWeight: 500,
-              fontFamily: "'Space Grotesk', sans-serif",
-              letterSpacing: '.02em',
-            }}>Barakat Education Platform</div>
-            <div style={{
-              fontSize: `${s.slogan}px`,
-              background: 'linear-gradient(90deg, #00C6FF, #4F8EF7, #7B2FBE)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              fontWeight: 700,
-              fontFamily: "'Space Grotesk', sans-serif",
-              marginTop: '3px',
-              letterSpacing: '.05em',
-            }}>Learn • Code • Grow</div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // horizontal (default) — icon + text side by side
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: `${s.icon * 0.25}px` }}>
-      <BeduIcon size={s.icon} />
-      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: Math.round(10 * scale), userSelect: 'none' }}>
+      {/* ── Icon ── */}
+      <svg
+        width={iconW} height={iconW}
+        viewBox="0 0 80 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="bg-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#3B6EF8" />
+            <stop offset="100%" stopColor="#6366F1" />
+          </linearGradient>
+          <linearGradient id="b-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#60A5FA" />
+            <stop offset="100%" stopColor="#818CF8" />
+          </linearGradient>
+          <linearGradient id="book-g" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#06B6D4" />
+            <stop offset="100%" stopColor="#3B6EF8" />
+          </linearGradient>
+        </defs>
+
+        {/* Rounded square background */}
+        <rect width="80" height="80" rx="18" fill="url(#bg-g)" />
+
+        {/* Circuit traces */}
+        <circle cx="10" cy="22" r="3" stroke="#60A5FA" strokeWidth="1.5" fill="none" opacity=".8" />
+        <polyline points="13,22 20,22 20,18 26,18" stroke="#60A5FA" strokeWidth="1.5" fill="none" opacity=".8" />
+
+        <circle cx="10" cy="30" r="3" stroke="#A5B4FC" strokeWidth="1.5" fill="none" opacity=".7" />
+        <polyline points="13,30 20,30" stroke="#A5B4FC" strokeWidth="1.5" fill="none" opacity=".7" />
+
+        <circle cx="10" cy="38" r="3" stroke="#818CF8" strokeWidth="1.5" fill="none" opacity=".65" />
+        <polyline points="13,38 20,38 20,34 26,34" stroke="#818CF8" strokeWidth="1.5" fill="none" opacity=".65" />
+
+        {/* Letter B */}
+        <path
+          d="M26 14 L26 46 L42 46 C49 46 54 42 54 36.5 C54 33 52 30.5 49 29 C51.5 27.5 53 25.5 53 22 C53 17.5 48.5 14 42 14 Z
+             M32 20 L41 20 C44.5 20 47 22 47 25 C47 28 44.5 30 41 30 L32 30 Z
+             M32 36 L42 36 C46 36 48 38 48 40.5 C48 43 46 45 42 45 L32 45 Z"
+          fill="url(#b-g)"
+        />
+
+        {/* Open book */}
+        <path d="M16 52 Q38 47 40 50 L40 65 Q38 62 16 66 Z" fill="url(#book-g)" opacity=".9" />
+        <path d="M64 52 Q42 47 40 50 L40 65 Q42 62 64 66 Z" fill="#4F8EF7" opacity=".8" />
+        <line x1="40" y1="50" x2="40" y2="65" stroke="rgba(255,255,255,.25)" strokeWidth="1.5" />
+      </svg>
+
+      {/* ── Wordmark ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
         <span style={{
           fontFamily: "'Space Grotesk', 'Cairo', sans-serif",
           fontWeight: 800,
-          fontSize: `${s.text}px`,
-          color: '#0D1B4B',
-          letterSpacing: '-.5px',
-        }}>BEDU</span>
+          fontSize: nameFs,
+          color: '#FFFFFF',
+          letterSpacing: '-.03em',
+        }} className="latin">BEDU</span>
+
         {showSlogan && (
           <span style={{
-            fontSize: `${s.slogan}px`,
-            background: 'linear-gradient(90deg, #00C6FF, #7B2FBE)',
+            fontSize: subFs,
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 600,
+            letterSpacing: '.01em',
+            background: 'linear-gradient(90deg, #60A5FA, #818CF8)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            fontWeight: 600,
-            fontFamily: "'Space Grotesk', sans-serif",
-          }}>Learn • Code • Grow</span>
+            marginTop: 3,
+          } as React.CSSProperties}>
+            Smart Learning.
+          </span>
         )}
       </div>
     </div>
