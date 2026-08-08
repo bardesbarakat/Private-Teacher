@@ -1,8 +1,0 @@
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.csproj.AssemblyReference.cache
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\rpswa.dswa.cache.json
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.GeneratedMSBuildEditorConfig.editorconfig
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.AssemblyInfoInputs.cache
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.AssemblyInfo.cs
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.csproj.CoreCompileInputs.cache
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.MvcApplicationPartsAssemblyInfo.cs
-D:\private teatcher\EduPlatform\EduPlatform.API\obj\Release\net10.0\EduPlatform.API.MvcApplicationPartsAssemblyInfo.cache
