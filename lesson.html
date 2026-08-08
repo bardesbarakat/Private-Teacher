@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الدرس الأول: مقدمة في التفكير البرمجي — EduPlatform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: #070A08; }
+
+    .lesson-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+      padding-top: 0;
+    }
+
+    /* Top bar */
+    .lesson-topbar {
+      grid-column: 1 / -1;
+      height: 58px;
+      background: rgba(11,17,14,.95);
+      border-bottom: 1px solid var(--line-soft);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(16px,3vw,32px);
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: blur(12px);
+    }
+    .lesson-topbar__brand { display: flex; align-items: center; gap: 10px; }
+    .lesson-topbar__mark {
+      width:34px; height:34px; border-radius:9px; flex:none;
+      background: linear-gradient(135deg, var(--mint), #0E7A4E);
+      display:flex; align-items:center; justify-content:center;
+      font-family: var(--font-latin); font-weight:700; color:var(--text-ink); font-size:16px;
+    }
+    .lesson-topbar__title { font-size: 14px; color: var(--text-soft); }
+    .lesson-topbar__title strong { color: var(--text); font-weight: 600; }
+    .lesson-topbar__actions { display: flex; align-items: center; gap: 10px; }
+    .lesson-topbar__progress {
+      display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-soft);
+    }
+    .topbar-progress-bar {
+      width: 80px; height: 4px; background: rgba(255,255,255,.08); border-radius: 2px;
+    }
+    .topbar-progress-fill { height: 100%; background: var(--mint); border-radius: 2px; width: 33%; }
+
+    /* Main video area */
+    .lesson-main {
+      display: flex; flex-direction: column;
+      background: #050807; border-right: 1px solid var(--line-soft);
+    }
+
+    .video-area {
+      position: relative; background: #000; aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0e1f17 0%, #050a07 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .play-btn {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint), var(--mint-2));
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 0 40px rgba(52,211,153,.4);
+      border: none;
+    }
+    .play-btn:hover { transform: scale(1.08); box-shadow: 0 0 60px rgba(52,211,153,.55); }
+    .play-btn svg { width: 30px; height: 30px; fill: var(--text-ink); margin-right: -4px; }
+    .video-title { font-size: 18px; font-weight: 600; color: var(--mint-text); }
+    .video-duration { font-size: 14px; color: var(--text-dim); }
+
+    /* Video controls */
+    .video-controls {
+      background: rgba(11,17,14,.95); border-top: 1px solid var(--line-soft);
+      padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .vc-btn {
+      background: none; border: none; color: var(--text-soft); cursor: pointer;
+      padding: 6px; border-radius: 8px; transition: color .2s, background .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vc-btn:hover { color: var(--text); background: var(--bg-muted); }
+    .vc-btn svg { width: 18px; height: 18px; }
+    .vc-progress {
+      flex: 1; height: 4px; background: rgba(255,255,255,.10); border-radius: 2px;
+      cursor: pointer; position: relative;
+    }
+    .vc-progress-fill { height: 100%; background: var(--mint); border-radius: 2px; width: 25%; transition: width .1s; }
+    .vc-time { font-size: 13px; color: var(--text-dim); font-family: var(--font-latin); white-space: nowrap; }
+    .speed-btn {
+      font-family: var(--font-latin); font-size: 12px; font-weight: 700;
+      background: var(--bg-muted); border: 1px solid var(--line); color: var(--text-soft);
+      padding: 4px 8px; border-radius: 6px; cursor: pointer; transition: all .2s;
+    }
+    .speed-btn:hover { border-color: var(--mint-line); color: var(--mint-text); }
+
+    /* Tabs */
+    .lesson-tabs {
+      display: flex; border-bottom: 1px solid var(--line-soft);
+      background: rgba(11,17,14,.7);
+    }
+    .lesson-tab {
+      padding: 14px 20px; font-size: 14px; font-weight: 600; color: var(--text-soft);
+      cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s;
+      background: none; border-top: none; border-right: none; border-left: none;
+      font-family: inherit;
+    }
+    .lesson-tab.active { color: var(--mint-text); border-bottom-color: var(--mint); }
+    .lesson-tab:hover { color: var(--text); }
+
+    /* Tab content */
+    .tab-content { padding: 24px; display: none; flex: 1; overflow-y: auto; }
+    .tab-content.active { display: block; }
+
+    /* Notes area */
+    .notes-area {
+      background: var(--bg-field); border: 1px solid var(--line); border-radius: var(--r-sm);
+      width: 100%; min-height: 160px; padding: 14px; color: var(--text); font-family: inherit;
+      font-size: 15px; line-height: 1.6; resize: vertical; outline: none;
+      transition: border-color .2s;
+    }
+    .notes-area:focus { border-color: var(--mint); box-shadow: 0 0 0 3px rgba(52,211,153,.15); }
+
+    /* Code block */
+    .code-block {
+      background: #0a0f0c; border: 1px solid var(--line); border-radius: var(--r-sm);
+      padding: 16px; font-family: var(--font-mono); font-size: 14px; color: #a8ff78;
+      overflow-x: auto; margin: 16px 0;
+    }
+    .code-comment { color: #6b7a71; }
+    .code-keyword { color: var(--mint); }
+    .code-string  { color: #f9c74f; }
+    .code-number  { color: #fb8c00; }
+
+    /* Q&A */
+    .qa-item {
+      border: 1px solid var(--line-soft); border-radius: var(--r-md);
+      padding: 16px; background: rgba(255,255,255,.02); margin-bottom: 12px;
+    }
+    .qa-question { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .qa-answer   { font-size: 14px; color: var(--text-soft); line-height: 1.65; }
+    .qa-meta     { font-size: 12px; color: var(--text-dim); margin-top: 8px; display: flex; gap: 12px; }
+
+    /* Sidebar curriculum */
+    .lesson-sidebar {
+      background: rgba(11,17,14,.8); display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--line-soft);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .sidebar-header h3 { font-size: 15px; font-weight: 700; }
+    .sidebar-progress { font-size: 12px; color: var(--mint); font-weight: 600; }
+    .sidebar-body { flex: 1; overflow-y: auto; }
+
+    .chapter-header {
+      padding: 14px 20px; display: flex; align-items: center; gap: 10px;
+      cursor: pointer; background: none; border: none; width: 100%;
+      text-align: right; font-family: inherit; transition: background .2s;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .chapter-header:hover { background: var(--bg-muted); }
+    .chapter-icon {
+      width: 28px; height: 28px; border-radius: 8px; flex: none;
+      background: var(--mint-soft); border: 1px solid var(--mint-line);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--mint); font-family: var(--font-latin);
+    }
+    .chapter-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; text-align: right; }
+    .chapter-count { font-size: 12px; color: var(--text-dim); }
+    .chapter-chevron { color: var(--text-dim); transition: transform .25s; flex: none; }
+    .chapter-header.open .chapter-chevron { transform: rotate(90deg); }
+
+    .lesson-list { display: none; background: rgba(0,0,0,.2); }
+    .lesson-list.open { display: block; }
+    .lesson-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 20px 12px 24px;
+      cursor: pointer; transition: background .2s; border-bottom: 1px solid var(--line-soft);
+    }
+    .lesson-item:hover { background: var(--bg-muted); }
+    .lesson-item.active { background: rgba(52,211,153,.06); }
+    .lesson-item.active .lesson-item-title { color: var(--mint-text); }
+    .lesson-item.done .lesson-check { background: var(--mint); border-color: var(--mint); color: var(--text-ink); }
+    .lesson-check {
+      width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); flex: none;
+      display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent;
+      transition: all .2s;
+    }
+    .lesson-item-info { flex: 1; }
+    .lesson-item-title { font-size: 13.5px; color: var(--text-soft); margin-bottom: 2px; }
+    .lesson-item-duration { font-size: 11.5px; color: var(--text-dim); font-family: var(--font-latin); }
+    .lesson-item-icon { color: var(--text-dim); flex: none; }
+
+    /* Complete button */
+    .complete-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, var(--mint), var(--mint-2));
+      color: var(--text-ink); font-weight: 700; font-size: 15px;
+      padding: 13px 20px; border: none; border-radius: 12px;
+      cursor: pointer; width: 100%; transition: filter .2s, transform .1s;
+      font-family: inherit;
+    }
+    .complete-btn:hover { filter: brightness(1.06); }
+    .complete-btn.done { background: linear-gradient(135deg, #1a5c3a, #0e3d27); color: var(--mint-text); }
+
+    @media (max-width: 900px) {
+      .lesson-layout { grid-template-columns: 1fr; }
+      .lesson-sidebar { border-top: 1px solid var(--line-soft); max-height: 380px; }
+      .lesson-main { border-right: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="lesson-layout">
+
+  <!-- TOP BAR -->
+  <div class="lesson-topbar">
+    <div class="lesson-topbar__brand">
+      <div class="lesson-topbar__mark">E</div>
+      <div class="lesson-topbar__title">
+        <strong>الكورس التأسيسي</strong>
+        <span> › الدرس الأول</span>
+      </div>
+    </div>
+    <div class="lesson-topbar__actions">
+      <div class="lesson-topbar__progress">
+        <span>3/9</span>
+        <div class="topbar-progress-bar"><div class="topbar-progress-fill"></div></div>
+        <span style="color:var(--mint);font-weight:600;">33%</span>
+      </div>
+      <a href="dashboard.html" class="btn-ghost" style="font-size:13px;padding:7px 14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        لوحة التحكم
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN VIDEO CONTENT -->
+  <div class="lesson-main">
+    <!-- Video Player -->
+    <div class="video-area">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <button class="play-btn" onclick="togglePlay()" id="playBtn" aria-label="تشغيل">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="video-title">الدرس الأول: مقدمة في التفكير البرمجي</div>
+        <div class="video-duration" style="font-family:var(--font-latin);">⏱ 18:45</div>
+      </div>
+    </div>
+
+    <!-- Video Controls -->
+    <div class="video-controls">
+      <button class="vc-btn" onclick="togglePlay()" id="playPauseBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>
+      </button>
+      <button class="vc-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </button>
+      <button class="vc-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </button>
+      <div class="vc-progress" id="vcProgress" onclick="seekVideo(event)">
+        <div class="vc-progress-fill" id="vcFill"></div>
+      </div>
+      <span class="vc-time"><span id="currentTime">4:41</span> / <span>18:45</span></span>
+      <button class="vc-btn" onclick="cycleSpeeds()" id="speedBtn">
+        <span class="speed-btn" id="speedLabel">1x</span>
+      </button>
+      <button class="vc-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </button>
+      <button class="vc-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="lesson-tabs">
+      <button class="lesson-tab active" onclick="switchTab('notes',this)">📝 الملاحظات</button>
+      <button class="lesson-tab" onclick="switchTab('transcript',this)">📋 النص الكامل</button>
+      <button class="lesson-tab" onclick="switchTab('resources',this)">📁 المصادر</button>
+      <button class="lesson-tab" onclick="switchTab('qa',this)">💬 الأسئلة</button>
+    </div>
+
+    <!-- NOTES TAB -->
+    <div class="tab-content active" id="tab-notes">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <h3 style="font-size:16px;font-weight:700;">ملاحظاتي</h3>
+        <button onclick="saveNotes()" class="btn-ghost" style="font-size:13px;padding:7px 14px;">💾 حفظ</button>
+      </div>
+      <textarea class="notes-area" id="notesArea" placeholder="اكتب ملاحظاتك هنا... يمكنك كتابة أي شيء تريد تذكّره من هذا الدرس."></textarea>
+      <div id="saveNotif" style="display:none;margin-top:8px;font-size:13px;color:var(--mint);font-weight:600;">✓ تم حفظ الملاحظات</div>
+
+      <div style="margin-top:24px;">
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:16px;">نقاط مهمة من الدرس:</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--bg-muted);border-radius:10px;border:1px solid var(--line-soft);">
+            <span style="color:var(--mint);font-size:16px;flex:none;">💡</span>
+            <span style="font-size:14.5px;color:var(--text-soft);">التفكير البرمجي هو طريقة تفكير لحل المشاكل بشكل منطقي ومنظّم، وليس مجرد كتابة كود.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--bg-muted);border-radius:10px;border:1px solid var(--line-soft);">
+            <span style="color:var(--mint);font-size:16px;flex:none;">💡</span>
+            <span style="font-size:14.5px;color:var(--text-soft);">الخوارزمية هي سلسلة من الخطوات المنظّمة لحل مشكلة معيّنة.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--bg-muted);border-radius:10px;border:1px solid var(--line-soft);">
+            <span style="color:var(--mint);font-size:16px;flex:none;">💡</span>
+            <span style="font-size:14.5px;color:var(--text-soft);">مثال عملي: خوارزمية عمل شاي — غلي الماء → وضع الكيس → الانتظار → الاستمتاع ☕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSCRIPT TAB -->
+    <div class="tab-content" id="tab-transcript">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">نص الدرس</h3>
+      <div style="font-size:15px;line-height:1.85;color:var(--text-soft);">
+        <p style="margin-bottom:16px;"><span style="color:var(--text-dim);font-family:var(--font-latin);font-size:13px;">[00:00]</span> أهلاً وسهلاً يا أصدقاء، في الدرس ده هنتكلم عن موضوع مهم جداً وهو <strong style="color:var(--text);">التفكير البرمجي</strong> — وده مش معناه إنك هتكتب كود من أول ثانية...</p>
+        <p style="margin-bottom:16px;"><span style="color:var(--text-dim);font-family:var(--font-latin);font-size:13px;">[02:30]</span> التفكير البرمجي هو في الأساس طريقة بتبقي بتفكر بيها لما بتحاول تحل أي مشكلة. يعني تقدر تقسّم المشكلة الكبيرة لأجزاء صغيرة...</p>
+        <p style="margin-bottom:16px;"><span style="color:var(--text-dim);font-family:var(--font-latin);font-size:13px;">[05:15]</span> في علوم الكمبيوتر بنسمي الحل ده <strong style="color:var(--mint-text);">خوارزمية</strong>. الخوارزمية ما هيش غير سلسلة من الخطوات المنظّمة لحل مشكلة معيّنة...</p>
+        <p style="margin-bottom:16px;"><span style="color:var(--text-dim);font-family:var(--font-latin);font-size:13px;">[08:40]</span> خلّونا نشوف مثال عملي: لو عايزين نعمل شاي...</p>
+
+        <div class="code-block">
+<span class="code-comment"># خوارزمية عمل شاي</span>
+<span class="code-keyword">def</span> make_tea():
+    غلي_الماء()
+    وضع_كيس_الشاي()
+    الانتظار(3)  <span class="code-comment"># 3 دقائق</span>
+    <span class="code-keyword">return</span> <span class="code-string">"شاي جاهز ☕"</span></div>
+
+        <p style="margin-bottom:16px;"><span style="color:var(--text-dim);font-family:var(--font-latin);font-size:13px;">[12:00]</span> ده مثال بسيط جداً بس بيوضّح الفكرة — كل برنامج كمبيوتر ما هو غير خوارزمية بس مكتوبة بلغة بيفهمها الجهاز...</p>
+      </div>
+    </div>
+
+    <!-- RESOURCES TAB -->
+    <div class="tab-content" id="tab-resources">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;">مصادر الدرس</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <a href="#" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg-muted);border:1px solid var(--line-soft);border-radius:12px;text-decoration:none;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--mint-line)'" onmouseout="this.style.borderColor='var(--line-soft)'">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📄</div>
+          <div>
+            <div style="font-size:15px;font-weight:600;color:var(--text);">ملخص الدرس الأول — PDF</div>
+            <div style="font-size:13px;color:var(--text-dim);margin-top:2px;">التفكير البرمجي والخوارزميات الأساسية</div>
+          </div>
+          <div style="margin-right:auto;font-size:12px;color:var(--text-dim);font-family:var(--font-latin);">1.2 MB</div>
+        </a>
+        <a href="#" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg-muted);border:1px solid var(--line-soft);border-radius:12px;text-decoration:none;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--mint-line)'" onmouseout="this.style.borderColor='var(--line-soft)'">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(52,211,153,.10);border:1px solid var(--mint-line);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📝</div>
+          <div>
+            <div style="font-size:15px;font-weight:600;color:var(--text);">تمرين الخوارزميات</div>
+            <div style="font-size:13px;color:var(--text-dim);margin-top:2px;">10 أسئلة تطبيقية لتثبيت المفهوم</div>
+          </div>
+          <div style="margin-right:auto;font-size:12px;color:var(--text-dim);font-family:var(--font-latin);">350 KB</div>
+        </a>
+        <div style="background:linear-gradient(135deg,rgba(41,182,246,.08),rgba(52,211,153,.06));border:1px solid rgba(41,182,246,.22);border-radius:12px;padding:20px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:10px;">✈️</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:6px;">ناقش الدرس مع زملاءك</div>
+          <div style="font-size:13.5px;color:var(--text-soft);margin-bottom:16px;">انضم لقناة Telegram الخاصة بالكورس للنقاش والأسئلة</div>
+          <a href="https://t.me/" target="_blank" class="btn-telegram" style="display:inline-flex;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            قناة الكورس على Telegram
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q&A TAB -->
+    <div class="tab-content" id="tab-qa">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h3 style="font-size:16px;font-weight:700;">الأسئلة والإجابات</h3>
+        <button onclick="document.getElementById('newQuestion').style.display='block'" class="btn-primary" style="font-size:13px;padding:8px 16px;border-radius:10px;">+ سؤال جديد</button>
+      </div>
+
+      <div id="newQuestion" style="display:none;margin-bottom:20px;background:var(--bg-muted);border:1px solid var(--mint-line);border-radius:12px;padding:16px;">
+        <textarea class="notes-area" placeholder="اكتب سؤالك هنا..." style="min-height:80px;margin-bottom:10px;"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="auth-btn" style="width:auto;font-size:14px;padding:10px 20px;">إرسال</button>
+          <button onclick="document.getElementById('newQuestion').style.display='none'" class="btn-ghost" style="font-size:13px;padding:10px 16px;">إلغاء</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="qa-item">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--mint-soft);border:1px solid var(--mint-line);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--mint);flex:none;">م</div>
+            <span style="font-size:14px;font-weight:600;">محمود أحمد</span>
+            <span style="font-size:12px;color:var(--text-dim);">منذ 3 ساعات</span>
+          </div>
+          <div class="qa-question">ما الفرق بين الخوارزمية والبرنامج؟</div>
+          <div style="background:rgba(52,211,153,.05);border:1px solid var(--mint-line);border-radius:8px;padding:12px;margin-top:8px;">
+            <div style="font-size:12px;color:var(--mint);font-weight:600;margin-bottom:6px;">✦ رد المدرّس</div>
+            <div class="qa-answer">الخوارزمية هي الخطة أو الفكرة لحل المشكلة — زي وصفة الطبخ. أما البرنامج فهو تنفيذ الخوارزمية دي بلغة برمجة معيّنة — زي لما تطبّق الوصفة فعلياً في المطبخ. 😊</div>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--violet-soft);border:1px solid var(--violet-line);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--violet);flex:none;">ن</div>
+            <span style="font-size:14px;font-weight:600;">نور حسين</span>
+            <span style="font-size:12px;color:var(--text-dim);">منذ 5 ساعات</span>
+          </div>
+          <div class="qa-question">هل لازم أكون عارف الرياضيات كويس عشان أتعلم برمجة؟</div>
+          <div style="background:rgba(52,211,153,.05);border:1px solid var(--mint-line);border-radius:8px;padding:12px;margin-top:8px;">
+            <div style="font-size:12px;color:var(--mint);font-weight:600;margin-bottom:6px;">✦ رد المدرّس</div>
+            <div class="qa-answer">لا لازم تكون متخصص في الرياضيات! اللي محتاجه في المستوى ده هو مجرد تفكير منطقي وقدرة على حل المشاكل. الرياضيات المتقدمة بتيجي بعدين في تعلّم الـ Machine Learning.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR CURRICULUM -->
+  <div class="lesson-sidebar">
+    <div class="sidebar-header">
+      <h3>محتوى الكورس</h3>
+      <span class="sidebar-progress">3/9 درس</span>
+    </div>
+    <div class="sidebar-body">
+
+      <!-- Chapter 1 -->
+      <button class="chapter-header open" onclick="toggleChapter(this)">
+        <div class="chapter-icon">1</div>
+        <span class="chapter-title">التفكير البرمجي وحل المشكلات</span>
+        <span class="chapter-count">3 دروس</span>
+        <svg class="chapter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="lesson-list open">
+        <div class="lesson-item done active" onclick="loadLesson(1)">
+          <div class="lesson-check">✓</div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-title">1. مقدمة في التفكير البرمجي</div>
+            <div class="lesson-item-duration">18:45</div>
+          </div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item done" onclick="loadLesson(2)">
+          <div class="lesson-check">✓</div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-title">2. تمثيل المعلومات والبيانات</div>
+            <div class="lesson-item-duration">22:10</div>
+          </div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item" onclick="loadLesson(3)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-title">3. خوارزميات بسيطة</div>
+            <div class="lesson-item-duration">15:30</div>
+          </div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+
+      <!-- Chapter 2 -->
+      <button class="chapter-header" onclick="toggleChapter(this)">
+        <div class="chapter-icon">2</div>
+        <span class="chapter-title">أساسيات Python</span>
+        <span class="chapter-count">4 دروس</span>
+        <svg class="chapter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="lesson-list">
+        <div class="lesson-item" onclick="loadLesson(4)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">4. المتغيرات وأنواع البيانات</div><div class="lesson-item-duration">20:15</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item" onclick="loadLesson(5)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">5. العمليات والتعبيرات</div><div class="lesson-item-duration">17:40</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item" onclick="loadLesson(6)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">6. الشرط والتحكم في التدفق</div><div class="lesson-item-duration">25:00</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item" onclick="loadLesson(7)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">7. الحلقات التكرارية</div><div class="lesson-item-duration">22:55</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+
+      <!-- Chapter 3 -->
+      <button class="chapter-header" onclick="toggleChapter(this)">
+        <div class="chapter-icon">3</div>
+        <span class="chapter-title">الخوارزميات وهياكل البيانات</span>
+        <span class="chapter-count">2 دروس</span>
+        <svg class="chapter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="lesson-list">
+        <div class="lesson-item" onclick="loadLesson(8)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">8. القوائم والمصفوفات</div><div class="lesson-item-duration">19:20</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="lesson-item" onclick="loadLesson(9)">
+          <div class="lesson-check"></div>
+          <div class="lesson-item-info"><div class="lesson-item-title">9. البحث والترتيب</div><div class="lesson-item-duration">28:10</div></div>
+          <svg class="lesson-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complete Lesson button -->
+    <div style="padding:16px;border-top:1px solid var(--line-soft);">
+      <button class="complete-btn" id="completeBtn" onclick="completeLesson()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        إكمال الدرس
+      </button>
+    </div>
+  </div>
+
+</div><!-- /lesson-layout -->
+
+<script>
+  // Tab switching
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Chapter accordion
+  function toggleChapter(btn) {
+    const list = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    list.classList.toggle('open', !isOpen);
+  }
+
+  // Video progress simulation
+  let progress = 25;
+  let playing = false;
+  let progressInterval = null;
+  const speeds = [1, 1.25, 1.5, 2];
+  let speedIdx = 0;
+
+  function togglePlay() {
+    playing = !playing;
+    const btn = document.getElementById('playBtn');
+    const ppBtn = document.getElementById('playPauseBtn');
+    if (playing) {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="#04130C"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+      ppBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+      progressInterval = setInterval(() => {
+        progress = Math.min(100, progress + 0.1 * speeds[speedIdx]);
+        document.getElementById('vcFill').style.width = progress + '%';
+        // Update time
+        const total = 18 * 60 + 45;
+        const current = Math.floor((progress / 100) * total);
+        const m = Math.floor(current / 60);
+        const s = current % 60;
+        document.getElementById('currentTime').textContent = m + ':' + String(s).padStart(2, '0');
+      }, 100);
+    } else {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="#04130C"><polygon points="5 3 19 12 5 21"/></svg>';
+      ppBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>';
+      clearInterval(progressInterval);
+    }
+  }
+
+  function seekVideo(e) {
+    const bar = document.getElementById('vcProgress');
+    const rect = bar.getBoundingClientRect();
+    // RTL: click on right side = near start
+    progress = ((rect.right - e.clientX) / rect.width) * 100;
+    progress = Math.max(0, Math.min(100, progress));
+    document.getElementById('vcFill').style.width = progress + '%';
+  }
+
+  function cycleSpeeds() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    document.getElementById('speedLabel').textContent = speeds[speedIdx] + 'x';
+  }
+
+  // Notes
+  function saveNotes() {
+    localStorage.setItem('lesson1_notes', document.getElementById('notesArea').value);
+    const notif = document.getElementById('saveNotif');
+    notif.style.display = 'block';
+    setTimeout(() => notif.style.display = 'none', 2000);
+  }
+  // Load saved notes
+  const saved = localStorage.getItem('lesson1_notes');
+  if (saved) document.getElementById('notesArea').value = saved;
+
+  // Complete lesson
+  function completeLesson() {
+    const btn = document.getElementById('completeBtn');
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> تم إكمال الدرس ✓';
+    // Mark current lesson as done
+    document.querySelector('.lesson-item.active .lesson-check').textContent = '✓';
+    document.querySelector('.lesson-item.active .lesson-check').style.background = 'var(--mint)';
+    document.querySelector('.lesson-item.active .lesson-check').style.borderColor = 'var(--mint)';
+    document.querySelector('.lesson-item.active .lesson-check').style.color = 'var(--text-ink)';
+  }
+
+  function loadLesson(num) {
+    document.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B0F0D">
+  <title>مدرّس التكنولوجيا · المنصة التعليمية للبكالوريا</title>
+  <meta name="description" content="أتقن البرمجة والذكاء الاصطناعي مع أفضل المدرّسين. دروس عملية لأولى وتانية بكالوريا. سجّل الآن وابدأ رحلتك التعليمية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Hero specific */
+    #hero {
+      min-height:100vh; padding:var(--nav-h) clamp(20px,4vw,56px) 40px;
+      background:radial-gradient(125% 95% at 16% 8%, var(--bg-0) 0%, var(--bg-1) 52%, var(--bg-2) 100%);
+      position:relative; overflow:hidden;
+    }
+    .hero-glow {
+      position:absolute; left:-140px; top:120px; width:560px; height:560px; border-radius:50%;
+      background:radial-gradient(circle,rgba(16,185,129,.28),transparent 62%);
+      filter:blur(8px); animation:pulseGlow 7s ease-in-out infinite; pointer-events:none;
+    }
+    .hero-inner {
+      max-width:1200px; margin:0 auto;
+      min-height:calc(100vh - 130px);
+      display:flex; flex-wrap:wrap-reverse; align-items:center; justify-content:center; gap:30px;
+      position:relative;
+    }
+    .hero-text { flex:1 1 460px; max-width:580px; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:9px;
+      background:var(--mint-soft); border:1px solid rgba(52,211,153,.28);
+      color:var(--mint-text); font-size:14px; font-weight:600;
+      padding:8px 16px; border-radius:var(--r-pill);
+    }
+    .hero-badge .pulse { width:8px; height:8px; border-radius:50%; background:var(--mint); box-shadow:0 0 12px var(--mint); }
+    .hero-h1 {
+      margin:22px 0 0; font-size:clamp(40px,6.2vw,72px); line-height:1.06;
+      font-weight:800; letter-spacing:-.02em;
+    }
+    .hero-h1 span { color:var(--mint); }
+    .hero-sub {
+      margin:22px 0 0; font-size:clamp(17px,2vw,21px); line-height:1.7;
+      color:var(--text-soft); max-width:520px;
+    }
+    .hero-actions { display:flex; align-items:center; gap:16px; margin-top:34px; flex-wrap:wrap; }
+    .hero-trust { display:flex; flex-wrap:wrap; align-items:center; gap:18px 24px; margin-top:40px; font-size:15px; color:var(--text-dim); }
+    .hero-trust-item { display:flex; align-items:center; gap:9px; }
+    .hero-trust .sep { width:1px; height:18px; background:rgba(255,255,255,.14); }
+
+    /* Hero portrait */
+    .hero-portrait {
+      position:relative; flex:1 1 340px; max-width:480px;
+      min-height:520px; display:flex; align-items:flex-end; justify-content:center;
+    }
+    .portrait-glow {
+      position:absolute; bottom:0; width:min(440px,90%); aspect-ratio:1; border-radius:50%;
+      background:radial-gradient(circle,rgba(16,185,129,.40),transparent 62%);
+      filter:blur(6px); animation:pulseGlow 6s ease-in-out infinite;
+    }
+    .portrait-ring {
+      position:absolute; bottom:20px; width:min(360px,78%); aspect-ratio:1;
+      border:1px solid rgba(52,211,153,.25); border-radius:50%; animation:spinSlow 40s linear infinite;
+    }
+    .portrait-img {
+      position:relative; width:auto; height:min(560px,62vh); max-width:100%;
+      object-fit:contain; object-position:bottom;
+      filter:contrast(1.07) saturate(1.12) brightness(1.05) drop-shadow(0 30px 50px rgba(0,0,0,.55));
+      -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);
+      mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);
+    }
+    .float-chip {
+      position:absolute; display:flex; align-items:center; gap:8px;
+      background:rgba(11,17,14,.72); backdrop-filter:blur(10px);
+      border:1px solid rgba(52,211,153,.3); padding:9px 15px; border-radius:14px;
+      font-size:13px; color:var(--mint-text);
+    }
+    .float-chip--1 { top:60px; left:0; animation:floatY 5s ease-in-out infinite; font-family:var(--font-mono); }
+    .float-chip--2 { top:190px; right:0; animation:floatY2 6s ease-in-out infinite; }
+    .float-chip--3 { bottom:120px; left:-6px; animation:floatY 7s ease-in-out infinite; font-family:var(--font-mono); }
+
+    /* Why section cards */
+    .why-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+    .why-card {
+      background:rgba(255,255,255,.03); border:1px solid var(--line-soft);
+      border-radius:var(--r-md); padding:24px; display:flex; flex-direction:column; gap:14px;
+      transition:border-color .2s, background .2s, transform .2s;
+    }
+    .why-card:hover { border-color:var(--mint-line); background:rgba(52,211,153,.04); transform:translateY(-2px); }
+    .why-icon {
+      width:48px; height:48px; border-radius:14px; font-size:24px;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--mint-soft); border:1px solid var(--mint-line);
+    }
+    .why-card h3 { font-size:18px; font-weight:700; }
+    .why-card p  { font-size:14.5px; color:var(--text-soft); line-height:1.7; }
+
+    /* Experience timeline */
+    .timeline { display:flex; flex-direction:column; gap:0; }
+    .timeline-item {
+      display:flex; gap:20px; position:relative; padding-bottom:32px;
+    }
+    .timeline-item:last-child { padding-bottom:0; }
+    .timeline-left { display:flex; flex-direction:column; align-items:center; }
+    .timeline-dot {
+      width:14px; height:14px; border-radius:50%; background:var(--mint);
+      box-shadow:0 0 14px rgba(52,211,153,.45); flex:none; margin-top:4px;
+    }
+    .timeline-line {
+      width:2px; flex:1; background:linear-gradient(to bottom,var(--mint-line),transparent);
+      margin-top:6px;
+    }
+    .timeline-item:last-child .timeline-line { display:none; }
+    .timeline-content h3 { font-size:17px; font-weight:700; margin-bottom:4px; }
+    .timeline-content p  { font-size:14px; color:var(--text-soft); line-height:1.65; }
+    .timeline-year {
+      font-family:var(--font-latin); font-size:12px; color:var(--mint); font-weight:600;
+      background:var(--mint-soft); border:1px solid var(--mint-line);
+      padding:3px 10px; border-radius:var(--r-pill); display:inline-block; margin-bottom:8px;
+    }
+
+    /* Benefits band */
+    .benefits-card {
+      background:linear-gradient(135deg,rgba(20,61,42,.6),rgba(255,255,255,.02));
+      border:1px solid var(--mint-line); border-radius:var(--r-lg); padding:40px;
+    }
+    .benefit-list { display:flex; flex-direction:column; gap:16px; margin-top:24px; }
+    .benefit-item { display:flex; align-items:flex-start; gap:14px; }
+    .benefit-check {
+      width:28px; height:28px; border-radius:8px; flex:none;
+      background:var(--mint-soft); border:1px solid var(--mint-line);
+      display:flex; align-items:center; justify-content:center; color:var(--mint); font-size:14px;
+    }
+    .benefit-text { font-size:15.5px; color:var(--text-soft); line-height:1.6; }
+    .benefit-text strong { color:var(--text); }
+
+    @media(max-width:560px) {
+      #hero { min-height:auto; padding-bottom:32px; }
+      .hero-inner { min-height:auto; gap:18px; }
+      .hero-h1 { font-size:33px; line-height:1.14; }
+      .hero-sub { font-size:16px; margin-top:14px; }
+      .hero-actions { flex-direction:column; align-items:stretch; margin-top:24px; gap:12px; }
+      .hero-actions > * { text-align:center; font-size:16px !important; }
+      .hero-portrait { min-height:0; }
+      .portrait-img { height:min(300px,38vh); }
+      .portrait-glow, .portrait-ring, .float-chip { display:none; }
+      .hero-trust .sep { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ▸ NAV ────────────────────────────────────────────────── -->
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav__brand">
+    <div class="nav__mark">E</div>
+    <span class="nav__name">EduPlatform</span>
+  </a>
+
+  <div class="nav__links">
+    <a href="index.html" class="active">الرئيسية</a>
+    <a href="catalog.html">الكورسات</a>
+    <a href="index.html#about">عن المنصة</a>
+    <a href="index.html#faq">الأسئلة الشائعة</a>
+    <a href="index.html#contact">تواصل معنا</a>
+  </div>
+
+  <div class="nav__actions">
+    <a href="login.html" class="btn-ghost">تسجيل الدخول</a>
+    <a href="join.html" class="btn-primary">سجّل الآن</a>
+    <button class="nav__burger" id="burgerBtn" aria-label="القائمة" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="active">الرئيسية</a>
+  <a href="catalog.html">الكورسات</a>
+  <a href="index.html#about">عن المنصة</a>
+  <a href="index.html#faq">الأسئلة الشائعة</a>
+  <a href="index.html#contact">تواصل معنا</a>
+  <a href="login.html">تسجيل الدخول</a>
+  <a href="join.html" style="color:var(--mint);font-weight:700;">سجّل الآن</a>
+</div>
+
+<!-- ▸ HERO ───────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="dot-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!-- AI network SVG decoration -->
+  <svg viewBox="0 0 600 500" style="position:absolute;left:20px;top:180px;width:min(600px,46vw);opacity:.4;pointer-events:none;" fill="none" aria-hidden="true">
+    <g stroke="rgba(52,211,153,.45)" stroke-width="1">
+      <line x1="80" y1="80" x2="220" y2="140"/><line x1="220" y1="140" x2="160" y2="280"/>
+      <line x1="220" y1="140" x2="360" y2="100"/><line x1="360" y1="100" x2="420" y2="240"/>
+      <line x1="160" y1="280" x2="300" y2="340"/><line x1="300" y1="340" x2="420" y2="240"/>
+      <line x1="300" y1="340" x2="240" y2="440"/><line x1="420" y1="240" x2="500" y2="360"/>
+    </g>
+    <g fill="#34D399">
+      <circle cx="80"  cy="80"  r="3" style="animation:pulseNode 3s ease-in-out infinite"/>
+      <circle cx="220" cy="140" r="3" style="animation:pulseNode 3s ease-in-out .5s infinite"/>
+      <circle cx="360" cy="100" r="3" style="animation:pulseNode 3s ease-in-out 1s infinite"/>
+      <circle cx="160" cy="280" r="3" style="animation:pulseNode 3s ease-in-out 1.4s infinite"/>
+      <circle cx="300" cy="340" r="3" style="animation:pulseNode 3s ease-in-out .8s infinite"/>
+      <circle cx="420" cy="240" r="3" style="animation:pulseNode 3s ease-in-out 1.8s infinite"/>
+      <circle cx="500" cy="360" r="3" style="animation:pulseNode 3s ease-in-out 2.2s infinite"/>
+      <circle cx="240" cy="440" r="3" style="animation:pulseNode 3s ease-in-out 1.2s infinite"/>
+    </g>
+  </svg>
+
+  <div class="hero-inner">
+    <!-- Left text -->
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="pulse"></span>
+        <span>البرمجة والذكاء الاصطناعي · البكالوريا</span>
+      </div>
+      <h1 class="hero-h1">أتقن <span>البرمجة</span><br>والذكاء الاصطناعي</h1>
+      <p class="hero-sub">اتعلّم على يد نخبة من المدرّسين المتخصصين — دروس عملية ومُركّزة على الامتحان لأولى وتانية بكالوريا، في السناتر وأونلاين.</p>
+      <div class="hero-actions">
+        <a href="join.html" class="btn-primary large">سجّل الآن ←</a>
+        <a href="catalog.html" class="btn-outline">شاهد الكورسات</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item">
+          <span style="color:var(--mint);font-size:18px;">✦</span>
+          <span>مدرّسون معتمدون</span>
+        </div>
+        <div class="sep"></div>
+        <div class="hero-trust-item">
+          <b style="color:var(--text);font-family:var(--font-latin);">+10,000</b>
+          <span>طالب</span>
+        </div>
+        <div class="sep"></div>
+        <div class="hero-trust-item">
+          <span>منذ</span>
+          <b style="color:var(--text);font-family:var(--font-latin);">2018</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right portrait area -->
+    <div class="hero-portrait">
+      <div class="portrait-glow"></div>
+      <div class="portrait-ring"></div>
+
+      <!-- Generated instructor illustration placeholder -->
+      <div style="position:relative;width:auto;height:min(500px,58vh);max-width:100%;display:flex;align-items:flex-end;justify-content:center;">
+        <div style="width:300px;height:440px;background:linear-gradient(180deg,rgba(52,211,153,.12) 0%,rgba(52,211,153,.04) 100%);border-radius:140px 140px 0 0;border:1px solid var(--mint-line);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;-webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);">
+          <div style="font-size:80px;line-height:1;">🧑‍💻</div>
+          <div style="text-align:center;padding:0 20px;">
+            <div style="font-size:18px;font-weight:700;color:var(--mint-text);">المدرّس المتخصص</div>
+            <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">برمجة · ذكاء اصطناعي</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-chip float-chip--1">&lt;/&gt; Python</div>
+      <div class="float-chip float-chip--2">🧠 AI / ML</div>
+      <div class="float-chip float-chip--3">{ } Code</div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ STATS BAND ─────────────────────────────────────────── -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal-init">
+        <div class="stat-num">+10K</div>
+        <div class="stat-label">طالب مستفيد</div>
+      </div>
+      <div class="stat-item reveal-init">
+        <div class="stat-num">8+</div>
+        <div class="stat-label">سنوات خبرة</div>
+      </div>
+      <div class="stat-item reveal-init">
+        <div class="stat-num">3</div>
+        <div class="stat-label">كورسات متاحة</div>
+      </div>
+      <div class="stat-item reveal-init">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">نسبة نجاح الطلاب</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ COURSES ─────────────────────────────────────────────── -->
+<section id="courses" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">الكورسات</span>
+      <h2>البرمجة والذكاء الاصطناعي<br>لأولى وتانية بكالوريا</h2>
+      <p>مساران مُنظّمان ينقلانك من الأساسيات تمامًا حتى بناء تطبيقات ذكاء اصطناعي حقيقية.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
+
+      <!-- Course 1 -->
+      <div class="course-card reveal-init">
+        <div class="course-card__glow"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="course-badge">المستوى التأسيسي</span>
+          <span class="course-num">01</span>
+        </div>
+        <h3>أولى بكالوريا</h3>
+        <p>تأسيس قوي في البرمجة واكتشاف عالم الذكاء الاصطناعي من البداية.</p>
+        <div class="course-features">
+          <div class="course-feature"><span>✓</span><span>التفكير الحسابي وحل المشكلات</span></div>
+          <div class="course-feature"><span>✓</span><span>أساسيات البرمجة بلغة Python</span></div>
+          <div class="course-feature"><span>✓</span><span>الخوارزميات وهياكل البيانات البسيطة</span></div>
+          <div class="course-feature"><span>✓</span><span>مقدمة في الذكاء الاصطناعي ومجالاته</span></div>
+        </div>
+        <a href="course-detail.html" class="course-cta">سجّل في الكورس ←</a>
+      </div>
+
+      <!-- Course 2 -->
+      <div class="course-card reveal-init" style="border-color:rgba(167,139,250,.22);background:linear-gradient(170deg,rgba(50,30,80,.4),rgba(255,255,255,.02));">
+        <div class="course-card__glow" style="background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%);"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="course-badge" style="color:#c4b5fd;background:rgba(167,139,250,.10);border-color:rgba(167,139,250,.25);">المستوى المتقدم</span>
+          <span class="course-num" style="color:rgba(167,139,250,.35);">02</span>
+        </div>
+        <h3>تانية بكالوريا</h3>
+        <p>انتقل لمستوى أعلى في البرمجة وابنِ تطبيقات ذكاء اصطناعي عملية.</p>
+        <div class="course-features">
+          <div class="course-feature"><span style="color:var(--violet);">✓</span><span>البرمجة كائنية التوجه (OOP)</span></div>
+          <div class="course-feature"><span style="color:var(--violet);">✓</span><span>هياكل بيانات وخوارزميات متقدمة</span></div>
+          <div class="course-feature"><span style="color:var(--violet);">✓</span><span>بناء تطبيقات ذكاء اصطناعي عملية</span></div>
+          <div class="course-feature"><span style="color:var(--violet);">✓</span><span>أساسيات تحليل البيانات</span></div>
+        </div>
+        <a href="course-detail.html" class="course-cta" style="background:linear-gradient(135deg,#A78BFA,#7C3AED);">سجّل في الكورس ←</a>
+      </div>
+
+      <!-- Course 3 - Exams -->
+      <div class="course-card reveal-init" style="border-color:rgba(251,191,36,.22);background:linear-gradient(170deg,rgba(70,50,10,.4),rgba(255,255,255,.02));">
+        <div class="course-card__glow" style="background:radial-gradient(circle,rgba(251,191,36,.12),transparent 70%);"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="course-badge" style="color:#fde68a;background:rgba(251,191,36,.10);border-color:rgba(251,191,36,.25);">تحضير للامتحانات</span>
+          <span class="course-num" style="color:rgba(251,191,36,.35);">03</span>
+        </div>
+        <h3>مراجعة مكثفة</h3>
+        <p>مراجعة شاملة ونماذج امتحانات متكررة لضمان أعلى الدرجات.</p>
+        <div class="course-features">
+          <div class="course-feature"><span style="color:var(--amber);">✓</span><span>نماذج امتحانات السنوات السابقة</span></div>
+          <div class="course-feature"><span style="color:var(--amber);">✓</span><span>تدريبات على نمط الامتحان الرسمي</span></div>
+          <div class="course-feature"><span style="color:var(--amber);">✓</span><span>مراجعة سريعة للمفاهيم الأساسية</span></div>
+          <div class="course-feature"><span style="color:var(--amber);">✓</span><span>جلسات أسئلة وأجوبة مباشرة</span></div>
+        </div>
+        <a href="catalog.html" class="course-cta" style="background:linear-gradient(135deg,#FBBF24,#D97706);">سجّل في الكورس ←</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ WHY US ──────────────────────────────────────────────── -->
+<section class="section section--alt" id="about">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">لماذا نحن</span>
+      <h2>ليه EduPlatform مختلفة؟</h2>
+      <p>ما بيميّزنا مش بس المحتوى — هو الأسلوب والمتابعة والنتيجة الفعلية.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal-init">
+        <div class="why-icon">🎯</div>
+        <h3>مركّز على الامتحان</h3>
+        <p>كل درس مُصمَّم بعناية ليغطي المنهج الرسمي ويتدرّب الطالب على أسلوب أسئلة الامتحان تحديدًا.</p>
+      </div>
+      <div class="why-card reveal-init">
+        <div class="why-icon">💻</div>
+        <h3>تطبيق عملي فعلي</h3>
+        <p>مش حفظ نظري — كل مفهوم بتبنيه بإيدك على الكمبيوتر. بتخرج من كل درس بكود شغّال.</p>
+      </div>
+      <div class="why-card reveal-init">
+        <div class="why-icon">📊</div>
+        <h3>متابعة وتقييم دوري</h3>
+        <p>نظام اختبارات دوري يتابع تقدّمك خطوة بخطوة، مع تقارير واضحة لك ولأهلك.</p>
+      </div>
+      <div class="why-card reveal-init">
+        <div class="why-icon">📱</div>
+        <h3>أونلاين وحضوري</h3>
+        <p>اختار اللي يناسبك — حضور في السنتر أو متابعة أونلاين بنفس جودة الشرح تمامًا.</p>
+      </div>
+      <div class="why-card reveal-init">
+        <div class="why-icon">🏆</div>
+        <h3>شهادة معتمدة</h3>
+        <p>بتخرج بشهادة إتمام معتمدة تضيفها لمعرض أعمالك وتفيدك في مسيرتك الجامعية والمهنية.</p>
+      </div>
+      <div class="why-card reveal-init">
+        <div class="why-icon">💬</div>
+        <h3>دعم على Telegram</h3>
+        <p>قناة Telegram مخصصة لكل كورس تقدر فيها تسأل وتتفاعل مع زملاءك والمدرّس على مدار اليوم.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ TELEGRAM CTA ────────────────────────────────────────── -->
+<section class="section">
+  <div class="container" style="max-width:800px;">
+    <div class="tg-card reveal-init">
+      <div class="tg-icon">✈️</div>
+      <h2 style="font-size:clamp(24px,3.5vw,36px);font-weight:700;margin-bottom:12px;">انضم لمجتمعنا على Telegram</h2>
+      <p style="font-size:16px;color:var(--text-soft);margin-bottom:28px;max-width:500px;margin-inline:auto;">تواصل مع الطلاب، احصل على ملخصات ومصادر إضافية، واسأل في أي وقت عبر قناة الدعم المخصصة.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="https://t.me/" target="_blank" rel="noopener" class="btn-telegram">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          قناة الطلاب
+        </a>
+        <a href="https://t.me/" target="_blank" rel="noopener" class="btn-telegram" style="background:linear-gradient(135deg,#34D399,#10A06A);box-shadow:0 10px 28px rgba(52,211,153,.32);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          قناة الدعم
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ BENEFITS + REGISTER ────────────────────────────────── -->
+<section id="register" class="section section--alt">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;align-items:start;">
+      <div class="benefits-card reveal-init">
+        <span class="section-eyebrow" style="text-align:right;display:block;margin-bottom:20px;">مزايا التسجيل</span>
+        <h2 style="font-size:clamp(24px,3vw,32px);font-weight:700;">لمّا تسجّل معنا، بتحصل على كل ده</h2>
+        <div class="benefit-list">
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>شرح مُبسَّط عملي</strong> — من الأساسيات لغاية الاحتراف</p></div>
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>نماذج امتحانات وتدريبات</strong> — على نمط الامتحان الرسمي</p></div>
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>مراجعات ومصادر إضافية</strong> — PDF ملخصات لكل وحدة</p></div>
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>دعم على Telegram</strong> — سؤال في أي وقت</p></div>
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>مشروع تخرج كامل</strong> — تضيفه لمعرض أعمالك</p></div>
+          <div class="benefit-item"><div class="benefit-check">✓</div><p class="benefit-text"><strong>شهادة إتمام معتمدة</strong> — رقمية وقابلة للتحقق</p></div>
+        </div>
+      </div>
+
+      <!-- Quick register form -->
+      <div class="reveal-init" style="background:rgba(11,17,14,.6);border:1px solid var(--mint-line);border-radius:var(--r-lg);padding:36px;backdrop-filter:blur(10px);">
+        <h2 style="font-size:26px;font-weight:700;margin-bottom:8px;">سجّل الآن — مجاناً</h2>
+        <p style="font-size:15px;color:var(--text-soft);margin-bottom:24px;">ابدأ رحلتك التعليمية وفريقنا سيتواصل معك لتحديد الموعد والمجموعة.</p>
+        <form style="display:flex;flex-direction:column;gap:14px;" id="quickRegForm" onsubmit="handleQuickReg(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="auth-field">
+              <label class="auth-label">الاسم الأول</label>
+              <input id="qFirstName" type="text" class="auth-input" placeholder="محمود" required>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">الاسم الأخير</label>
+              <input id="qLastName" type="text" class="auth-input" placeholder="شرف" required>
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">رقم الهاتف</label>
+            <input id="qPhone" type="tel" class="auth-input" placeholder="01XXXXXXXXX" required>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">الصف الدراسي</label>
+            <select id="qGrade" class="auth-input" required>
+              <option value="">اختر صفّك</option>
+              <option value="bac1">أولى بكالوريا</option>
+              <option value="bac2">تانية بكالوريا</option>
+            </select>
+          </div>
+          <button type="submit" class="auth-btn" id="quickRegBtn">
+            سجّل الآن ←
+          </button>
+        </form>
+        <div id="quickRegSuccess" style="display:none;text-align:center;padding:20px;">
+          <div style="font-size:40px;margin-bottom:12px;">🎉</div>
+          <p style="font-size:17px;font-weight:700;color:var(--mint-text);">تم التسجيل بنجاح!</p>
+          <p style="font-size:14px;color:var(--text-soft);margin-top:6px;">سيتواصل معك فريقنا قريبًا لتأكيد المجموعة والمواعيد.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ FAQ ────────────────────────────────────────────────── -->
+<section id="faq" class="section">
+  <div class="container" style="max-width:820px;">
+    <div class="section-head">
+      <span class="section-eyebrow">الأسئلة الشائعة</span>
+      <h2>أي سؤال في دماغك؟</h2>
+      <p>إجابات على أكثر الأسئلة اللي بيسألنا فيها الطلاب وأهاليهم.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;" id="faqList">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>ليه أتعلّم هنا تحديدًا؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">لأن المدرّسين عندنا مش مجرد أكاديميين — هم مهندسون بيبنوا أنظمة حقيقية وبيعلّموا من خبرة سوق فعلية. الشرح عملي ومبسّط وموصّل.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>الدروس أونلاين ولا حضورية؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">الاثنان معاً. تقدر تحضر في سنترنا أو تتابع أونلاين بنفس جودة الشرح تمامًا. اختار اللي يناسبك عند التسجيل.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>هل أحتاج خلفية سابقة في البرمجة؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">لا تحتاج أي خبرة سابقة. الدروس بتبدأ من الصفر تمامًا وتتدرّج خطوة بخطوة مع تدريبات وأسئلة على نمط الامتحان.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>إيه اللي بيميّز الشرح عن أي حصة تانية؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">الحصة مش محاضرة تحفظها. المفاهيم الصعبة بنحوّلها لمشاريع تبنيها بإيدك، وفيه تطبيق عملي في كل حصة. وكمان معاك متابعة ومراجعات دورية وملخصات وشهادة إتمام معتمدة.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>هل تشمل الدورة المراجعة والاستعداد للامتحان؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">نعم. بتتضمن كل دورة مراجعات دورية ونماذج إجابات وتدريبات على نمط الامتحان عشان تكون مستعد وواثق يوم الامتحان.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>ده للامتحان بس ولا هيفيدني بعد البكالوريا؟</span>
+          <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">الاثنين. الشرح مبني على المنهج الرسمي ودرجاتك أولوية. لكن اللي بتتعلمه — Python والخوارزميات وOOP وتطبيقات AI — هو نفس أساس اللي مهندسين البرمجيات بيشتغلوا بيه. البكالوريا بداية الطريق مش نهايته.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ CONTACT ────────────────────────────────────────────── -->
+<section id="contact" class="section section--alt">
+  <div class="container" style="max-width:700px;text-align:center;">
+    <span class="section-eyebrow">تواصل معنا</span>
+    <h2 style="font-size:clamp(28px,4vw,40px);font-weight:700;margin-bottom:16px;">فريقنا موجود دايمًا</h2>
+    <p style="font-size:16px;color:var(--text-soft);margin-bottom:36px;">سواء عندك سؤال عن التسجيل أو المحتوى أو أي حاجة تانية، تواصل معنا وسنرد بأسرع وقت.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://t.me/" target="_blank" class="btn-telegram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram
+      </a>
+      <a href="tel:+201558298481" class="btn-primary large" style="border-radius:14px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l1.32-1.32a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        اتصل بنا
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ▸ FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div class="nav__mark">E</div>
+          <h3 style="margin:0;">EduPlatform</h3>
+        </div>
+        <p>المنصة التعليمية المتخصصة في تعليم البرمجة والذكاء الاصطناعي لطلاب البكالوريا في مصر — بخبرة حقيقية ونتائج مُثبَتة.</p>
+        <div class="social-links" style="margin-top:20px;">
+          <a href="#" class="social-link" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://t.me/" target="_blank" class="social-link" aria-label="Telegram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </a>
+          <a href="#" class="social-link" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h4>الكورسات</h4>
+        <div class="footer__links">
+          <a href="catalog.html">أولى بكالوريا</a>
+          <a href="catalog.html">تانية بكالوريا</a>
+          <a href="catalog.html">المراجعة المكثّفة</a>
+          <a href="catalog.html">تصفّح الكل</a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h4>المنصة</h4>
+        <div class="footer__links">
+          <a href="index.html">الرئيسية</a>
+          <a href="index.html#about">عن المنصة</a>
+          <a href="index.html#faq">الأسئلة الشائعة</a>
+          <a href="index.html#contact">تواصل معنا</a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h4>الحساب</h4>
+        <div class="footer__links">
+          <a href="login.html">تسجيل الدخول</a>
+          <a href="register.html">إنشاء حساب</a>
+          <a href="join.html">سجّل الآن</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© 2026 EduPlatform. جميع الحقوق محفوظة.</span>
+      <div style="display:flex;gap:16px;">
+        <a href="#" style="color:var(--text-dim);font-size:13px;transition:color .2s;">الخصوصية</a>
+        <a href="#" style="color:var(--text-dim);font-size:13px;transition:color .2s;">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ▸ SCRIPTS ─────────────────────────────────────────────── -->
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Burger menu
+  const burger = document.getElementById('burgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal-init');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('reveal-in'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Quick reg form
+  function handleQuickReg(e) {
+    e.preventDefault();
+    const btn = document.getElementById('quickRegBtn');
+    btn.disabled = true;
+    btn.textContent = 'جارٍ التسجيل...';
+    setTimeout(() => {
+      document.getElementById('quickRegForm').style.display = 'none';
+      document.getElementById('quickRegSuccess').style.display = 'block';
+    }, 1500);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكورسات | المنصة التعليمية</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">أكاديمية<span>الكود</span></a>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="catalog.html" class="active">الكورسات</a>
+                <a href="about.html">عن الأكاديمية</a>
+                <a href="contact.html">تواصل معنا</a>
+            </div>
+            <div class="nav-auth">
+                <a href="login.html" class="btn btn-outline">دخول</a>
+                <a href="register.html" class="btn btn-primary">سجل الآن</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="catalog-hero relative">
+        <div class="ambient-glow"></div>
+        <div class="dot-grid"></div>
+        <div class="container relative z-10 text-center">
+            <div class="eyebrow">الكورسات</div>
+            <h1 class="hero-title">اختر صفّك وابدأ</h1>
+            <p class="hero-subtitle">كورسات برمجة وذكاء اصطناعي لأولى وتانية بكالوريا — شرح عملي، متابعة دورية، وشهادات معتمدة</p>
+            
+            <div class="search-box">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="ابحث عن كورس...">
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="bac1">أولى بكالوريا</button>
+                <button class="filter-btn" data-filter="bac2">تانية بكالوريا</button>
+                <button class="filter-btn" data-filter="intensive">مراجعة مكثّفة</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Grid -->
+    <section class="courses-section">
+        <div class="container">
+            <div class="course-grid">
+                <!-- Card 1 -->
+                <div class="course-card reveal" data-category="bac1">
+                    <div class="card-badge">المستوى التأسيسي</div>
+                    <div class="course-number">01</div>
+                    <h3 class="course-title">الكورس التأسيسي | أولى بكالوريا</h3>
+                    <p class="course-desc">مقدمة شاملة في عالم البرمجة وتأسيس قوي للمفاهيم الأساسية.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> أساسيات الخوارزميات</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مقدمة في لغة بايثون</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مشاريع عملية أسبوعية</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> متابعة وتقييم مستمر</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">مجاني</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="course-card reveal" data-category="bac1">
+                    <div class="card-badge badge-amber">المستوى المتقدم</div>
+                    <div class="course-number">02</div>
+                    <h3 class="course-title">الكورس المتقدم | أولى بكالوريا</h3>
+                    <p class="course-desc">بناء تطبيقات متقدمة وتعلم هياكل البيانات الأساسية.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> هياكل البيانات في بايثون</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> واجهات المستخدم الرسومية</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مشروع تخرج شامل</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> شهادة معتمدة</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">350 EGP</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="course-card reveal" data-category="bac2">
+                    <div class="card-badge">المستوى التأسيسي</div>
+                    <div class="course-number">03</div>
+                    <h3 class="course-title">الكورس التأسيسي | تانية بكالوريا</h3>
+                    <p class="course-desc">البرمجة كائنية التوجه وتطوير تطبيقات الويب الأساسية.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> البرمجة كائنية التوجه (OOP)</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> قواعد البيانات SQL</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> أساسيات تطوير الويب</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> تطبيق عملي متكامل</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">400 EGP</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="course-card reveal" data-category="bac2">
+                    <div class="card-badge badge-violet">المستوى المتقدم</div>
+                    <div class="course-number">04</div>
+                    <h3 class="course-title">الكورس المتقدم | تانية بكالوريا</h3>
+                    <p class="course-desc">الذكاء الاصطناعي وبناء نماذج تعلم الآلة ومشاريع التخرج.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مقدمة في تعلم الآلة</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> تحليل البيانات</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> نماذج الذكاء الاصطناعي</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مشروع تخرج احترافي</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">450 EGP</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="course-card reveal" data-category="intensive">
+                    <div class="card-badge badge-amber">مراجعة</div>
+                    <div class="course-number">05</div>
+                    <h3 class="course-title">مراجعة مكثّفة | أولى بكالوريا</h3>
+                    <p class="course-desc">مراجعة شاملة لجميع المفاهيم استعداداً للامتحانات النهائية.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> تلخيص شامل للمنهج</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> حل نماذج امتحانات</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> جلسات أسئلة وأجوبة</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> ملازم مراجعة PDF</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">200 EGP</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="course-card reveal" data-category="intensive">
+                    <div class="card-badge badge-amber">مراجعة</div>
+                    <div class="course-number">06</div>
+                    <h3 class="course-title">مراجعة مكثّفة | تانية بكالوريا</h3>
+                    <p class="course-desc">التركيز على المواضيع المتقدمة والتطبيق العملي للامتحانات.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> مراجعة OOP والمشاريع</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> تريكات البرمجة المتقدمة</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> تدريب على المشاريع</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> دعم فني ممتد</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span class="price">250 EGP</span>
+                        <a href="course-detail.html" class="btn btn-outline">التفاصيل</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">أكاديمية<span>الكود</span></div>
+                    <p>منصة تعليمية متخصصة في تقديم كورسات البرمجة والذكاء الاصطناعي لطلاب البكالوريا.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="catalog.html">الكورسات</a></li>
+                        <li><a href="about.html">عن الأكاديمية</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>تواصل معنا</h3>
+                    <ul>
+                        <li>دعم فني: support@codeacademy.com</li>
+                        <li>هاتف: +20 123 456 7890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; 2026 أكاديمية الكود.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+        const revealObserver = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+        
+        // Initial reveal for elements in view
+        setTimeout(() => {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                }
+            });
+        }, 100);
+
+        // Filter logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const courseCards = document.querySelectorAll('.course-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+
+                courseCards.forEach(card => {
+                    // Smooth hide/show
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(10px)';
+                    
+                    setTimeout(() => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'flex';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 50);
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

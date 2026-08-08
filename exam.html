@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاختبار - أساسيات Python</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mint: #34D399;
+            --mint-2: #10A06A;
+            --bg-1: #0B0F0D;
+            --bg-0: #14241C;
+            --text: #EAF2EE;
+            --text-soft: #aebbb4;
+            --danger: #ef4444;
+            --border: rgba(234, 242, 238, 0.1);
+            --correct: #10B981;
+            --wrong: #EF4444;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-1);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-0);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: rgba(52, 211, 153, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--mint);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .timer.danger {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 2rem;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .question-area {
+            flex: 0 0 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar {
+            flex: 0 0 calc(30% - 2rem);
+            background-color: var(--bg-0);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        /* Question Area */
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-soft);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-0);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--mint);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: var(--bg-0);
+            border: 1px solid var(--mint);
+            border-radius: 12px;
+            padding: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: var(--bg-1);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 1rem;
+            direction: ltr;
+            text-align: left;
+            border: 1px solid var(--border);
+            color: var(--mint);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background: var(--bg-0);
+            border: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--mint);
+            background: rgba(52, 211, 153, 0.05);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--mint);
+            background: rgba(52, 211, 153, 0.15);
+            box-shadow: 0 0 0 2px var(--mint-2);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+
+        .btn {
+            background: var(--bg-0);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn:hover {
+            border-color: var(--mint);
+            color: var(--mint);
+        }
+        
+        .btn-primary {
+            background: var(--mint);
+            color: var(--bg-1);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: var(--mint-2);
+            color: var(--bg-1);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Sidebar Grid */
+        .grid-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .q-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+        }
+
+        .q-btn.answered {
+            background: var(--mint);
+            color: var(--bg-1);
+            border-color: var(--mint);
+        }
+
+        .q-btn.current {
+            border: 2px solid var(--mint);
+            color: var(--mint);
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-soft);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(11, 15, 13, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-0);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .score-ring {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .score-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .score-ring circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+        .ring-bg { stroke: var(--bg-1); }
+        .ring-fill {
+            stroke: var(--mint);
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1s ease;
+        }
+        .score-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--mint);
+        }
+
+        .grade-badge {
+            display: inline-block;
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--mint);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-soft);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .btn-telegram {
+            background: #0088cc;
+            color: white;
+            border: none;
+        }
+        .btn-telegram:hover {
+            background: #0077b5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="logo-title">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>اختبار: أساسيات Python</span>
+        </div>
+        <div class="timer" id="timer">20:00</div>
+    </header>
+
+    <div class="main-container">
+        <div class="question-area">
+            <div>
+                <div class="question-header">
+                    <h2 style="margin:0;" id="q-counter">السؤال 1 من 10</h2>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div id="q-text">ما هو ناتج الكود التالي؟</div>
+                <div class="code-block" id="q-code">print(type(5))</div>
+            </div>
+
+            <div class="options" id="options-container">
+                <!-- Options populated by JS -->
+            </div>
+
+            <div class="navigation">
+                <button class="btn" id="btn-prev">السابق</button>
+                <button class="btn" id="btn-next">التالي</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="grid-header">الأسئلة</div>
+            <div class="question-grid" id="q-grid">
+                <!-- Grid buttons populated by JS -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--mint);"></div>
+                    <span>مجاب</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="border: 2px solid var(--mint);"></div>
+                    <span>الحالي</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--bg-1); border: 1px solid var(--border);"></div>
+                    <span>غير مجاب</span>
+                </div>
+            </div>
+
+            <button class="btn btn-danger" id="btn-finish">إنهاء الاختبار</button>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal">
+            <h2 style="margin-top:0;">النتيجة النهائية</h2>
+            
+            <div class="score-ring">
+                <svg>
+                    <circle class="ring-bg" cx="75" cy="75" r="70"></circle>
+                    <circle class="ring-fill" cx="75" cy="75" r="70" id="score-circle"></circle>
+                </svg>
+                <div class="score-text" id="score-text">0%</div>
+            </div>
+
+            <div class="grade-badge" id="grade-badge">ممتاز</div>
+
+            <div class="stats">
+                <div id="correct-stats">الأسئلة الصحيحة: 0/10</div>
+                <div id="time-stats">الوقت المستغرق: 0:00</div>
+            </div>
+
+            <div class="modal-actions">
+                <a href="results.html" class="btn btn-primary">مراجعة الإجابات</a>
+                <a href="dashboard.html" class="btn">العودة للوحة التحكم</a>
+                <button class="btn btn-telegram">مشاركة على تيليجرام</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "ما هو ناتج الكود التالي؟", code: "print(type(5))", options: ["<class 'int'>", "<class 'str'>", "<class 'float'>", "5"], correct: 0 },
+            { text: "كيف يمكنك إنشاء دالة في بايثون؟", code: null, options: ["function my_func():", "def my_func():", "create my_func():", "func my_func():"], correct: 1 },
+            { text: "ما هي النتيجة الصحيحة للعملية التالية؟", code: "print(2 ** 3)", options: ["6", "9", "8", "16"], correct: 2 },
+            { text: "أي من التالي هو نوع بيانات غير قابل للتعديل (Immutable)؟", code: null, options: ["List", "Dictionary", "Set", "Tuple"], correct: 3 },
+            { text: "ما هو ناتج الكود التالي؟", code: "x = [1, 2, 3]\nprint(len(x))", options: ["2", "3", "4", "Error"], correct: 1 },
+            { text: "كيف يتم إضافة عنصر إلى نهاية القائمة؟", code: "my_list = [1, 2]", options: ["my_list.add(3)", "my_list.append(3)", "my_list.insert(3)", "my_list.push(3)"], correct: 1 },
+            { text: "ما هو الرمز المستخدم للتعليقات في بايثون؟", code: null, options: ["//", "/* */", "#", "<!-- -->"], correct: 2 },
+            { text: "ما هو ناتج العملية التالية؟", code: "print(10 // 3)", options: ["3.33", "3", "4", "1"], correct: 1 },
+            { text: "كيف يتم استيراد مكتبة في بايثون؟", code: null, options: ["import math", "include math", "require math", "using math"], correct: 0 },
+            { text: "أي من هذه الكلمات المحجوزة تستخدم لإنهاء حلقة التكرار؟", code: null, options: ["stop", "exit", "return", "break"], correct: 3 }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(10).fill(null);
+        let timeLeft = 20 * 60; // 20 minutes in seconds
+        let timerInterval;
+
+        // Elements
+        const timerEl = document.getElementById('timer');
+        const qCounterEl = document.getElementById('q-counter');
+        const progressFillEl = document.getElementById('progress-fill');
+        const qTextEl = document.getElementById('q-text');
+        const qCodeEl = document.getElementById('q-code');
+        const optionsContainer = document.getElementById('options-container');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const qGrid = document.getElementById('q-grid');
+        const resultModal = document.getElementById('result-modal');
+
+        function init() {
+            // Build Grid
+            for (let i = 0; i < 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'q-btn';
+                btn.textContent = i + 1;
+                btn.onclick = () => loadQuestion(i);
+                qGrid.appendChild(btn);
+            }
+            
+            loadQuestion(0);
+            startTimer();
+        }
+
+        function loadQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+            
+            qCounterEl.textContent = `السؤال ${index + 1} من 10`;
+            progressFillEl.style.width = `${((index + 1) / 10) * 100}%`;
+            
+            qTextEl.textContent = q.text;
+            if (q.code) {
+                qCodeEl.style.display = 'block';
+                qCodeEl.textContent = q.code;
+            } else {
+                qCodeEl.style.display = 'none';
+            }
+
+            // Options
+            optionsContainer.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = `quiz-option ${answers[index] === i ? 'selected' : ''}`;
+                div.innerHTML = `<strong>${labels[i]}.</strong> <span>${opt}</span>`;
+                div.onclick = () => selectOption(i);
+                optionsContainer.appendChild(div);
+            });
+
+            // Nav buttons
+            btnPrev.style.visibility = index === 0 ? 'hidden' : 'visible';
+            btnNext.textContent = index === 9 ? 'إنهاء' : 'التالي';
+            
+            updateGrid();
+        }
+
+        function selectOption(optIndex) {
+            answers[currentQuestion] = optIndex;
+            loadQuestion(currentQuestion); // reload to show selected state
+        }
+
+        function updateGrid() {
+            const btns = qGrid.children;
+            for (let i = 0; i < 10; i++) {
+                btns[i].className = 'q-btn';
+                if (answers[i] !== null) btns[i].classList.add('answered');
+                if (i === currentQuestion) btns[i].classList.add('current');
+            }
+        }
+
+        btnPrev.onclick = () => {
+            if (currentQuestion > 0) loadQuestion(currentQuestion - 1);
+        };
+
+        btnNext.onclick = () => {
+            if (currentQuestion < 9) loadQuestion(currentQuestion + 1);
+            else finishExam();
+        };
+
+        document.getElementById('btn-finish').onclick = finishExam;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                timerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 300) { // 5 minutes
+                    timerEl.classList.add('danger');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            
+            let correctCount = 0;
+            answers.forEach((ans, i) => {
+                if (ans === questions[i].correct) correctCount++;
+            });
+            
+            const score = Math.round((correctCount / 10) * 100);
+            
+            // Populate Modal
+            document.getElementById('score-text').textContent = `${score}%`;
+            document.getElementById('correct-stats').textContent = `الأسئلة الصحيحة: ${correctCount}/10`;
+            
+            const timeSpent = (20 * 60) - timeLeft;
+            const m = Math.floor(timeSpent / 60);
+            const s = timeSpent % 60;
+            document.getElementById('time-stats').textContent = `الوقت المستغرق: ${m}:${s.toString().padStart(2, '0')}`;
+            
+            const gradeEl = document.getElementById('grade-badge');
+            if (score >= 90) gradeEl.textContent = 'ممتاز';
+            else if (score >= 80) gradeEl.textContent = 'جيد جدًا';
+            else if (score >= 70) gradeEl.textContent = 'جيد';
+            else gradeEl.textContent = 'مقبول';
+
+            resultModal.classList.add('active');
+            
+            // Animate ring
+            setTimeout(() => {
+                const offset = 440 - (440 * score) / 100;
+                document.getElementById('score-circle').style.strokeDashoffset = offset;
+            }, 100);
+        }
+
+        init();
+    </script>
+</body>
+</html>

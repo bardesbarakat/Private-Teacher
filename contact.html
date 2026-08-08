@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B0F0D">
+  <title>تواصل معنا · EduPlatform</title>
+  <meta name="description" content="تواصل مع فريق EduPlatform عبر Telegram أو WhatsApp أو النموذج الإلكتروني.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero {
+      min-height:52vh; padding:var(--nav-h) clamp(20px,4vw,56px) 72px;
+      background:radial-gradient(125% 95% at 16% 8%, var(--bg-0) 0%, var(--bg-1) 52%, var(--bg-2) 100%);
+      position:relative; overflow:hidden; display:flex; align-items:flex-end;
+    }
+    .page-hero-glow {
+      position:absolute; left:-100px; top:80px; width:500px; height:500px; border-radius:50%;
+      background:radial-gradient(circle,rgba(16,185,129,.22),transparent 62%);
+      filter:blur(8px); animation:pulseGlow 7s ease-in-out infinite; pointer-events:none;
+    }
+    .page-hero-inner { position:relative; max-width:1160px; margin:0 auto; width:100%; }
+    .page-eyebrow {
+      display:inline-flex; align-items:center; gap:9px;
+      background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.28);
+      color:#7ee7b6; font-size:13px; font-weight:600;
+      padding:7px 16px; border-radius:999px; margin-bottom:20px;
+    }
+    .page-eyebrow .pulse { width:7px; height:7px; border-radius:50%; background:var(--mint); box-shadow:0 0 10px var(--mint); }
+    .page-hero h1 { font-size:clamp(38px,6vw,68px); font-weight:800; line-height:1.08; letter-spacing:-.02em; margin-bottom:18px; }
+    .page-hero h1 span { color:var(--mint); }
+    .page-hero p { font-size:clamp(16px,1.8vw,20px); color:var(--text-soft); max-width:580px; line-height:1.75; }
+
+    /* Contact 2-col grid */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+    @media(max-width:860px){ .contact-grid { grid-template-columns:1fr; } }
+
+    /* Form */
+    .contact-form-card {
+      background:rgba(11,17,14,.6); border:1px solid var(--mint-line);
+      border-radius:var(--r-lg); padding:36px; backdrop-filter:blur(12px);
+    }
+    .contact-form-card h2 { font-size:22px; font-weight:700; margin-bottom:6px; }
+    .contact-form-card .sub { font-size:14px; color:var(--text-soft); margin-bottom:28px; }
+    .cform { display:flex; flex-direction:column; gap:18px; }
+    .cform-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:560px){ .cform-row { grid-template-columns:1fr; } }
+    .cform-field { display:flex; flex-direction:column; gap:7px; }
+    .cform-label { font-size:13.5px; font-weight:500; color:var(--text-soft); }
+    .cform-input {
+      width:100%; background:var(--bg-field); border:1px solid var(--line);
+      border-radius:var(--r-sm); padding:13px 15px; color:var(--text);
+      font-family:inherit; font-size:15.5px; outline:none;
+      transition:border-color .2s, box-shadow .2s, background .2s;
+    }
+    .cform-input::placeholder { color:#6f817a; }
+    .cform-input:hover { border-color:rgba(255,255,255,.20); }
+    .cform-input:focus { border-color:var(--mint); box-shadow:0 0 0 3px rgba(52,211,153,.16); background:rgba(255,255,255,.06); }
+    select.cform-input { appearance:none; cursor:pointer; }
+    select.cform-input option { background:#0E1512; color:var(--text); }
+    textarea.cform-input { resize:vertical; min-height:130px; }
+    .cform-submit {
+      display:flex; align-items:center; justify-content:center; gap:9px;
+      width:100%; background:linear-gradient(135deg,var(--mint),var(--mint-2));
+      color:var(--text-ink); font-weight:700; font-size:16px; padding:16px;
+      border:none; border-radius:13px; cursor:pointer;
+      box-shadow:0 12px 30px var(--mint-glow);
+      transition:filter .2s, transform .1s;
+    }
+    .cform-submit:hover { filter:brightness(1.06); transform:translateY(-1px); }
+    .cform-submit:active { transform:translateY(1px); }
+    .cform-submit:disabled { opacity:.65; cursor:progress; }
+
+    /* Success state */
+    .contact-success {
+      display:none; text-align:center; padding:40px 20px;
+    }
+    .contact-success .success-icon {
+      width:80px; height:80px; border-radius:50%; margin:0 auto 20px;
+      background:var(--mint-soft); border:2px solid var(--mint-line);
+      display:flex; align-items:center; justify-content:center; font-size:40px;
+      animation:scaleIn .5s ease;
+    }
+    .contact-success h3 { font-size:22px; font-weight:700; margin-bottom:8px; }
+    .contact-success p { font-size:15px; color:var(--text-soft); }
+
+    /* Right contact info */
+    .contact-info { display:flex; flex-direction:column; gap:20px; }
+    .contact-info-card {
+      background:rgba(255,255,255,.03); border:1px solid var(--line-soft);
+      border-radius:var(--r-md); padding:22px 20px;
+      transition:border-color .2s, background .2s;
+    }
+    .contact-info-card:hover { border-color:var(--mint-line); background:rgba(52,211,153,.03); }
+    .contact-info-label {
+      font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      color:var(--text-dim); margin-bottom:10px;
+    }
+
+    /* Contact buttons */
+    .btn-tg-big {
+      display:flex; align-items:center; gap:12px; width:100%;
+      background:linear-gradient(135deg,#29b6f6,#0288d1); color:#fff; font-weight:700;
+      padding:14px 20px; border-radius:12px; font-size:16px; text-decoration:none;
+      box-shadow:0 8px 24px rgba(41,182,246,.28); transition:filter .2s,transform .1s;
+    }
+    .btn-tg-big:hover { filter:brightness(1.08); transform:translateY(-2px); }
+    .btn-wa-big {
+      display:flex; align-items:center; gap:12px; width:100%;
+      background:linear-gradient(135deg,#25D366,#128C7E); color:#fff; font-weight:700;
+      padding:14px 20px; border-radius:12px; font-size:16px; text-decoration:none;
+      box-shadow:0 8px 24px rgba(37,211,102,.28); transition:filter .2s,transform .1s;
+    }
+    .btn-wa-big:hover { filter:brightness(1.08); transform:translateY(-2px); }
+    .contact-meta-item {
+      display:flex; align-items:center; gap:12px; padding:10px 0;
+      border-bottom:1px solid var(--line-soft); text-decoration:none; color:var(--text);
+      transition:color .2s;
+    }
+    .contact-meta-item:last-child { border-bottom:0; }
+    .contact-meta-item:hover { color:var(--mint-text); }
+    .contact-meta-icon {
+      width:36px; height:36px; border-radius:10px; flex:none;
+      background:var(--mint-soft); border:1px solid var(--mint-line);
+      display:flex; align-items:center; justify-content:center; font-size:17px;
+    }
+    .contact-meta-text strong { display:block; font-size:14px; font-weight:600; }
+    .contact-meta-text span { font-size:12.5px; color:var(--text-dim); }
+
+    /* Working hours */
+    .hours-box {
+      background:linear-gradient(135deg,rgba(20,61,42,.5),rgba(52,211,153,.06));
+      border:1px solid var(--mint-line); border-radius:var(--r-md); padding:20px;
+    }
+    .hours-box h4 { font-size:15px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+    .hours-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:14px; }
+    .hours-row:last-child { border-bottom:0; }
+    .hours-row span:first-child { color:var(--text-soft); }
+    .hours-row span:last-child { color:var(--mint-text); font-weight:600; font-family:var(--font-latin); }
+
+    /* Map placeholder */
+    .map-placeholder {
+      background:linear-gradient(135deg,rgba(20,61,42,.6),rgba(16,160,106,.15));
+      border:1px solid var(--mint-line); border-radius:var(--r-md); padding:32px 20px;
+      text-align:center; position:relative; overflow:hidden;
+    }
+    .map-placeholder::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(circle at 50% 50%,rgba(52,211,153,.12),transparent 65%);
+    }
+    .map-emoji { font-size:48px; display:block; margin-bottom:12px; position:relative; animation:floatY 5s ease-in-out infinite; }
+    .map-title { font-size:18px; font-weight:700; margin-bottom:6px; position:relative; }
+    .map-sub { font-size:13px; color:var(--text-soft); position:relative; line-height:1.6; }
+
+    /* Social row */
+    .social-row { display:flex; gap:12px; }
+    .social-row-btn {
+      flex:1; display:flex; flex-direction:column; align-items:center; gap:8px;
+      padding:14px 10px; border-radius:var(--r-md); border:1.5px solid var(--line);
+      background:rgba(255,255,255,.03); text-decoration:none; color:var(--text-soft);
+      font-size:12px; font-weight:600; transition:all .2s;
+    }
+    .social-row-btn:hover { border-color:var(--mint-line); color:var(--mint-text); background:var(--mint-soft); transform:translateY(-2px); }
+    .social-row-btn svg { width:22px; height:22px; }
+
+    /* FAQ */
+    .faq-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav__brand">
+    <div class="nav__mark">E</div>
+    <span class="nav__name">EduPlatform</span>
+  </a>
+  <div class="nav__links">
+    <a href="index.html">الرئيسية</a>
+    <a href="catalog.html">الكورسات</a>
+    <a href="about.html">عن المنصة</a>
+    <a href="contact.html" class="active">تواصل معنا</a>
+    <a href="index.html#faq">الأسئلة الشائعة</a>
+  </div>
+  <div class="nav__actions">
+    <a href="login.html" class="btn-ghost">تسجيل الدخول</a>
+    <a href="join.html" class="btn-primary">سجّل الآن</a>
+    <button class="nav__burger" id="burgerBtn" aria-label="القائمة" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">الرئيسية</a>
+  <a href="catalog.html">الكورسات</a>
+  <a href="about.html">عن المنصة</a>
+  <a href="contact.html" class="active">تواصل معنا</a>
+  <a href="index.html#faq">الأسئلة الشائعة</a>
+  <a href="login.html">تسجيل الدخول</a>
+  <a href="join.html" style="color:var(--mint);font-weight:700;">سجّل الآن</a>
+</div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="dot-grid"></div>
+  <div class="page-hero-glow"></div>
+  <div class="page-hero-inner">
+    <div class="page-eyebrow"><span class="pulse"></span><span>نحن هنا</span></div>
+    <h1><span>تواصل</span><br>معنا</h1>
+    <p>فريقنا متاح دايمًا للإجابة على أسئلتك — سواء عن التسجيل أو المحتوى أو أي حاجة تانية. ابعتلنا وسنرد في أسرع وقت.</p>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- LEFT: FORM -->
+      <div class="contact-form-card reveal-init">
+        <h2>أرسل لنا رسالة</h2>
+        <p class="sub">سنرد عليك خلال 24 ساعة كحد أقصى</p>
+
+        <form class="cform" id="contactForm" onsubmit="handleContactSubmit(event)">
+          <div class="cform-row">
+            <div class="cform-field">
+              <label class="cform-label" for="fname">الاسم الكامل *</label>
+              <input class="cform-input" id="fname" type="text" placeholder="اكتب اسمك" required>
+            </div>
+            <div class="cform-field">
+              <label class="cform-label" for="femail">البريد الإلكتروني *</label>
+              <input class="cform-input" id="femail" type="email" placeholder="example@email.com" required>
+            </div>
+          </div>
+
+          <div class="cform-row">
+            <div class="cform-field">
+              <label class="cform-label" for="fphone">رقم الهاتف</label>
+              <input class="cform-input" id="fphone" type="tel" placeholder="01xxxxxxxxx" dir="ltr">
+            </div>
+            <div class="cform-field">
+              <label class="cform-label" for="fsubject">الموضوع *</label>
+              <select class="cform-input" id="fsubject" required>
+                <option value="" disabled selected>اختر الموضوع</option>
+                <option value="general">استفسار عام</option>
+                <option value="register">تسجيل</option>
+                <option value="technical">مشكلة تقنية</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cform-field">
+            <label class="cform-label" for="fmessage">الرسالة *</label>
+            <textarea class="cform-input" id="fmessage" placeholder="اكتب رسالتك هنا..." required></textarea>
+          </div>
+
+          <button class="cform-submit" type="submit" id="submitBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            إرسال الرسالة
+          </button>
+        </form>
+
+        <div class="contact-success" id="contactSuccess">
+          <div class="success-icon">✅</div>
+          <h3>تم إرسال رسالتك!</h3>
+          <p>شكرًا على تواصلك معنا. سيرد عليك فريقنا في أقرب وقت ممكن.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: INFO -->
+      <div class="contact-info reveal-init">
+
+        <!-- Telegram -->
+        <div>
+          <div class="contact-info-label">تواصل فوري</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <a href="https://t.me/eduplatform_eg" target="_blank" rel="noopener" class="btn-tg-big">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              <div>
+                <div>Telegram</div>
+                <div style="font-size:12px;opacity:.8;font-weight:400;">@eduplatform_eg</div>
+              </div>
+            </a>
+            <a href="https://wa.me/201558298481" target="_blank" rel="noopener" class="btn-wa-big">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004.002C5.506.002.002 5.506.002 12.004c0 2.028.506 3.948 1.392 5.63L0 24l6.505-1.37A11.93 11.93 0 0 0 12.004 24C18.502 24 24 18.498 24 12.004 24 5.506 18.502.002 12.004.002zm0 21.818a9.815 9.815 0 0 1-5.007-1.367l-.36-.214-3.727.977.994-3.64-.234-.373a9.789 9.789 0 0 1-1.503-5.201c0-5.414 4.403-9.818 9.823-9.818 2.63 0 5.099 1.026 6.954 2.886a9.791 9.791 0 0 1 2.876 6.938c-.006 5.42-4.41 9.812-9.816 9.812z"/></svg>
+              <div>
+                <div>WhatsApp</div>
+                <div style="font-size:12px;opacity:.8;font-weight:400;">01558298481</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Direct contact -->
+        <div class="contact-info-card">
+          <div class="contact-info-label">وسائل التواصل المباشر</div>
+          <a href="tel:+201558298481" class="contact-meta-item">
+            <div class="contact-meta-icon">📞</div>
+            <div class="contact-meta-text">
+              <strong>اتصل بنا</strong>
+              <span style="direction:ltr;display:block;">+20 155 829 8481</span>
+            </div>
+          </a>
+          <a href="mailto:info@eduplatform.eg" class="contact-meta-item">
+            <div class="contact-meta-icon">📧</div>
+            <div class="contact-meta-text">
+              <strong>البريد الإلكتروني</strong>
+              <span>info@eduplatform.eg</span>
+            </div>
+          </a>
+          <div class="contact-meta-item" style="cursor:default;">
+            <div class="contact-meta-icon">📍</div>
+            <div class="contact-meta-text">
+              <strong>الموقع</strong>
+              <span>القاهرة والجيزة وأونلاين</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Working hours -->
+        <div class="hours-box">
+          <h4>🕐 ساعات العمل</h4>
+          <div class="hours-row"><span>السبت — الخميس</span><span>10:00 – 22:00</span></div>
+          <div class="hours-row"><span>الجمعة</span><span>12:00 – 20:00</span></div>
+          <div class="hours-row"><span>الرد على Telegram</span><span>على مدار اليوم</span></div>
+        </div>
+
+        <!-- Social media -->
+        <div>
+          <div class="contact-info-label" style="margin-bottom:12px;">تابعنا على وسائل التواصل</div>
+          <div class="social-row">
+            <a href="#" class="social-row-btn" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              Facebook
+            </a>
+            <a href="#" class="social-row-btn" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Instagram
+            </a>
+            <a href="https://youtube.com/" class="social-row-btn" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+              YouTube
+            </a>
+            <a href="https://t.me/" class="social-row-btn" aria-label="Telegram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              Telegram
+            </a>
+          </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="map-placeholder">
+          <span class="map-emoji">🗺️</span>
+          <div class="map-title">نخدم طلاب مصر</div>
+          <div class="map-sub">القاهرة الجديدة · الجيزة<br>وأونلاين من أي مكان في مصر</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="section section--alt" id="faq">
+  <div class="container">
+    <div class="section-head reveal-init">
+      <span class="section-eyebrow">أسئلة شائعة</span>
+      <h2>أسئلة متكررة عن التسجيل</h2>
+      <p>إجابات سريعة للأسئلة الأكثر شيوعًا. لو ما لقيتش إجابتك، ابعتلنا مباشرةً.</p>
+    </div>
+    <div class="faq-grid">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="faq-item reveal-init">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button">
+            <span>كيف أسجّل في الكورس؟</span>
+            <div class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </button>
+          <div class="faq-a">اضغط على زر "سجّل الآن" في أي صفحة، واختر نوع التسجيل (طالب أو ولي أمر)، واملأ البيانات المطلوبة. بعد التأكيد ستتلقى رسالة على Telegram.</div>
+        </div>
+        <div class="faq-item reveal-init">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button">
+            <span>هل يمكن التسجيل أونلاين؟</span>
+            <div class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </button>
+          <div class="faq-a">نعم! نقدّم الكورسات أونلاين بنفس جودة الحضور. بعد التسجيل ستحصل على رابط الجلسات المباشرة ومواد الدراسة عبر المنصة.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="faq-item reveal-init">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button">
+            <span>ما هي تكلفة الكورسات؟</span>
+            <div class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </button>
+          <div class="faq-a">تختلف التكاليف حسب الكورس والنظام المختار. تواصل معنا عبر Telegram أو الفورم للحصول على التفاصيل والعروض المتاحة لهذا الترم.</div>
+        </div>
+        <div class="faq-item reveal-init">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button">
+            <span>هل هناك متابعة بعد الانتهاء من الكورس؟</span>
+            <div class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </button>
+          <div class="faq-a">بالطبع! لدينا مجموعة Telegram مخصصة للخريجين وجلسات مراجعة قبيل الامتحانات. الطالب يظل جزءًا من المجتمع بعد انتهاء الكورس.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div class="nav__mark">E</div>
+          <h3 style="margin:0;">EduPlatform</h3>
+        </div>
+        <p>المنصة التعليمية المتخصصة في تعليم البرمجة والذكاء الاصطناعي لطلاب البكالوريا في مصر.</p>
+        <div class="social-links" style="margin-top:20px;">
+          <a href="#" class="social-link" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://t.me/" class="social-link" aria-label="Telegram"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+          <a href="#" class="social-link" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>الكورسات</h4>
+        <div class="footer__links">
+          <a href="catalog.html">أولى بكالوريا</a>
+          <a href="catalog.html">تانية بكالوريا</a>
+          <a href="catalog.html">المراجعة المكثّفة</a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>المنصة</h4>
+        <div class="footer__links">
+          <a href="index.html">الرئيسية</a>
+          <a href="about.html">عن المنصة</a>
+          <a href="contact.html">تواصل معنا</a>
+          <a href="index.html#faq">الأسئلة الشائعة</a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>الحساب</h4>
+        <div class="footer__links">
+          <a href="login.html">تسجيل الدخول</a>
+          <a href="register.html">إنشاء حساب</a>
+          <a href="join.html">سجّل الآن</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 EduPlatform. جميع الحقوق محفوظة.</span>
+      <div style="display:flex;gap:16px;">
+        <a href="#" style="color:var(--text-dim);font-size:13px;">الخصوصية</a>
+        <a href="#" style="color:var(--text-dim);font-size:13px;">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+  document.getElementById('burgerBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('open'));
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => { if(e.isIntersecting){ setTimeout(() => e.target.classList.add('reveal-in'), i*90); obs.unobserve(e.target); }});
+  }, {threshold:.10});
+  document.querySelectorAll('.reveal-init').forEach(el => obs.observe(el));
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  function handleContactSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> جارٍ الإرسال...';
+    setTimeout(() => {
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('contactSuccess').style.display = 'block';
+    }, 1600);
+  }
+</script>
+</body>
+</html>

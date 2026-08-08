@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - المنصة التعليمية</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mint: #34D399;
+            --mint-2: #10A06A;
+            --bg-1: #0B0F0D;
+            --bg-0: #14241C;
+            --text: #EAF2EE;
+            --text-soft: #aebbb4;
+            --danger: #ef4444;
+            --border: rgba(234, 242, 238, 0.1);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-1);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav */
+        .sidebar-nav {
+            width: 250px;
+            background-color: var(--bg-0);
+            border-left: 1px solid var(--border);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .nav-item {
+            padding: 1rem;
+            color: var(--text-soft);
+            text-decoration: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--mint);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--mint), var(--mint-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--bg-1);
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+        }
+        .user-info h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+        }
+        .user-info p {
+            margin: 0 0 1rem 0;
+            color: var(--text-soft);
+        }
+        .badge {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--mint);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--mint);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: var(--bg-0);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-1);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--text-soft);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active {
+            color: var(--mint);
+            border-bottom-color: var(--mint);
+            background: var(--bg-0);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-soft);
+        }
+        .form-control {
+            width: 100%;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--mint);
+        }
+
+        .btn {
+            background: var(--mint);
+            color: var(--bg-1);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--mint-2); }
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Toggle Switch */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-1);
+            border: 1px solid var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 3px;
+            background-color: var(--text-soft);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--mint);
+            border-color: var(--mint);
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: var(--bg-1);
+        }
+
+        /* Achievements */
+        .achievements-section {
+            margin-top: 3rem;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .achievement-card {
+            background: var(--bg-0);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.2s;
+        }
+        .achievement-card:hover { transform: translateY(-5px); }
+        .ach-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(52, 211, 153, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mint);
+        }
+        .achievement-card.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+        .achievement-card.locked .ach-icon {
+            background: var(--bg-1);
+            color: var(--text-soft);
+        }
+        .ach-title { font-weight: 700; }
+        .ach-desc { font-size: 0.85rem; color: var(--text-soft); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--mint);
+            color: var(--bg-1);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar-nav">
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--mint); margin-bottom: 2rem; padding: 0 1rem;">
+            المنصة
+        </div>
+        <a href="dashboard.html" class="nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            لوحة التحكم
+        </a>
+        <a href="#" class="nav-item active">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            الملف الشخصي
+        </a>
+        <a href="#" class="nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            دوراتي
+        </a>
+    </nav>
+
+    <div class="main-content">
+        <div class="profile-header">
+            <div class="avatar">أ.م</div>
+            <div class="user-info">
+                <h1>أحمد محمد</h1>
+                <p>ahmed.m@example.com</p>
+                <span class="badge">طالب متفوق</span>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab('personal', this)">البيانات الشخصية</button>
+                <button class="tab-btn" onclick="openTab('security', this)">الأمان</button>
+                <button class="tab-btn" onclick="openTab('notifications', this)">الإشعارات</button>
+            </div>
+
+            <!-- Tab 1: Personal Data -->
+            <div id="personal" class="tab-content active">
+                <form onsubmit="saveProfile(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label>الاسم الأول</label>
+                            <input type="text" class="form-control" value="أحمد" required>
+                        </div>
+                        <div class="form-group">
+                            <label>اسم العائلة</label>
+                            <input type="text" class="form-control" value="محمد" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" class="form-control" value="ahmed.m@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" class="form-control" value="+966 50 123 4567" dir="ltr" style="text-align: right;">
+                    </div>
+                    <button type="submit" class="btn">حفظ التغييرات</button>
+                </form>
+            </div>
+
+            <!-- Tab 2: Security -->
+            <div id="security" class="tab-content">
+                <form onsubmit="saveProfile(event)">
+                    <h3 style="margin-top:0;">تغيير كلمة المرور</h3>
+                    <div class="form-group">
+                        <label>كلمة المرور الحالية</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور الجديدة</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn" style="margin-bottom: 2rem;">تحديث كلمة المرور</button>
+                </form>
+
+                <h3 style="border-top: 1px solid var(--border); padding-top: 2rem;">إعدادات متقدمة</h3>
+                <div class="toggle-row">
+                    <div>
+                        <div style="font-weight: 600;">المصادقة الثنائية (2FA)</div>
+                        <div style="font-size: 0.9rem; color: var(--text-soft);">أضف طبقة حماية إضافية لحسابك</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div style="margin-top: 3rem; padding: 2rem; border: 1px solid var(--danger); border-radius: 8px; background: rgba(239, 68, 68, 0.05);">
+                    <h3 style="margin-top:0; color: var(--danger);">منطقة الخطر</h3>
+                    <p style="color: var(--text-soft); margin-bottom: 1.5rem;">حذف حسابك سيؤدي إلى مسح جميع بياناتك ونتائجك بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.</p>
+                    <button class="btn btn-danger" onclick="confirmDelete()">حذف الحساب نهائياً</button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Notifications -->
+            <div id="notifications" class="tab-content">
+                <div class="toggle-row">
+                    <div>
+                        <div style="font-weight: 600;">إشعارات البريد الإلكتروني</div>
+                        <div style="font-size: 0.9rem; color: var(--text-soft);">تلقي تحديثات الدورة والنتائج عبر البريد</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div style="font-weight: 600;">إشعارات تيليجرام</div>
+                        <div style="font-size: 0.9rem; color: var(--text-soft);">تلقي تذكيرات سريعة على حسابك المربوط</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div style="font-weight: 600;">تذكيرات الاختبارات</div>
+                        <div style="font-size: 0.9rem; color: var(--text-soft);">تنبيه قبل موعد الاختبار بـ 24 ساعة</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-section">
+            <h2>إنجازاتي</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="ach-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                    <div class="ach-title">شهادة إتمام</div>
+                    <div class="ach-desc">أكملت دورة أساسيات Python بنجاح</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="ach-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    </div>
+                    <div class="ach-title">متفوق</div>
+                    <div class="ach-desc">حصلت على +90% في 3 اختبارات</div>
+                </div>
+
+                <div class="achievement-card locked">
+                    <div class="ach-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                    <div class="ach-title">مبرمج متقدم</div>
+                    <div class="ach-desc">أكمل مسار هياكل البيانات</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">تم حفظ التغييرات بنجاح!</div>
+
+    <script>
+        function openTab(tabName, btn) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active from buttons
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            
+            // Show selected tab and active button
+            document.getElementById(tabName).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function confirmDelete() {
+            if(confirm('هل أنت متأكد من رغبتك في حذف الحساب نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                alert('تم تقديم طلب حذف الحساب.');
+            }
+        }
+    </script>
+</body>
+</html>
