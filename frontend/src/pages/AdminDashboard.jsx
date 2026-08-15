@@ -141,7 +141,7 @@ export default function AdminDashboard() {
   const pct = (p) => `${Math.round(p)}%`;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', paddingTop: 'var(--nav-h)', background: 'var(--bg-1)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', paddingTop: 'var(--nav-h)', background: 'var(--bg-0)' }}>
 
       {/* ── SIDEBAR ── */}
       <aside style={{
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ── MAIN CONTENT ── */}
-      <main style={{ flex: 1, marginRight: 256, padding: 'clamp(20px,3vw,36px)' }}>
+      <main style={{ flex: 1, minWidth: 0, marginRight: 256, padding: 'clamp(20px,3vw,36px)' }}>
 
         {/* topbar */}
         <div style={{ marginBottom: 28 }}>

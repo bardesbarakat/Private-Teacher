@@ -108,13 +108,13 @@ export default function Home() {
 
         {/* AI network SVG decoration — original */}
         <svg viewBox="0 0 600 500" style={{position:'absolute',left:'20px',top:'180px',width:'min(600px,46vw)',opacity:.4,pointerEvents:'none'}} fill="none" aria-hidden="true">
-          <g stroke="rgba(52,211,153,.45)" strokeWidth="1">
+          <g stroke="var(--mint-glow)" strokeWidth="1">
             <line x1="80" y1="80" x2="220" y2="140"/><line x1="220" y1="140" x2="160" y2="280"/>
             <line x1="220" y1="140" x2="360" y2="100"/><line x1="360" y1="100" x2="420" y2="240"/>
             <line x1="160" y1="280" x2="300" y2="340"/><line x1="300" y1="340" x2="420" y2="240"/>
             <line x1="300" y1="340" x2="240" y2="440"/><line x1="420" y1="240" x2="500" y2="360"/>
           </g>
-          <g fill="#34D399">
+          <g fill="var(--mint)">
             <circle cx="80"  cy="80"  r="3" style={{animation:'pulseNode 3s ease-in-out infinite'}}/>
             <circle cx="220" cy="140" r="3" style={{animation:'pulseNode 3s ease-in-out .5s infinite'}}/>
             <circle cx="360" cy="100" r="3" style={{animation:'pulseNode 3s ease-in-out 1s infinite'}}/>
@@ -167,7 +167,7 @@ export default function Home() {
             <div className="portrait-glow" />
             <div className="portrait-ring" />
             <div style={{position:'relative',width:'auto',height:'min(500px,58vh)',maxWidth:'100%',display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
-              <div style={{width:'300px',height:'440px',background:'linear-gradient(180deg,rgba(52,211,153,.12) 0%,rgba(52,211,153,.04) 100%)',borderRadius:'140px 140px 0 0',border:'1px solid var(--mint-line)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'16px',WebkitMaskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)',maskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)'}}>
+              <div style={{width:'300px',height:'440px',background:'linear-gradient(180deg,var(--mint-soft) 0%,rgba(0,0,0,0) 100%)',borderRadius:'140px 140px 0 0',border:'1px solid var(--mint-line)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'16px',WebkitMaskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)',maskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)'}}>
                 <div style={{fontSize:'80px',lineHeight:1}}>🧑‍💻</div>
                 <div style={{textAlign:'center',padding:'0 20px'}}>
                   <div style={{fontSize:'18px',fontWeight:700,color:'var(--mint-text)'}}>المدرّس المتخصص</div>
@@ -398,22 +398,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ▸ CONTACT ───────────────────────────────────────────── */}
-      <section id="contact" className="section section--alt">
-        <div className="container" style={{maxWidth:'700px',textAlign:'center'}}>
-          <span className="section-eyebrow">تواصل معنا</span>
-          <h2 style={{fontSize:'clamp(28px,4vw,40px)',fontWeight:700,marginBottom:'16px'}}>فريقنا موجود دايمًا</h2>
-          <p style={{fontSize:'16px',color:'var(--text-soft)',marginBottom:'36px'}}>سواء عندك سؤال عن التسجيل أو المحتوى أو أي حاجة تانية، تواصل معنا وسنرد بأسرع وقت.</p>
-          <div style={{display:'flex',gap:'16px',justifyContent:'center',flexWrap:'wrap'}}>
-            <a href="https://t.me/" target="_blank" rel="noopener noreferrer" className="btn-telegram">
-              {TELEGRAM_SVG} Telegram
-            </a>
-            <a href="tel:+213000000000" className="btn-primary large" style={{borderRadius:'14px'}}>
-              {PHONE_SVG} اتصل بنا
-            </a>
-          </div>
-        </div>
-      </section>
+
 
       <Footer />
     </>

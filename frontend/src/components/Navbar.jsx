@@ -85,7 +85,6 @@ export default function Navbar() {
         <NavLink to="/courses" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? 'active' : ''}>الكورسات</NavLink>
         <a href="/#about" onClick={() => setMenuOpen(false)}>عن المنصة</a>
         <a href="/#faq" onClick={() => setMenuOpen(false)}>الأسئلة الشائعة</a>
-        <a href="/#contact" onClick={() => setMenuOpen(false)}>تواصل معنا</a>
         {isAuthenticated ? (
           <>
             <NavLink to={dashPath} onClick={() => setMenuOpen(false)}>لوحة التحكم</NavLink>
