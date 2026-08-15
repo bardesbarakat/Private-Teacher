@@ -124,7 +124,7 @@ export default function TeacherDashboard() {
             { icon:'📚', num:courses.length, label:'إجمالي الكورسات' },
             { icon:'📖', num:courses.reduce((s,c)=>s+(c.lessonCount||0),0), label:'إجمالي الدروس' },
             { icon:'👥', num:courses.reduce((s,c)=>s+(c.enrollmentCount||0),0), label:'الطلاب المسجّلون' },
-            { icon:'📝', num:selectedCourse ? exams.length : '—', label:'الاختبارات' },
+            { icon:'🏆', num:courses.filter(c=>c.isPublished).length, label:'الكورسات المنشورة' },
           ].map((s,i) => (
             <div className="stat-card" key={i}>
               <div className="stat-card__icon">{s.icon}</div>

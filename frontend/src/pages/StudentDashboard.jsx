@@ -111,8 +111,6 @@ export default function StudentDashboard() {
   const SIDEBAR = [
     { id:'courses', icon:'🌐', label:'جميع الكورسات' },
     { id:'enrolled', icon:'📚', label:'كورساتي المسجّلة' },
-    { id:'lessons', icon:'📖', label:'الدروس', disabled:!selectedCourse },
-    { id:'exams', icon:'📝', label:'الاختبارات', disabled:!selectedCourse },
     { id:'results', icon:'📊', label:'نتائجي' },
   ];
 
@@ -187,8 +185,8 @@ export default function StudentDashboard() {
                   <div className="item-card__actions">
                     {isEnrolled(c.id) ? (
                       <button className="btn-ghost" style={{flex:1,justifyContent:'center'}}
-                        onClick={() => { setSelected({...c,courseId:c.id}); setTab('lessons'); }}>
-                        عرض الدروس →
+                        onClick={() => navigate(`/learn/${c.id}`)}>
+                        الدخول لمسرح التعلم 🚀
                       </button>
                     ) : (
                       <button className="btn-primary" style={{flex:1,justifyContent:'center'}}
@@ -223,8 +221,8 @@ export default function StudentDashboard() {
                     <div className="item-card__sub">تاريخ التسجيل: {new Date(e.enrolledAt).toLocaleDateString('ar-DZ')}</div>
                     <div className="item-card__actions">
                       <button className="btn-primary" style={{flex:1,justifyContent:'center'}}
-                        onClick={() => { setSelected({...e}); setTab('lessons'); }}>
-                        الدروس والاختبارات →
+                        onClick={() => navigate(`/learn/${e.courseId}`)}>
+                        الدخول لمسرح التعلم 🚀
                       </button>
                     </div>
                   </div>
@@ -234,167 +232,7 @@ export default function StudentDashboard() {
           </div>
         )}
 
-        {/* ── LESSONS ── */}
-        {tab === 'lessons' && selectedCourse && (
-          <div className="dash-section">
-            <div className="dash-section__head">
-              <h2>دروس: {selectedCourse.courseTitle || selectedCourse.title}</h2>
-              <button className="btn-ghost" onClick={() => setTab('exams')}>الاختبارات ←</button>
-            </div>
-            {lessons.length === 0 ? (
-              <div className="empty-state"><div className="empty-icon">📖</div><h3>لا توجد دروس بعد</h3></div>
-            ) : (
-              <div className="cards-grid">
-                {lessons.map((l,i) => (
-                  <div className="item-card" key={l.id}>
-                    <div className="item-card__header">
-                      <span className="item-card__icon">📖</span>
-                      <span className="badge badge--amber">درس {i+1}</span>
-                    </div>
-                    <div className="item-card__title">{l.title}</div>
-                    {l.content && <div className="item-card__sub">{l.content.slice(0,80)}...</div>}
-                    <div className="item-card__actions">
-                      {l.videoUrl && <a href={l.videoUrl} target="_blank" className="btn-ghost" style={{flex:1,justifyContent:'center',fontSize:'13px'}}>▶ فيديو</a>}
-                      {l.pdfUrl  && <a href={l.pdfUrl}  target="_blank" className="btn-ghost" style={{flex:1,justifyContent:'center',fontSize:'13px'}}>📄 PDF</a>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* ── EXAMS ── */}
-        {tab === 'exams' && selectedCourse && (
-          <div className="dash-section">
-            <div className="dash-section__head">
-              <h2>اختبارات: {selectedCourse.courseTitle || selectedCourse.title}</h2>
-            </div>
-            {exams.length === 0 ? (
-              <div className="empty-state"><div className="empty-icon">📝</div><h3>لا توجد اختبارات بعد</h3></div>
-            ) : (
-              <div className="cards-grid">
-                {exams.map(e => {
-                  const done = myResults.find(r => r.examId === e.id);
-                  return (
-                    <div className="item-card" key={e.id}>
-                      <div className="item-card__header">
-                        <span className="item-card__icon">📝</span>
-                        {done
-                          ? <span className="badge badge--mint">✅ مكتمل</span>
-                          : <span className="badge badge--amber">⏳ لم يُؤدَّ</span>
-                        }
-                      </div>
-                      <div className="item-card__title">{e.title}</div>
-                      <div className="item-card__meta">
-                        <span>❓ {e.questionCount} سؤال</span>
-                        <span>⏱️ {e.durationMinutes} دقيقة</span>
-                        <span>⭐ {e.totalScore} نقطة</span>
-                      </div>
-                      {done && (
-                        <div style={{marginTop:'8px'}}>
-                          <div style={{fontSize:'13px',color:'var(--text-dim)',marginBottom:'6px'}}>
-                            نتيجتي: <strong style={{color:'var(--mint)'}}>{done.score}/{done.maxScore}</strong> ({Math.round(done.percentage)}%)
-                          </div>
-                          <div className="progress-bar"><div className="progress-bar__fill" style={{width:`${done.percentage}%`}}/></div>
-                        </div>
-                      )}
-                      <div className="item-card__actions">
-                        <button className={`${done?'btn-ghost':'btn-primary'}`} style={{flex:1,justifyContent:'center'}}
-                          onClick={() => handleStartExam(e.id, e.durationMinutes)} disabled={examLoading}>
-                          {done ? 'عرض النتيجة' : 'ابدأ الاختبار →'}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── EXAM TAKING ── */}
-        {tab === 'exam' && currentExam && !examResult && (
-          <div className="exam-container">
-            <div className="exam-header">
-              <div>
-                <h2 style={{fontSize:'18px',fontWeight:800}}>{currentExam.title}</h2>
-                <p style={{fontSize:'13px',color:'var(--text-dim)'}}>{currentExam.questions.length} سؤال</p>
-              </div>
-              <div className={`exam-timer ${timeLeft < 120 ? 'warning' : ''}`}>
-                ⏱️ {formatTime(timeLeft)}
-              </div>
-            </div>
-
-            {currentExam.questions.map((q, qi) => (
-              <div className="question-card" key={q.id}>
-                <div className="question-num">السؤال {qi+1} من {currentExam.questions.length} · {q.score} نقطة</div>
-                <div className="question-text">{q.text}</div>
-                {q.options.map(opt => (
-                  <div key={opt.id} className={`option-item ${answers[q.id]===opt.id?'selected':''}`}
-                       onClick={() => setAnswers({...answers, [q.id]: opt.id})}>
-                    <div className={`option-circle ${answers[q.id]===opt.id?'':''}` } style={{color:answers[q.id]===opt.id?'var(--mint)':'var(--text-dim)'}}>
-                      {answers[q.id]===opt.id ? '●' : '○'}
-                    </div>
-                    {opt.text}
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            <div style={{textAlign:'center',padding:'16px 0 32px'}}>
-              <button className="btn-primary lg" onClick={handleSubmitExam} disabled={examLoading}>
-                {examLoading ? 'جارٍ التسليم...' : `تسليم الاختبار (${Object.keys(answers).length}/${currentExam.questions.length} إجابة)`}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── RESULT ── */}
-        {tab === 'result' && examResult && (
-          <div className="exam-container">
-            <div className="result-card">
-              <div style={{fontSize:'48px',marginBottom:'12px'}}>
-                {examResult.percentage >= 80 ? '🏆' : examResult.percentage >= 50 ? '👍' : '📚'}
-              </div>
-              <div className="result-score">{examResult.score}/{examResult.maxScore}</div>
-              <div className="result-pct">{Math.round(examResult.percentage)}%</div>
-              <div className="result-label" style={{color: examResult.percentage>=50?'var(--mint-text)':'var(--danger)'}}>
-                {examResult.percentage >= 80 ? 'ممتاز! أداء رائع 🎉' : examResult.percentage >= 50 ? 'جيد! استمر في التقدّم 💪' : 'تحتاج مزيداً من المراجعة 📖'}
-              </div>
-              <div style={{display:'flex',gap:'12px',justifyContent:'center',marginTop:'16px'}}>
-                <span className="badge badge--mint">✅ {examResult.answers.filter(a=>a.isCorrect).length} صحيح</span>
-                <span className="badge badge--danger">❌ {examResult.answers.filter(a=>!a.isCorrect).length} خاطئ</span>
-              </div>
-            </div>
-
-            {/* Detailed answers */}
-            {examResult.answers.map((a,i) => (
-              <div className={`question-card`} key={a.questionId}
-                style={{borderColor: a.isCorrect ? 'var(--mint-line)' : 'var(--danger-line)'}}>
-                <div className="question-num">السؤال {i+1} · {a.isCorrect ? '✅ صحيح' : '❌ خاطئ'}</div>
-                <div className="question-text">{a.questionText}</div>
-                {a.selectedOptionId && (
-                  <div className={`option-item ${a.isCorrect?'correct':'wrong'}`} style={{cursor:'default'}}>
-                    <div className="option-circle">{a.isCorrect?'✓':'✗'}</div>
-                    إجابتك: {a.selectedOptionText}
-                  </div>
-                )}
-                {!a.isCorrect && (
-                  <div className="option-item correct" style={{cursor:'default',marginTop:'6px'}}>
-                    <div className="option-circle">✓</div>
-                    الإجابة الصحيحة: {a.correctOptionText}
-                  </div>
-                )}
-              </div>
-            ))}
-            <div style={{textAlign:'center',padding:'16px 0 32px'}}>
-              <button className="btn-primary" onClick={() => { setExamResult(null); setCurrentExam(null); setTab('results'); }}>
-                عرض جميع نتائجي
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* ── MY RESULTS ── */}
         {tab === 'results' && (
