@@ -14,14 +14,14 @@ import CoursesManagement from '../components/CoursesManagement';
 function StatCard({ icon, num, label, color = 'var(--mint)' }) {
   return (
     <div style={{
-      background: 'rgba(255,255,255,.03)', border: '1px solid var(--line-soft)',
+      background: 'var(--bg-card)', border: '1px solid var(--line-soft)',
       borderRadius: 'var(--r-lg)', padding: '22px', display: 'flex',
       alignItems: 'center', gap: '16px'
     }}>
       <div style={{
         width: 52, height: 52, borderRadius: 14, fontSize: 24, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'rgba(255,255,255,.05)', border: '1px solid var(--line-soft)'
+        background: 'var(--bg-field)', border: '1px solid var(--line-soft)'
       }}>{icon}</div>
       <div>
         <div style={{ fontSize: 28, fontWeight: 800, fontFamily: 'var(--font-latin)', color }}>{num}</div>
@@ -34,12 +34,12 @@ function StatCard({ icon, num, label, color = 'var(--mint)' }) {
 /* ── Badge ── */
 function RoleBadge({ role }) {
   const map = {
-    Admin:   { bg: 'rgba(239,68,68,.15)', color: '#fca5a5',  border: 'rgba(239,68,68,.4)',   label: '⚙️ أدمن' },
-    Teacher: { bg: 'rgba(167,139,250,.1)', color: '#c4b5fd', border: 'rgba(167,139,250,.3)', label: '👩‍🏫 مدرّس' },
-    Student: { bg: 'rgba(52,211,153,.1)',  color: '#7ee7b6', border: 'rgba(52,211,153,.3)',  label: '👨‍🎓 طالب' },
-    Parent:  { bg: 'rgba(251,191,36,.1)',  color: '#fcd34d', border: 'rgba(251,191,36,.3)',  label: '👨‍👧 ولي أمر' },
+    Admin:   { bg: 'var(--danger-soft)', color: 'var(--danger)',  border: 'var(--danger-line)',   label: '⚙️ أدمن' },
+    Teacher: { bg: 'var(--violet-soft)', color: 'var(--violet)', border: 'var(--violet-line)', label: '👩‍🏫 مدرّس' },
+    Student: { bg: 'var(--mint-soft)',  color: 'var(--mint-text)', border: 'var(--mint-line)',  label: '👨‍🎓 طالب' },
+    Parent:  { bg: 'var(--amber-soft)',  color: 'var(--amber)', border: 'var(--amber-line)',  label: '👨‍👧 ولي أمر' },
   };
-  const s = map[role] || { bg: 'rgba(255,255,255,.05)', color: 'var(--text-dim)', border: 'var(--line)', label: role };
+  const s = map[role] || { bg: 'var(--bg-field)', color: 'var(--text-dim)', border: 'var(--line)', label: role };
   return (
     <span style={{
       padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700,
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
 
       {/* ── SIDEBAR ── */}
       <aside style={{
-        width: 256, background: 'rgba(4,9,6,.95)', backdropFilter: 'blur(12px)',
+        width: 256, background: 'var(--bg-1)', backdropFilter: 'blur(12px)',
         borderLeft: '1px solid var(--line-soft)',
         position: 'fixed', top: 'var(--nav-h)', bottom: 0, right: 0,
         display: 'flex', flexDirection: 'column', zIndex: 40, overflowY: 'auto'
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
         <div style={{ padding: '20px 20px 14px', borderBottom: '1px solid var(--line-soft)' }}>
           <div style={{
             width: 50, height: 50, borderRadius: '50%', marginBottom: 10,
-            background: 'linear-gradient(135deg,#ef4444,#b91c1c)',
+            background: 'linear-gradient(135deg,var(--danger),#b91c1c)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 22, fontWeight: 800, color: '#fff'
           }}>⚙️</div>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
               color: tab === t.id ? 'var(--mint)' : 'var(--text-soft)',
               fontSize: 14.5, fontWeight: tab === t.id ? 700 : 500, cursor: 'pointer',
               fontFamily: 'var(--font-body)', textAlign: 'right',
-              background: tab === t.id ? 'rgba(52,211,153,.07)' : 'transparent',
+              background: tab === t.id ? 'var(--mint-soft)' : 'transparent',
               transition: 'all .2s'
             }}>
               <span style={{ fontSize: 18 }}>{t.icon}</span>
@@ -184,9 +184,9 @@ export default function AdminDashboard() {
         <div style={{ padding: '14px 20px', borderTop: '1px solid var(--line-soft)' }}>
           <button onClick={() => { logout(); navigate('/'); }} style={{
             display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-            padding: '10px 12px', border: '1px solid rgba(239,68,68,.4)',
-            background: 'rgba(239,68,68,.07)', borderRadius: 'var(--r-sm)',
-            color: '#fca5a5', fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
+            padding: '10px 12px', border: '1px solid var(--danger-line)',
+            background: 'var(--danger-soft)', borderRadius: 'var(--r-sm)',
+            color: 'var(--danger)', fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
             fontFamily: 'var(--font-body)'
           }}>🚪 تسجيل الخروج</button>
         </div>
@@ -198,10 +198,10 @@ export default function AdminDashboard() {
         {/* topbar */}
         <div style={{ marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 }}>
-            <h1 style={{ fontSize: 'clamp(22px,3vw,28px)', fontWeight: 800 }}>لوحة تحكم الأدمن</h1>
+            <h1 style={{ fontSize: 'clamp(22px,3vw,28px)', fontWeight: 800, color: 'var(--text)' }}>لوحة تحكم الأدمن</h1>
             <span style={{
               padding: '4px 12px', borderRadius: 999, fontSize: 12, fontWeight: 700,
-              background: 'rgba(239,68,68,.15)', color: '#fca5a5', border: '1px solid rgba(239,68,68,.4)'
+              background: 'var(--danger-soft)', color: 'var(--danger)', border: '1px solid var(--danger-line)'
             }}>⚙️ Admin Panel</span>
           </div>
           <p style={{ color: 'var(--text-dim)', fontSize: 14 }}>
@@ -230,8 +230,8 @@ export default function AdminDashboard() {
             {/* Quick info cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 18 }}>
               {/* Distribution */}
-              <div style={{ background: 'rgba(255,255,255,.025)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', padding: 24 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>توزيع المستخدمين</h3>
+              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', padding: 24 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>توزيع المستخدمين</h3>
                 {[
                   { label: 'الطلاب', count: stats.totalStudents, color: 'var(--mint)', pct: stats.totalUsers ? Math.round(stats.totalStudents / stats.totalUsers * 100) : 0 },
                   { label: 'المدرّسون', count: stats.totalTeachers, color: 'var(--violet)', pct: stats.totalUsers ? Math.round(stats.totalTeachers / stats.totalUsers * 100) : 0 },
@@ -250,8 +250,8 @@ export default function AdminDashboard() {
               </div>
 
               {/* Platform health */}
-              <div style={{ background: 'rgba(255,255,255,.025)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', padding: 24 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>صحة المنصة</h3>
+              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', padding: 24 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>صحة المنصة</h3>
                 {[
                   { label: 'الكورسات النشطة', val: stats.totalCourses, icon: '📚', ok: stats.totalCourses > 0 },
                   { label: 'متوسط الدرجات', val: pct(stats.avgScore), icon: '⭐', ok: stats.avgScore >= 50 },
@@ -284,8 +284,8 @@ export default function AdminDashboard() {
         {/* ══ SUBMISSIONS TAB ══ */}
         {tab === 'submissions' && (
           <>
-            <div style={{ marginBottom: 18, fontWeight: 700, fontSize: 16 }}>نتائج الاختبارات ({submissions.length})</div>
-            <div style={{ background: 'rgba(255,255,255,.02)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+            <div style={{ marginBottom: 18, fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>نتائج الاختبارات ({submissions.length})</div>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
@@ -314,9 +314,9 @@ export default function AdminDashboard() {
                         <td style={{ padding: '11px 14px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 120 }}>
                             <div style={{ flex: 1, height: 6, background: 'var(--line)', borderRadius: 3, overflow: 'hidden' }}>
-                              <div style={{ height: '100%', width: `${s.percentage}%`, borderRadius: 3, background: s.percentage >= 50 ? 'var(--mint)' : '#ef4444', transition: 'width .5s' }} />
+                              <div style={{ height: '100%', width: `${s.percentage}%`, borderRadius: 3, background: s.percentage >= 50 ? 'var(--mint)' : 'var(--danger-solid)', transition: 'width .5s' }} />
                             </div>
-                            <span style={{ fontSize: 13, fontWeight: 700, minWidth: 38, color: s.percentage >= 50 ? 'var(--mint)' : '#fca5a5', fontFamily: 'var(--font-latin)' }}>
+                            <span style={{ fontSize: 13, fontWeight: 700, minWidth: 38, color: s.percentage >= 50 ? 'var(--mint)' : 'var(--danger)', fontFamily: 'var(--font-latin)' }}>
                               {pct(s.percentage)}
                             </span>
                           </div>
@@ -324,9 +324,9 @@ export default function AdminDashboard() {
                         <td style={{ padding: '11px 14px' }}>
                           <span style={{
                             padding: '3px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 700,
-                            background: s.percentage >= 80 ? 'rgba(52,211,153,.1)' : s.percentage >= 50 ? 'rgba(251,191,36,.1)' : 'rgba(239,68,68,.1)',
-                            color: s.percentage >= 80 ? 'var(--mint-text)' : s.percentage >= 50 ? '#fcd34d' : '#fca5a5',
-                            border: `1px solid ${s.percentage >= 80 ? 'rgba(52,211,153,.3)' : s.percentage >= 50 ? 'rgba(251,191,36,.3)' : 'rgba(239,68,68,.3)'}`
+                            background: s.percentage >= 80 ? 'var(--mint-soft)' : s.percentage >= 50 ? 'var(--amber-soft)' : 'var(--danger-soft)',
+                            color: s.percentage >= 80 ? 'var(--mint-text)' : s.percentage >= 50 ? 'var(--amber)' : 'var(--danger)',
+                            border: `1px solid ${s.percentage >= 80 ? 'var(--mint-line)' : s.percentage >= 50 ? 'var(--amber-line)' : 'var(--danger-line)'}`
                           }}>
                             {s.percentage >= 80 ? '🏆 ممتاز' : s.percentage >= 50 ? '👍 مقبول' : '❌ ضعيف'}
                           </span>

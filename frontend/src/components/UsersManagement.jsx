@@ -7,19 +7,19 @@ import {
 /* ══════════════════════════════════════════════════════════
    CONSTANTS
 ══════════════════════════════════════════════════════════ */
-const ROLE_TABS = [
+const ROLE_FILTERS = [
   { key: '',        label: 'الكل',        icon: '👥', color: 'var(--mint)' },
-  { key: 'Student', label: 'طلاب',        icon: '👨‍🎓', color: '#7ee7b6' },
-  { key: 'Teacher', label: 'مدرّسون',     icon: '👩‍🏫', color: '#c4b5fd' },
-  { key: 'Parent',  label: 'أولياء أمور', icon: '👨‍👧', color: '#fcd34d' },
-  { key: 'Admin',   label: 'أدمن',        icon: '⚙️',  color: '#fca5a5' },
+  { key: 'Student', label: 'طلاب',        icon: '👨‍🎓', color: 'var(--mint-text)' },
+  { key: 'Teacher', label: 'مدرّسون',     icon: '👩‍🏫', color: 'var(--violet)' },
+  { key: 'Parent',  label: 'أولياء أمور', icon: '👨‍👧', color: 'var(--amber)' },
+  { key: 'Admin',   label: 'أدمن',        icon: '⚙️',  color: 'var(--danger)' },
 ];
 
 const ROLE_META = {
-  Admin:   { bg: 'rgba(239,68,68,.15)',   color: '#fca5a5',  border: 'rgba(239,68,68,.35)',   label: '⚙️ أدمن' },
-  Teacher: { bg: 'rgba(167,139,250,.12)', color: '#c4b5fd',  border: 'rgba(167,139,250,.32)', label: '👩‍🏫 مدرّس' },
-  Student: { bg: 'rgba(52,211,153,.10)',  color: '#7ee7b6',  border: 'rgba(52,211,153,.28)',  label: '👨‍🎓 طالب' },
-  Parent:  { bg: 'rgba(251,191,36,.10)',  color: '#fcd34d',  border: 'rgba(251,191,36,.28)',  label: '👨‍👧 ولي أمر' },
+  Admin:   { bg: 'var(--danger-soft)',   color: 'var(--danger)',  border: 'var(--danger-line)',   label: '⚙️ أدمن' },
+  Teacher: { bg: 'var(--violet-soft)', color: 'var(--violet)',  border: 'var(--violet-line)', label: '👩‍🏫 مدرّس' },
+  Student: { bg: 'var(--mint-soft)',  color: 'var(--mint-text)',  border: 'var(--mint-line)',  label: '👨‍🎓 طالب' },
+  Parent:  { bg: 'var(--amber-soft)',  color: 'var(--amber)',  border: 'var(--amber-line)',  label: '👨‍👧 ولي أمر' },
 };
 
 const GOVERNORATES_EG = [
@@ -29,12 +29,14 @@ const GOVERNORATES_EG = [
   'السويس','الإسماعيلية','بورسعيد','دمياط',
 ];
 
+const YEARS_EG = ['أولى ثانوي','ثانية ثانوي','أولى بكالوريا','تانية بكالوريا','خارج المدرسة'];
+
 /* ══════════════════════════════════════════════════════════
    SUB-COMPONENTS
 ══════════════════════════════════════════════════════════ */
 
 function RoleBadge({ role }) {
-  const m = ROLE_META[role] || { bg: 'rgba(255,255,255,.06)', color: 'var(--text-dim)', border: 'var(--line)', label: role };
+  const m = ROLE_META[role] || { bg: 'var(--bg-card)', color: 'var(--text-dim)', border: 'var(--line)', label: role };
   return (
     <span style={{
       padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700,
@@ -48,12 +50,12 @@ function StatusBadge({ active }) {
   return (
     <span style={{
       padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700,
-      background: active ? 'rgba(52,211,153,.10)' : 'rgba(239,68,68,.10)',
-      color: active ? '#7ee7b6' : '#fca5a5',
-      border: `1px solid ${active ? 'rgba(52,211,153,.28)' : 'rgba(239,68,68,.3)'}`,
+      background: active ? 'var(--mint-soft)' : 'var(--danger-soft)',
+      color: active ? 'var(--mint-text)' : 'var(--danger)',
+      border: `1px solid ${active ? 'var(--mint-line)' : 'var(--danger-line)'}`,
       whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 5
     }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? '#34d399' : '#ef4444', display: 'inline-block' }} />
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? 'var(--mint)' : 'var(--danger)', display: 'inline-block' }} />
       {active ? 'نشط' : 'موقوف'}
     </span>
   );
@@ -68,26 +70,17 @@ function ConfirmDialog({ user, onConfirm, onCancel }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24
     }}>
       <div style={{
-        background: '#0f1a14', border: '1px solid rgba(239,68,68,.35)',
-        borderRadius: 20, padding: 32, maxWidth: 420, width: '100%',
-        boxShadow: '0 40px 80px rgba(0,0,0,.6)', animation: 'scaleIn .25s ease'
+        background: 'var(--bg-card)', border: '1px solid var(--danger-line)',
+        borderRadius: 22, padding: 36, maxWidth: 440, width: '100%',
+        boxShadow: '0 40px 80px rgba(0,0,0,.65)', animation: 'scaleIn .2s ease'
       }}>
-        <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 16 }}>🗑️</div>
-        <h3 style={{ textAlign: 'center', fontSize: 20, fontWeight: 800, marginBottom: 10 }}>
-          تأكيد الحذف
-        </h3>
-        <p style={{ textAlign: 'center', color: 'var(--text-soft)', fontSize: 15, lineHeight: 1.6, marginBottom: 8 }}>
-          هل أنت متأكد من حذف المستخدم
+        <div style={{ fontSize: 52, textAlign: 'center', marginBottom: 14 }}>🗑️</div>
+        <h3 style={{ textAlign: 'center', fontSize: 20, fontWeight: 800, marginBottom: 8, color: 'var(--text)' }}>حذف المستخدم</h3>
+        <p style={{ textAlign: 'center', color: 'var(--text-soft)', fontSize: 15, marginBottom: 8 }}>
+          هل أنت متأكد من حذف حساب
         </p>
-        <p style={{ textAlign: 'center', fontWeight: 800, color: '#fca5a5', fontSize: 16, marginBottom: 24 }}>
-          "{user.fullNameAr}"
-        </p>
-        <p style={{
-          textAlign: 'center', fontSize: 13, color: 'var(--text-dim)',
-          background: 'rgba(239,68,68,.07)', border: '1px solid rgba(239,68,68,.2)',
-          borderRadius: 10, padding: '10px 14px', marginBottom: 24
-        }}>
-          ⚠️ هذا الإجراء لا يمكن التراجع عنه، وستُحذف جميع بياناته نهائياً.
+        <p style={{ textAlign: 'center', fontWeight: 800, color: 'var(--danger)', fontSize: 16, marginBottom: 24 }}>
+          {user.fullNameAr} ({user.username})
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
           <button onClick={onCancel} style={{
@@ -97,9 +90,9 @@ function ConfirmDialog({ user, onConfirm, onCancel }) {
           }}>إلغاء</button>
           <button onClick={onConfirm} style={{
             flex: 1, padding: '12px', borderRadius: 12, border: 'none',
-            background: 'linear-gradient(135deg,#ef4444,#b91c1c)', color: '#fff',
+            background: 'linear-gradient(135deg,var(--danger),#b91c1c)', color: '#fff',
             fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-body)',
-            boxShadow: '0 8px 24px rgba(239,68,68,.35)', transition: 'filter .2s'
+            boxShadow: '0 8px 24px var(--danger-soft)', transition: 'filter .2s'
           }}>نعم، احذف</button>
         </div>
       </div>
@@ -116,8 +109,12 @@ function EditModal({ user, onSave, onClose }) {
     academicYear: user.academicYear || '',
   });
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const change = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const change = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }));
+    if (errors[k]) setErrors(e => ({ ...e, [k]: null }));
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -132,14 +129,16 @@ function EditModal({ user, onSave, onClose }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24
     }}>
       <div style={{
-        background: '#0f1a14', border: '1px solid var(--mint-line)',
-        borderRadius: 22, padding: 32, maxWidth: 500, width: '100%',
-        boxShadow: '0 40px 80px rgba(0,0,0,.6)', animation: 'scaleIn .25s ease'
+        background: 'var(--bg-card)', border: '1px solid var(--mint-line)',
+        borderRadius: 22, padding: 32, maxWidth: 540, width: '100%',
+        boxShadow: '0 40px 80px rgba(0,0,0,.65)', animation: 'scaleIn .22s ease',
+        margin: 'auto'
       }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
           <div>
-            <h3 style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>تعديل بيانات المستخدم</h3>
+            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>
+              ✏️ تعديل بيانات المستخدم
+            </h3>
             <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>{user.fullNameAr} · {user.username}</p>
           </div>
           <button onClick={onClose} style={{
@@ -149,9 +148,8 @@ function EditModal({ user, onSave, onClose }) {
           }}>✕</button>
         </div>
 
-        {/* User info (read-only) */}
         <div style={{
-          background: 'rgba(52,211,153,.05)', border: '1px solid var(--mint-line)',
+          background: 'var(--bg-field)', border: '1px solid var(--line-soft)',
           borderRadius: 14, padding: '14px 18px', marginBottom: 22,
           display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px'
         }}>
@@ -168,10 +166,7 @@ function EditModal({ user, onSave, onClose }) {
           ))}
         </div>
 
-        {/* Editable fields */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-          {/* Role */}
           <div>
             <label style={{ fontSize: 13, color: 'var(--text-soft)', display: 'block', marginBottom: 8, fontWeight: 600 }}>
               الدور / الصلاحية
@@ -182,7 +177,7 @@ function EditModal({ user, onSave, onClose }) {
                   padding: '9px 6px', borderRadius: 10, fontSize: 13, fontWeight: 700,
                   cursor: 'pointer', fontFamily: 'var(--font-body)', transition: 'all .2s',
                   border: `1.5px solid ${form.role === r ? (ROLE_META[r]?.border || 'var(--mint-line)') : 'var(--line)'}`,
-                  background: form.role === r ? (ROLE_META[r]?.bg || 'var(--mint-soft)') : 'rgba(255,255,255,.03)',
+                  background: form.role === r ? (ROLE_META[r]?.bg || 'var(--mint-soft)') : 'var(--bg-field)',
                   color: form.role === r ? (ROLE_META[r]?.color || 'var(--mint-text)') : 'var(--text-soft)',
                 }}>
                   {ROLE_META[r]?.label || r}
@@ -191,7 +186,6 @@ function EditModal({ user, onSave, onClose }) {
             </div>
           </div>
 
-          {/* Governorate */}
           <div>
             <label style={{ fontSize: 13, color: 'var(--text-soft)', display: 'block', marginBottom: 8, fontWeight: 600 }}>
               المحافظة
@@ -200,17 +194,18 @@ function EditModal({ user, onSave, onClose }) {
               value={form.governorate}
               onChange={e => change('governorate', e.target.value)}
               style={{
-                width: '100%', background: 'rgba(255,255,255,.05)',
-                border: '1px solid var(--line)', borderRadius: 10, padding: '11px 14px',
-                color: '#000', fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
+                width: '100%', boxSizing: 'border-box', background: 'var(--bg-field)',
+                border: `1px solid ${errors.governorate ? 'var(--danger)' : 'var(--line)'}`,
+                borderRadius: 11, padding: '11px 14px',
+                color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
+                transition: 'all .2s'
               }}
             >
-              <option value="">اختر المحافظة...</option>
-              {GOVERNORATES_EG.map(g => <option key={g} value={g} style={{ color: '#000', background: '#fff' }}>{g}</option>)}
+              <option value="" disabled style={{ color: 'var(--text-soft)' }}>محافظات مصر...</option>
+              {GOVERNORATES_EG.map(g => <option key={g} value={g} style={{ color: 'var(--text)', background: 'var(--bg-1)' }}>{g}</option>)}
             </select>
           </div>
 
-          {/* Academic Year */}
           {(form.role === 'Student') && (
             <div>
               <label style={{ fontSize: 13, color: 'var(--text-soft)', display: 'block', marginBottom: 8, fontWeight: 600 }}>
@@ -220,23 +215,24 @@ function EditModal({ user, onSave, onClose }) {
                 value={form.academicYear}
                 onChange={e => change('academicYear', e.target.value)}
                 style={{
-                  width: '100%', background: 'rgba(255,255,255,.05)',
-                  border: '1px solid var(--line)', borderRadius: 10, padding: '11px 14px',
-                  color: '#000', fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
+                  width: '100%', boxSizing: 'border-box', background: 'var(--bg-field)',
+                  border: `1px solid ${errors.academicYear ? 'var(--danger)' : 'var(--line)'}`,
+                  borderRadius: 11, padding: '11px 14px',
+                  color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
+                  transition: 'all .2s'
                 }}
               >
-                <option value="">اختر السنة الدراسية...</option>
-                {['أولى ثانوي','ثانية ثانوي','أولى بكالوريا','تانية بكالوريا','خارج المدرسة'].map(y => (
-                  <option key={y} value={y} style={{ color: '#000', background: '#fff' }}>{y}</option>
+                <option value="" disabled style={{ color: 'var(--text-soft)' }}>السنة الدراسية...</option>
+                {YEARS_EG.map(y => (
+                  <option key={y} value={y} style={{ color: 'var(--text)', background: 'var(--bg-1)' }}>{y}</option>
                 ))}
               </select>
             </div>
           )}
 
-          {/* Active toggle */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            background: 'rgba(255,255,255,.03)', border: '1px solid var(--line)',
+            background: 'var(--bg-field)', border: '1px solid var(--line)',
             borderRadius: 12, padding: '12px 16px'
           }}>
             <div>
@@ -249,7 +245,7 @@ function EditModal({ user, onSave, onClose }) {
               onClick={() => change('isActive', !form.isActive)}
               style={{
                 width: 52, height: 28, borderRadius: 999, border: 'none', cursor: 'pointer',
-                background: form.isActive ? 'var(--mint)' : 'rgba(255,255,255,.1)',
+                background: form.isActive ? 'var(--mint)' : 'var(--line)',
                 position: 'relative', transition: 'background .25s', flexShrink: 0
               }}
             >
@@ -265,7 +261,6 @@ function EditModal({ user, onSave, onClose }) {
           </div>
         </div>
 
-        {/* Actions */}
         <div style={{ display: 'flex', gap: 12, marginTop: 26 }}>
           <button onClick={onClose} style={{
             flex: 1, padding: 13, borderRadius: 12, border: '1px solid var(--line)',
@@ -291,23 +286,21 @@ function EditModal({ user, onSave, onClose }) {
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════ */
 export default function UsersManagement() {
-  const [allUsers, setAllUsers]     = useState([]);      // raw data from API
-  const [filtered, setFiltered]     = useState([]);      // after filter + search
+  const [allUsers, setAllUsers]     = useState([]);      
+  const [filtered, setFiltered]     = useState([]);      
   const [loading, setLoading]       = useState(true);
-  const [roleTab, setRoleTab]       = useState('');      // active role filter
+  const [roleTab, setRoleTab]       = useState('');      
   const [search, setSearch]         = useState('');
   const [sortCol, setSortCol]       = useState('id');
   const [sortAsc, setSortAsc]       = useState(false);
   const [page, setPage]             = useState(1);
   const PER_PAGE = 12;
 
-  /* modals */
-  const [editUser,   setEditUser]   = useState(null);   // user object being edited
-  const [deleteUser, setDeleteUser] = useState(null);   // user object to confirm delete
+  const [editUser,   setEditUser]   = useState(null);   
+  const [deleteUser, setDeleteUser] = useState(null);   
 
   const searchRef = useRef(null);
 
-  /* ── load ── */
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -322,7 +315,6 @@ export default function UsersManagement() {
 
   useEffect(() => { load(); }, [load]);
 
-  /* ── filter + search + sort ── */
   useEffect(() => {
     const q = search.trim().toLowerCase();
     let result = allUsers;
@@ -339,7 +331,6 @@ export default function UsersManagement() {
         u.phoneNumber?.includes(q)
       );
 
-    // sort
     result = [...result].sort((a, b) => {
       let va = a[sortCol], vb = b[sortCol];
       if (typeof va === 'string') va = va.toLowerCase();
@@ -353,11 +344,9 @@ export default function UsersManagement() {
     setPage(1);
   }, [allUsers, roleTab, search, sortCol, sortAsc]);
 
-  /* pagination */
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const pageData   = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  /* sort toggle */
   const handleSort = (col) => {
     if (sortCol === col) setSortAsc(a => !a);
     else { setSortCol(col); setSortAsc(true); }
@@ -368,7 +357,6 @@ export default function UsersManagement() {
     </span>
   );
 
-  /* ── actions ── */
   const handleConfirmDelete = async () => {
     try {
       await adminDeleteUser(deleteUser.id);
@@ -391,13 +379,10 @@ export default function UsersManagement() {
 
   const handleSaveEdit = async (id, form) => {
     try {
-      // Toggle active if changed
       const original = allUsers.find(u => u.id === id);
       if (original.isActive !== form.isActive) await adminToggleUser(id);
-      // Promote to admin if needed
       if (original.role !== form.role && form.role === 'Admin') await adminMakeAdmin(id);
 
-      // Update local state optimistically
       setAllUsers(prev => prev.map(u => u.id === id ? { ...u, ...form } : u));
       toast.success('تم حفظ التغييرات بنجاح ✅');
       setEditUser(null);
@@ -406,41 +391,37 @@ export default function UsersManagement() {
     }
   };
 
-  /* ── role counts ── */
-  const counts = ROLE_TABS.reduce((acc, t) => {
+  const counts = ROLE_FILTERS.reduce((acc, t) => {
     acc[t.key] = t.key === '' ? allUsers.length : allUsers.filter(u => u.role === t.key).length;
     return acc;
   }, {});
 
-  /* ══════════ RENDER ══════════ */
   return (
     <div>
-      {/* ── PAGE HEADER ── */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>إدارة المستخدمين</h2>
+            <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>إدارة المستخدمين</h2>
             <p style={{ fontSize: 13.5, color: 'var(--text-dim)' }}>
-              إجمالي المستخدمين: <strong style={{ color: 'var(--mint)' }}>{allUsers.length}</strong> مستخدم مسجّل
+              إجمالي المستخدمين: <strong style={{ color: 'var(--mint-text)' }}>{allUsers.length}</strong> مستخدم مسجّل
             </p>
           </div>
           <button onClick={load} style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 18px', borderRadius: 10, border: '1px solid var(--line)',
-            background: 'rgba(255,255,255,.04)', color: 'var(--text-soft)',
+            background: 'var(--bg-field)', color: 'var(--text-soft)',
             fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)',
             transition: 'all .2s'
           }}>🔄 تحديث</button>
         </div>
       </div>
 
-      {/* ── ROLE FILTER TABS ── */}
       <div style={{
         display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18,
-        background: 'rgba(255,255,255,.02)', border: '1px solid var(--line-soft)',
+        background: 'var(--bg-card)', border: '1px solid var(--line-soft)',
         borderRadius: 14, padding: '10px 14px'
       }}>
-        {ROLE_TABS.map(t => (
+        {ROLE_FILTERS.map(t => (
           <button
             key={t.key}
             onClick={() => setRoleTab(t.key)}
@@ -458,7 +439,7 @@ export default function UsersManagement() {
             <span>{t.label}</span>
             <span style={{
               fontSize: 11, fontWeight: 800, minWidth: 20, textAlign: 'center',
-              background: roleTab === t.key ? `${t.color}30` : 'rgba(255,255,255,.08)',
+              background: roleTab === t.key ? `${t.color}30` : 'var(--bg-field)',
               color: roleTab === t.key ? t.color : 'var(--text-dim)',
               padding: '1px 7px', borderRadius: 999
             }}>{counts[t.key]}</span>
@@ -466,7 +447,6 @@ export default function UsersManagement() {
         ))}
       </div>
 
-      {/* ── SEARCH BAR ── */}
       <div style={{ position: 'relative', marginBottom: 18 }}>
         <span style={{
           position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
@@ -479,7 +459,7 @@ export default function UsersManagement() {
           onChange={e => setSearch(e.target.value)}
           placeholder="بحث بالاسم، الإيميل، Username، أو رقم الهاتف..."
           style={{
-            width: '100%', background: 'rgba(255,255,255,.04)',
+            width: '100%', background: 'var(--bg-field)',
             border: '1px solid var(--line)', borderRadius: 12,
             padding: '13px 48px 13px 46px', color: 'var(--text)',
             fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
@@ -493,7 +473,7 @@ export default function UsersManagement() {
             onClick={() => setSearch('')}
             style={{
               position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-              background: 'rgba(255,255,255,.1)', border: 'none', borderRadius: '50%',
+              background: 'var(--bg-card)', border: 'none', borderRadius: '50%',
               width: 24, height: 24, cursor: 'pointer', color: 'var(--text-dim)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14
             }}
@@ -501,7 +481,6 @@ export default function UsersManagement() {
         )}
       </div>
 
-      {/* ── RESULTS META ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
         <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>
           {filtered.length === 0 ? 'لا توجد نتائج' : `عرض ${(page - 1) * PER_PAGE + 1}–${Math.min(page * PER_PAGE, filtered.length)} من ${filtered.length} نتيجة`}
@@ -515,9 +494,8 @@ export default function UsersManagement() {
         )}
       </div>
 
-      {/* ── TABLE ── */}
       <div style={{
-        background: 'rgba(255,255,255,.02)', border: '1px solid var(--line-soft)',
+        background: 'var(--bg-card)', border: '1px solid var(--line-soft)',
         borderRadius: 18, overflow: 'hidden'
       }}>
         {loading ? (
@@ -526,7 +504,6 @@ export default function UsersManagement() {
             <p style={{ color: 'var(--text-dim)', fontSize: 15 }}>جارٍ تحميل البيانات...</p>
           </div>
         ) : filtered.length === 0 ? (
-          /* ── EMPTY STATE ── */
           <div style={{ padding: '64px 24px', textAlign: 'center' }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>🔍</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>لا توجد نتائج</h3>
@@ -546,7 +523,7 @@ export default function UsersManagement() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
               <thead>
-                <tr style={{ background: 'rgba(255,255,255,.03)', borderBottom: '1px solid var(--line-soft)' }}>
+                <tr style={{ background: 'var(--bg-field)', borderBottom: '1px solid var(--line-soft)' }}>
                   {[
                     { label: '#',               col: 'id',           w: 52  },
                     { label: 'الاسم',            col: 'fullNameAr',   w: 160 },
@@ -586,23 +563,20 @@ export default function UsersManagement() {
                       borderBottom: '1px solid rgba(255,255,255,.035)',
                       transition: 'background .15s',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(52,211,153,.03)'}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--mint-soft)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    {/* # */}
                     <td style={{ padding: '13px 14px', fontSize: 12.5, color: 'var(--text-dim)', fontFamily: 'var(--font-latin)' }}>
                       {(page - 1) * PER_PAGE + idx + 1}
                     </td>
 
-                    {/* الاسم */}
                     <td style={{ padding: '13px 14px', minWidth: 150 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <div style={{
-                          width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
-                          background: `linear-gradient(135deg, ${ROLE_META[u.role]?.color || 'var(--mint)'} , var(--bg-0))`,
+                          width: 38, height: 38, borderRadius: 12, flexShrink: 0,
+                          background: `linear-gradient(135deg, ${ROLE_META[u.role]?.color || 'var(--mint)'}, rgba(0,0,0,.5))`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 14, fontWeight: 800, color: '#fff',
-                          boxShadow: '0 2px 8px rgba(0,0,0,.25)'
+                          fontSize: 14, fontWeight: 800, color: '#fff', textTransform: 'uppercase'
                         }}>
                           {u.fullNameAr?.charAt(0) || '?'}
                         </div>
@@ -613,93 +587,78 @@ export default function UsersManagement() {
                       </div>
                     </td>
 
-                    {/* Username */}
                     <td style={{ padding: '13px 14px' }}>
                       <span style={{
                         fontFamily: 'var(--font-mono)', fontSize: 12.5, fontWeight: 600,
-                        color: 'var(--mint-text)', background: 'rgba(52,211,153,.07)',
-                        border: '1px solid rgba(52,211,153,.18)', borderRadius: 7, padding: '3px 9px'
+                        color: 'var(--mint-text)', background: 'var(--mint-soft)',
+                        border: '1px solid var(--mint-line)', borderRadius: 7, padding: '3px 9px'
                       }}>@{u.username}</span>
                     </td>
 
-                    {/* الإيميل */}
                     <td style={{ padding: '13px 14px', fontSize: 13, color: 'var(--text-soft)', direction: 'ltr', textAlign: 'left', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {u.email}
                     </td>
 
-                    {/* الهاتف */}
                     <td style={{ padding: '13px 14px', fontSize: 13, fontFamily: 'var(--font-latin)', direction: 'ltr', textAlign: 'left', color: 'var(--text-soft)' }}>
                       {u.phoneNumber}
                     </td>
 
-                    {/* الدور */}
                     <td style={{ padding: '13px 14px' }}>
                       <RoleBadge role={u.role} />
                     </td>
 
-                    {/* المحافظة */}
                     <td style={{ padding: '13px 14px', fontSize: 13, color: 'var(--text-soft)', whiteSpace: 'nowrap' }}>
                       {u.governorate || <span style={{ color: 'var(--text-dim)' }}>—</span>}
                     </td>
 
-                    {/* السنة الدراسية */}
                     <td style={{ padding: '13px 14px', fontSize: 12.5, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                       {u.academicYear || <span style={{ opacity: .4 }}>—</span>}
                     </td>
 
-                    {/* تاريخ التسجيل */}
                     <td style={{ padding: '13px 14px', fontSize: 12.5, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                       {new Date(u.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </td>
 
-                    {/* الحالة */}
                     <td style={{ padding: '13px 14px' }}>
                       <StatusBadge active={u.isActive} />
                     </td>
 
-                    {/* إجراءات */}
                     <td style={{ padding: '13px 14px' }}>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        {/* تعديل */}
                         <button
                           onClick={() => setEditUser(u)}
                           title="تعديل"
                           style={{
-                            width: 34, height: 34, borderRadius: 9, border: '1px solid rgba(52,211,153,.25)',
-                            background: 'rgba(52,211,153,.08)', color: 'var(--mint-text)',
+                            width: 34, height: 34, borderRadius: 9, border: '1px solid var(--mint-line)',
+                            background: 'var(--mint-soft)', color: 'var(--mint-text)',
                             cursor: 'pointer', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             transition: 'all .2s'
                           }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(52,211,153,.18)'; e.currentTarget.style.borderColor = 'var(--mint)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(52,211,153,.08)'; e.currentTarget.style.borderColor = 'rgba(52,211,153,.25)'; }}
                         >✏️</button>
 
-                        {/* تفعيل / إيقاف */}
                         <button
                           onClick={() => handleToggle(u)}
                           title={u.isActive ? 'إيقاف' : 'تفعيل'}
                           style={{
                             width: 34, height: 34, borderRadius: 9,
-                            border: `1px solid ${u.isActive ? 'rgba(251,191,36,.25)' : 'rgba(52,211,153,.25)'}`,
-                            background: u.isActive ? 'rgba(251,191,36,.07)' : 'rgba(52,211,153,.07)',
-                            color: u.isActive ? '#fcd34d' : 'var(--mint-text)',
+                            border: `1px solid ${u.isActive ? 'var(--amber-line)' : 'var(--mint-line)'}`,
+                            background: u.isActive ? 'var(--amber-soft)' : 'var(--mint-soft)',
+                            color: u.isActive ? 'var(--amber)' : 'var(--mint-text)',
                             cursor: 'pointer', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             transition: 'all .2s'
                           }}
                         >{u.isActive ? '🚫' : '✅'}</button>
 
-                        {/* حذف */}
                         <button
                           onClick={() => setDeleteUser(u)}
                           title="حذف"
                           style={{
-                            width: 34, height: 34, borderRadius: 9, border: '1px solid rgba(239,68,68,.25)',
-                            background: 'rgba(239,68,68,.07)', color: '#fca5a5',
-                            cursor: 'pointer', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            width: 34, height: 34, borderRadius: 9, fontSize: 15,
+                            border: '1px solid var(--danger-line)',
+                            background: 'var(--danger-soft)', color: 'var(--danger)',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             transition: 'all .2s'
                           }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,.18)'; e.currentTarget.style.borderColor = '#ef4444'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,.07)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,.25)'; }}
                         >🗑️</button>
                       </div>
                     </td>
