@@ -6,12 +6,12 @@ import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
 const GOVERNORATES = [
-  'الجزائر','وهران','قسنطينة','عنابة','بجاية','سطيف','تلمسان','بسكرة','تيزي وزو','المدية',
-  'البليدة','باتنة','سيدي بلعباس','سكيكدة','الأغواط','بومرداس','المسيلة','تيارت','مستغانم','الجلفة',
-  'برج بو عريريج','جيجل','الشلف','غرداية','ورقلة','بشار','أدرار','تمنراست','إليزي','تندوف',
-  'آخر'
+  'القاهرة', 'الجيزة', 'الإسكندرية', 'الدقهلية', 'البحر الأحمر', 'البحيرة', 
+  'الفيوم', 'الغربية', 'الإسماعيلية', 'المنوفية', 'المنيا', 'القليوبية', 
+  'الوادي الجديد', 'السويس', 'أسوان', 'أسيوط', 'بني سويف', 'بورسعيد', 
+  'دمياط', 'الشرقية', 'جنوب سيناء', 'كفر الشيخ', 'مطروح', 'الأقصر', 
+  'قنا', 'شمال سيناء', 'سوهاج', 'أخرى'
 ];
-
 const ACADEMIC_YEARS = [
   'أولى ثانوي','ثانية ثانوي','أولى بكالوريا','تانية بكالوريا','خارج المدرسة'
 ];
@@ -31,19 +31,35 @@ export default function Register() {
     governorate: '', academicYear: ''
   });
 
-  const change = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-    if (name === 'password') {
-      let s = 0;
-      if (value.length >= 8) s++;
-      if (/[0-9]/.test(value)) s++;
-      if (/[A-Z]/.test(value)) s++;
-      if (/[^a-zA-Z0-9]/.test(value)) s++;
-      setStrength(s);
-    }
-  };
+ const change = (e) => {
+  const { name, value } = e.target;
+  
+  let finalValue = value;
 
+  // 1. تقييد الاسم بالإنجليزي (حروف إنجليزية ومسافات فقط)
+  if (name === 'fullNameEn') {
+    finalValue = value.replace(/[^a-zA-Z\s]/g, '');
+  }
+  
+  // 2. تقييد الاسم بالعربي (حروف عربية ومسافات فقط)
+  if (name === 'fullNameAr') {
+    // استخدمنا النطاق \u0600-\u06FF وهو الخاص بالحروف العربية
+    finalValue = value.replace(/[^\u0600-\u06FF\s]/g, '');
+  }
+
+  // حفظ القيمة النهائية
+  setForm({ ...form, [name]: finalValue });
+
+  // 3. حساب قوة كلمة المرور
+  if (name === 'password') {
+    let s = 0;
+    if (finalValue.length >= 8) s++;
+    if (/[0-9]/.test(finalValue)) s++;
+    if (/[A-Z]/.test(finalValue)) s++;
+    if (/[^a-zA-Z0-9]/.test(finalValue)) s++;
+    setStrength(s);
+  }
+};
   const validate = () => {
     if (!form.fullNameAr) return 'الاسم الكامل بالعربية مطلوب';
     if (!form.fullNameEn) return 'الاسم الكامل بالإنجليزية مطلوب';
@@ -52,7 +68,7 @@ export default function Register() {
     if (!form.phoneNumber) return 'رقم الهاتف مطلوب';
     if (form.password.length < 8) return 'كلمة المرور يجب أن تكون 8 أحرف على الأقل';
     if (form.password !== form.confirmPassword) return 'كلمتا المرور غير متطابقتين';
-    if (!form.governorate) return 'يرجى اختيار الولاية / المحافظة';
+    if (!form.governorate) return 'يرجى اختيار المحافظة';
     return null;
   };
 
@@ -90,7 +106,7 @@ export default function Register() {
           <img src="/logo.jpg" alt="BEdU" />
           <div>
             <div className="bedu">BEdU</div>
-            <div className="tagline">EduBarakat Platform</div>
+            <div className="tagline">Barakat education platform</div>
           </div>
         </Link>
         <Link to="/login" className="btn-ghost" style={{fontSize:'13px'}}>لديّ حساب</Link>
@@ -98,7 +114,7 @@ export default function Register() {
 
       <main className="auth-main" style={{padding:'16px 16px 40px'}}>
         <div className="auth-card auth-card--wide">
-          <span className="auth-eyebrow">انضم إلى EduBarakat</span>
+          <span className="auth-eyebrow">انضم إلى Barakat education platform</span>
           <h1 className="auth-title">إنشاء حساب جديد</h1>
           <p className="auth-subtitle">سجّل بياناتك وابدأ رحلتك التعليمية اليوم</p>
 
@@ -162,10 +178,10 @@ export default function Register() {
                   value={form.phoneNumber} onChange={change} required dir="ltr" />
               </div>
               <div className="form-group">
-                <label className="form-label">الولاية / المحافظة *</label>
+                <label className="form-label">  المحافظة *</label>
                 <select name="governorate" className="auth-input form-select"
                   value={form.governorate} onChange={change} required>
-                  <option value="">اختر الولاية...</option>
+                  <option value="">اختر المحافظة...</option>
                   {GOVERNORATES.map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
               </div>

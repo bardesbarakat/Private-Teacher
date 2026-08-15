@@ -132,3 +132,9 @@
   .form-row { grid-template-columns: 1fr; }
   .role-selector { grid-template-columns: 1fr; }
 }
+/* إجبار القوائم المنسدلة وخياراتها على الظهور باللون الأسود الواضح */
+select, select option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  font-weight: 500;
+}

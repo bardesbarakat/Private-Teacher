@@ -305,29 +305,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ▸ TELEGRAM CTA ─────────────────────────────────────── */}
-      <section className="section">
-        <div className="container" style={{maxWidth:'800px'}}>
-          <Reveal>
-            <div className="tg-card">
-              <div className="tg-icon">✈️</div>
-              <h2 style={{fontSize:'clamp(24px,3.5vw,36px)',fontWeight:700,marginBottom:'12px'}}>انضم لمجتمعنا على Telegram</h2>
-              <p style={{fontSize:'16px',color:'var(--text-soft)',marginBottom:'28px',maxWidth:'500px',marginInline:'auto'}}>
-                تواصل مع الطلاب، احصل على ملخصات ومصادر إضافية، واسأل في أي وقت عبر قناة الدعم المخصصة.
-              </p>
-              <div style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
-                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" className="btn-telegram">
-                  {TELEGRAM_SVG} قناة الطلاب
-                </a>
-                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" className="btn-telegram" style={{background:'linear-gradient(135deg,#34D399,#10A06A)',boxShadow:'0 10px 28px rgba(52,211,153,.32)'}}>
-                  {TELEGRAM_SVG} قناة الدعم
-                </a>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
+   
       {/* ▸ BENEFITS + QUICK REGISTER ─────────────────────── */}
       <section id="register" className="section section--alt">
         <div className="container">

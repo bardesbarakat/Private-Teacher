@@ -36,7 +36,7 @@ export default function Navbar() {
           <NavLink to="/courses" className={({ isActive }) => isActive ? 'active' : ''}>الكورسات</NavLink>
           <a href="/#about">عن المنصة</a>
           <a href="/#faq">الأسئلة الشائعة</a>
-          <a href="/#contact">تواصل معنا</a>
+      
           {isAuthenticated && <NavLink to={dashPath} className={({ isActive }) => isActive ? 'active' : ''}>لوحة التحكم</NavLink>}
         </div>
 
