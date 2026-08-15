@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj": {}
+    "D:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj": {}
   },
   "projects": {
-    "d:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj": {
+    "D:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj",
+        "projectUniqueName": "D:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj",
         "projectName": "BarakatEducationApi",
-        "projectPath": "d:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj",
+        "projectPath": "D:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\BarakatEducationApi.csproj",
         "packagesPath": "C:\\Users\\yousef\\.nuget\\packages\\",
-        "outputPath": "d:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\obj\\",
+        "outputPath": "D:\\privateTeacher\\BarakatEducationPlatform\\backend\\BarakatEducationApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
