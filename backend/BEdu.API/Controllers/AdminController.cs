@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BEdu.API.Data;
+using BEdu.API.DTOs.Courses;
 using BEdu.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -9,6 +9,27 @@ public class CreateCourseDto
     public string? ThumbnailUrl { get; set; }
 }
 
+// Admin versions — allow setting TeacherId explicitly
+public class AdminCreateCourseDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string? Level { get; set; }
+    public string? ThumbnailUrl { get; set; }
+    public int TeacherId { get; set; }
+    public bool IsPublished { get; set; } = true;
+}
+
+public class AdminUpdateCourseDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string? Level { get; set; }
+    public string? ThumbnailUrl { get; set; }
+    public int TeacherId { get; set; }
+    public bool IsPublished { get; set; }
+}
+
 public class UpdateCourseDto
 {
     public string Title { get; set; } = string.Empty;

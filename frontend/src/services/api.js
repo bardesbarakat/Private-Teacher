@@ -57,15 +57,17 @@ export const getStudentResults = (sId) => API.get(`/exams/student/${sId}/results
 export const createExam       = (d)   => API.post('/exams', d);
 
 // Admin
-export const adminGetStats       = ()      => API.get('/admin/stats');
-export const adminGetUsers       = (role, search) => API.get('/admin/users', { params: { role, search } });
-export const adminToggleUser     = (id)    => API.put(`/admin/users/${id}/toggle`);
-export const adminDeleteUser     = (id)    => API.delete(`/admin/users/${id}`);
-export const adminGetCourses     = ()      => API.get('/admin/courses');
-export const adminToggleCourse   = (id)    => API.put(`/admin/courses/${id}/toggle`);
-export const adminDeleteCourse   = (id)    => API.delete(`/admin/courses/${id}`);
-export const adminGetSubmissions = ()      => API.get('/admin/submissions');
-export const adminMakeAdmin      = (id)    => API.post(`/admin/make-admin/${id}`);
+export const adminGetStats         = ()        => API.get('/admin/stats');
+export const adminGetUsers         = (role, search) => API.get('/admin/users', { params: { role, search } });
+export const adminToggleUser       = (id)      => API.put(`/admin/users/${id}/toggle`);
+export const adminDeleteUser       = (id)      => API.delete(`/admin/users/${id}`);
+export const adminMakeAdmin        = (id)      => API.post(`/admin/make-admin/${id}`);
+export const adminGetTeachers      = ()        => API.get('/admin/teachers');
+export const adminGetCourses       = ()        => API.get('/admin/courses');
+export const adminToggleCourse     = (id)      => API.put(`/admin/courses/${id}/toggle`);
+export const adminDeleteCourse     = (id)      => API.delete(`/admin/courses/${id}`);
+export const adminCreateCourse     = (data)    => API.post('/admin/courses', data);
+export const adminUpdateCourse     = (id, data)=> API.put(`/admin/courses/${id}/edit`, data);
+export const adminGetSubmissions   = ()        => API.get('/admin/submissions');
 
 export default API;
-

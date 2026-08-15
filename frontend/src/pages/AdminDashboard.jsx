@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import {
-  adminGetStats, adminGetUsers, adminToggleUser, adminDeleteUser,
+  adminGetStats,
   adminGetCourses, adminToggleCourse, adminDeleteCourse,
-  adminGetSubmissions, adminMakeAdmin
+  adminGetSubmissions
 } from '../services/api';
+import UsersManagement from '../components/UsersManagement';
+import CoursesManagement from '../components/CoursesManagement';
 
 /* ── tiny StatCard ── */
 function StatCard({ icon, num, label, color = 'var(--mint)' }) {
@@ -271,157 +273,12 @@ export default function AdminDashboard() {
 
         {/* ══ USERS TAB ══ */}
         {tab === 'users' && (
-          <>
-            {/* filters */}
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-              <input
-                style={{ flex: '1 1 220px', background: 'rgba(255,255,255,.05)', border: '1px solid var(--line)', borderRadius: 'var(--r-sm)', padding: '10px 14px', color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: 14, outline: 'none' }}
-                placeholder="🔍 بحث بالاسم / الإيميل / username..."
-                value={search} onChange={e => setSearch(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && loadUsers()}
-              />
-              {['', 'Student', 'Teacher', 'Parent', 'Admin'].map(r => (
-                <button key={r} onClick={() => setRoleFilter(r)} style={{
-                  padding: '9px 16px', borderRadius: 999, fontSize: 13.5, fontWeight: 600,
-                  border: '1.5px solid', cursor: 'pointer', fontFamily: 'var(--font-body)',
-                  borderColor: roleFilter === r ? 'var(--mint)' : 'var(--line)',
-                  background: roleFilter === r ? 'var(--mint-soft)' : 'transparent',
-                  color: roleFilter === r ? 'var(--mint-text)' : 'var(--text-soft)',
-                  transition: 'all .2s'
-                }}>
-                  {r === '' ? 'الكل' : r === 'Student' ? '👨‍🎓 طلاب' : r === 'Teacher' ? '👩‍🏫 مدرّسون' : r === 'Parent' ? '👨‍👧 أولياء' : '⚙️ أدمن'}
-                </button>
-              ))}
-              <button onClick={loadUsers} style={{ padding: '9px 18px', borderRadius: 999, background: 'linear-gradient(135deg,var(--mint),var(--mint-2))', color: 'var(--text-ink)', fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-                بحث
-              </button>
-            </div>
-
-            <div style={{ background: 'rgba(255,255,255,.02)', border: '1px solid var(--line-soft)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
-              <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--line-soft)', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 700, fontSize: 15 }}>المستخدمون ({users.length})</span>
-              </div>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid var(--line-soft)' }}>
-                      {['#', 'الاسم', 'Username', 'الإيميل', 'الهاتف', 'الدور', 'المحافظة', 'السنة الدراسية', 'تاريخ التسجيل', 'الحالة', 'إجراءات'].map(h => (
-                        <th key={h} style={{ padding: '11px 14px', textAlign: 'right', fontSize: 12, fontWeight: 700, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.length === 0 ? (
-                      <tr><td colSpan={11} style={{ textAlign: 'center', padding: 40, color: 'var(--text-dim)' }}>لا توجد نتائج</td></tr>
-                    ) : users.map(u => (
-                      <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}
-                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,.02)'}
-                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <td style={{ padding: '11px 14px', fontSize: 13, color: 'var(--text-dim)', fontFamily: 'var(--font-latin)' }}>{u.id}</td>
-                        <td style={{ padding: '11px 14px', minWidth: 140 }}>
-                          <div style={{ fontWeight: 700, fontSize: 14 }}>{u.fullNameAr}</div>
-                          <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>{u.fullNameEn}</div>
-                        </td>
-                        <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'var(--font-mono)', color: 'var(--mint-text)' }}>{u.username}</td>
-                        <td style={{ padding: '11px 14px', fontSize: 13, color: 'var(--text-soft)', direction: 'ltr', textAlign: 'left' }}>{u.email}</td>
-                        <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'var(--font-mono)', direction: 'ltr', textAlign: 'left' }}>{u.phoneNumber}</td>
-                        <td style={{ padding: '11px 14px' }}><RoleBadge role={u.role} /></td>
-                        <td style={{ padding: '11px 14px', fontSize: 13, color: 'var(--text-soft)', whiteSpace: 'nowrap' }}>{u.governorate}</td>
-                        <td style={{ padding: '11px 14px', fontSize: 12, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>{u.academicYear || '—'}</td>
-                        <td style={{ padding: '11px 14px', fontSize: 12, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>{new Date(u.createdAt).toLocaleDateString('ar-EG')}</td>
-                        <td style={{ padding: '11px 14px' }}>
-                          <span style={{
-                            padding: '3px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 700,
-                            background: u.isActive ? 'rgba(52,211,153,.1)' : 'rgba(239,68,68,.1)',
-                            color: u.isActive ? 'var(--mint-text)' : '#fca5a5',
-                            border: `1px solid ${u.isActive ? 'rgba(52,211,153,.3)' : 'rgba(239,68,68,.3)'}`
-                          }}>{u.isActive ? '✅ نشط' : '🚫 موقوف'}</span>
-                        </td>
-                        <td style={{ padding: '11px 14px' }}>
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
-                            <button onClick={() => handleToggleUser(u.id)} style={{
-                              padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                              background: u.isActive ? 'rgba(239,68,68,.1)' : 'rgba(52,211,153,.1)',
-                              color: u.isActive ? '#fca5a5' : 'var(--mint-text)',
-                              border: `1px solid ${u.isActive ? 'rgba(239,68,68,.3)' : 'rgba(52,211,153,.3)'}`,
-                              cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'var(--font-body)'
-                            }}>
-                              {u.isActive ? '🚫 إيقاف' : '✅ تفعيل'}
-                            </button>
-                            {u.role !== 'Admin' && (
-                              <button onClick={() => handleMakeAdmin(u.id, u.fullNameAr)} style={{
-                                padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                                background: 'rgba(239,68,68,.07)', color: '#fca5a5',
-                                border: '1px solid rgba(239,68,68,.25)', cursor: 'pointer',
-                                fontFamily: 'var(--font-body)', whiteSpace: 'nowrap'
-                              }}>⚙️ أدمن</button>
-                            )}
-                            <button onClick={() => handleDeleteUser(u.id, u.fullNameAr)} style={{
-                              padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                              background: 'rgba(239,68,68,.1)', color: '#fca5a5',
-                              border: '1px solid rgba(239,68,68,.3)', cursor: 'pointer',
-                              fontFamily: 'var(--font-body)'
-                            }}>🗑️</button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
+          <UsersManagement />
         )}
 
         {/* ══ COURSES TAB ══ */}
         {tab === 'courses' && (
-          <>
-            <div style={{ marginBottom: 18, fontWeight: 700, fontSize: 16 }}>الكورسات ({courses.length})</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 18 }}>
-              {courses.length === 0 ? (
-                <p style={{ color: 'var(--text-dim)', padding: 40 }}>لا توجد كورسات</p>
-              ) : courses.map(c => (
-                <div key={c.id} style={{
-                  background: 'rgba(255,255,255,.025)', border: '1px solid var(--line-soft)',
-                  borderRadius: 'var(--r-lg)', padding: 22,
-                  borderColor: c.isPublished ? 'rgba(52,211,153,.2)' : 'rgba(239,68,68,.2)'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dim)', fontFamily: 'var(--font-latin)' }}>#{c.id}</span>
-                    <span style={{
-                      padding: '3px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 700,
-                      background: c.isPublished ? 'rgba(52,211,153,.1)' : 'rgba(239,68,68,.1)',
-                      color: c.isPublished ? 'var(--mint-text)' : '#fca5a5',
-                      border: `1px solid ${c.isPublished ? 'rgba(52,211,153,.3)' : 'rgba(239,68,68,.3)'}`
-                    }}>{c.isPublished ? '✅ منشور' : '🚫 مخفي'}</span>
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: 15.5, marginBottom: 6 }}>{c.title}</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-dim)', marginBottom: 12 }}>المدرّس: {c.teacherName}</div>
-                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
-                    {[['📖', c.lessonCount, 'درس'], ['👥', c.enrollmentCount, 'طالب'], ['📝', c.examCount, 'اختبار']].map(([icon, num, label]) => (
-                      <span key={label} style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: 'rgba(255,255,255,.05)', border: '1px solid var(--line-soft)', color: 'var(--text-soft)' }}>
-                        {icon} {num} {label}
-                      </span>
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => handleToggleCourse(c.id)} style={{
-                      flex: 1, padding: '8px', borderRadius: 10, fontSize: 13, fontWeight: 700,
-                      background: c.isPublished ? 'rgba(239,68,68,.1)' : 'rgba(52,211,153,.1)',
-                      color: c.isPublished ? '#fca5a5' : 'var(--mint-text)',
-                      border: `1px solid ${c.isPublished ? 'rgba(239,68,68,.3)' : 'rgba(52,211,153,.3)'}`,
-                      cursor: 'pointer', fontFamily: 'var(--font-body)'
-                    }}>{c.isPublished ? '🚫 إخفاء' : '✅ نشر'}</button>
-                    <button onClick={() => handleDeleteCourse(c.id, c.title)} style={{
-                      padding: '8px 12px', borderRadius: 10, fontSize: 13, fontWeight: 700,
-                      background: 'rgba(239,68,68,.1)', color: '#fca5a5',
-                      border: '1px solid rgba(239,68,68,.3)', cursor: 'pointer', fontFamily: 'var(--font-body)'
-                    }}>🗑️</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <CoursesManagement />
         )}
 
         {/* ══ SUBMISSIONS TAB ══ */}
