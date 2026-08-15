@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BarakatEducationApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+940b1dbd2ce219fa97db3f73e95d9cc1d5a0a35d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+799a84b27b2e257b951a058353a2aacc52c92a74")]
 [assembly: System.Reflection.AssemblyProductAttribute("BarakatEducationApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BarakatEducationApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
