@@ -29,6 +29,7 @@ public class AuthResponseDto
     public string FullNameEn { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string ApprovalStatus { get; set; } = "Approved";
 }
 
 public class UserProfileDto
@@ -43,4 +44,5 @@ public class UserProfileDto
     public string Governorate { get; set; } = string.Empty;
     public string? AcademicYear { get; set; }
     public DateTime CreatedAt { get; set; }
+    public string ApprovalStatus { get; set; } = "Approved";
 }

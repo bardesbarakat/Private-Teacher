@@ -36,7 +36,10 @@ public class Question
     public int Id { get; set; }
 
     [Required, MaxLength(2000)]
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+
+    [Required, MaxLength(2000)]
+    public string TextEn { get; set; } = string.Empty;
 
     public int Score { get; set; } = 1;
 
@@ -54,7 +57,10 @@ public class AnswerOption
     public int Id { get; set; }
 
     [Required, MaxLength(1000)]
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+
+    [Required, MaxLength(1000)]
+    public string TextEn { get; set; } = string.Empty;
 
     public bool IsCorrect { get; set; } = false;
 

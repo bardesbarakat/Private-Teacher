@@ -65,7 +65,8 @@ public class AuthService
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Role = dto.Role,
             Governorate = dto.Governorate,
-            AcademicYear = dto.AcademicYear
+            AcademicYear = dto.AcademicYear,
+            ApprovalStatus = dto.Role == "Teacher" ? "Pending" : "Approved"
         };
 
         _db.Users.Add(user);
@@ -80,7 +81,8 @@ public class AuthService
             FullNameAr = user.FullNameAr,
             FullNameEn = user.FullNameEn,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            ApprovalStatus = user.ApprovalStatus
         });
     }
 
@@ -99,6 +101,9 @@ public class AuthService
         if (!user.IsActive)
             return (false, "الحساب غير مفعّل. تواصل مع الإدارة", null);
 
+        if (user.ApprovalStatus == "Rejected")
+            return (false, "تم رفض طلب الانضمام الخاص بك. تواصل مع الإدارة.", null);
+
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             return (false, "كلمة المرور غير صحيحة", null);
 
@@ -111,7 +116,8 @@ public class AuthService
             FullNameAr = user.FullNameAr,
             FullNameEn = user.FullNameEn,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            ApprovalStatus = user.ApprovalStatus
         });
     }
 
@@ -129,7 +135,8 @@ public class AuthService
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role),
             new Claim("fullNameAr", user.FullNameAr),
-            new Claim("fullNameEn", user.FullNameEn)
+            new Claim("fullNameEn", user.FullNameEn),
+            new Claim("approvalStatus", user.ApprovalStatus)
         };
 
         var token = new JwtSecurityToken(

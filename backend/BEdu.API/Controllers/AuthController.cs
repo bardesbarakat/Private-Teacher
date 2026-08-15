@@ -56,7 +56,8 @@ public class AuthController : ControllerBase
             Role = user.Role,
             Governorate = user.Governorate,
             AcademicYear = user.AcademicYear,
-            CreatedAt = user.CreatedAt
+            CreatedAt = user.CreatedAt,
+            ApprovalStatus = user.ApprovalStatus
         });
     }
 }

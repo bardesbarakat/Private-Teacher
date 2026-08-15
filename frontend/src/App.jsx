@@ -13,6 +13,7 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import ParentDashboard from './pages/ParentDashboard';
 import Courses from './pages/Courses';
 import AdminDashboard from './pages/AdminDashboard';
+import PendingApproval from './pages/PendingApproval';
 
 function AppRoutes() {
   const { isAuthenticated, role } = useAuth();
@@ -56,6 +57,9 @@ function AppRoutes() {
           <><Navbar /><AdminDashboard /></>
         </ProtectedRoute>
       } />
+
+      {/* حسابات قيد المراجعة */}
+      <Route path="/pending-approval" element={<PendingApproval />} />
 
       {/* Fallback — أي مسار خطأ يرجع للصفحة الرئيسية */}
       <Route path="*" element={<Navigate to="/" replace />} />

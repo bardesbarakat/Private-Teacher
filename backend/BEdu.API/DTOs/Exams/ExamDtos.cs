@@ -13,7 +13,8 @@ public class CreateExamDto
 
 public class CreateQuestionDto
 {
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+    public string TextEn { get; set; } = string.Empty;
     public int Score { get; set; } = 1;
     public int Order { get; set; }
     public List<CreateAnswerOptionDto> Options { get; set; } = new();
@@ -21,7 +22,8 @@ public class CreateQuestionDto
 
 public class CreateAnswerOptionDto
 {
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+    public string TextEn { get; set; } = string.Empty;
     public bool IsCorrect { get; set; }
 }
 
@@ -53,7 +55,8 @@ public class ExamDetailDto
 public class QuestionDto
 {
     public int Id { get; set; }
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+    public string TextEn { get; set; } = string.Empty;
     public int Score { get; set; }
     public int Order { get; set; }
     public List<AnswerOptionDto> Options { get; set; } = new();
@@ -62,7 +65,8 @@ public class QuestionDto
 public class AnswerOptionDto
 {
     public int Id { get; set; }
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+    public string TextEn { get; set; } = string.Empty;
     // IsCorrect is hidden from students at exam time, shown in results
 }
 
@@ -94,11 +98,14 @@ public class ExamResultDto
 public class AnswerResultDto
 {
     public int QuestionId { get; set; }
-    public string QuestionText { get; set; } = string.Empty;
+    public string QuestionTextAr { get; set; } = string.Empty;
+    public string QuestionTextEn { get; set; } = string.Empty;
     public int Score { get; set; }
     public int? SelectedOptionId { get; set; }
-    public string? SelectedOptionText { get; set; }
+    public string? SelectedOptionTextAr { get; set; }
+    public string? SelectedOptionTextEn { get; set; }
     public int CorrectOptionId { get; set; }
-    public string CorrectOptionText { get; set; } = string.Empty;
+    public string CorrectOptionTextAr { get; set; } = string.Empty;
+    public string CorrectOptionTextEn { get; set; } = string.Empty;
     public bool IsCorrect { get; set; }
 }

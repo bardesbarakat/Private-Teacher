@@ -9,7 +9,10 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Track> Tracks => Set<Track>();
+    public DbSet<Chapter> Chapters => Set<Chapter>();
     public DbSet<Lesson> Lessons => Set<Lesson>();
+    public DbSet<SupplementaryResource> SupplementaryResources => Set<SupplementaryResource>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
     public DbSet<Exam> Exams => Set<Exam>();
     public DbSet<Question> Questions => Set<Question>();
@@ -77,12 +80,40 @@ public class AppDbContext : DbContext
             .HasForeignKey(a => a.QuestionId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Exam optional FK to Course/Lesson
+        // Track -> Chapter
+        builder.Entity<Chapter>()
+            .HasOne(c => c.Track)
+            .WithMany(t => t.Chapters)
+            .HasForeignKey(c => c.TrackId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Chapter -> Lesson
+        builder.Entity<Lesson>()
+            .HasOne(l => l.Chapter)
+            .WithMany(c => c.Lessons)
+            .HasForeignKey(l => l.ChapterId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // SupplementaryResource relationships
+        builder.Entity<SupplementaryResource>()
+            .HasOne(s => s.Chapter)
+            .WithMany(c => c.Resources)
+            .HasForeignKey(s => s.ChapterId)
+            .OnDelete(DeleteBehavior.NoAction)
+            .IsRequired(false);
+
+        builder.Entity<SupplementaryResource>()
+            .HasOne(s => s.Lesson)
+            .WithMany(l => l.Resources)
+            .HasForeignKey(s => s.LessonId)
+            .OnDelete(DeleteBehavior.NoAction)
+            .IsRequired(false);
+
         builder.Entity<Exam>()
             .HasOne(e => e.Course)
             .WithMany(c => c.Exams)
             .HasForeignKey(e => e.CourseId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired(false);
 
         builder.Entity<Exam>()

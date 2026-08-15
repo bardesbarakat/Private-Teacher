@@ -22,7 +22,9 @@ public class CoursesController : ControllerBase
         var query = _db.Courses
             .Include(c => c.Teacher)
             .Include(c => c.Enrollments)
-            .Include(c => c.Lessons)
+            .Include(c => c.Tracks)
+                .ThenInclude(t => t.Chapters)
+                .ThenInclude(ch => ch.Lessons)
             .Where(c => c.IsPublished);
 
         if (!string.IsNullOrEmpty(level))
@@ -42,7 +44,7 @@ public class CoursesController : ControllerBase
                 TeacherId = c.TeacherId,
                 TeacherName = c.Teacher.FullNameAr,
                 EnrollmentCount = c.Enrollments.Count,
-                LessonCount = c.Lessons.Count
+                LessonCount = c.Tracks.SelectMany(t => t.Chapters).SelectMany(ch => ch.Lessons).Count()
             })
             .ToListAsync();
 
@@ -56,7 +58,9 @@ public class CoursesController : ControllerBase
         var course = await _db.Courses
             .Include(c => c.Teacher)
             .Include(c => c.Enrollments)
-            .Include(c => c.Lessons)
+            .Include(c => c.Tracks)
+                .ThenInclude(t => t.Chapters)
+                .ThenInclude(ch => ch.Lessons)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (course == null) return NotFound(new { message = "الكورس غير موجود" });
@@ -73,20 +77,22 @@ public class CoursesController : ControllerBase
             TeacherId = course.TeacherId,
             TeacherName = course.Teacher.FullNameAr,
             EnrollmentCount = course.Enrollments.Count,
-            LessonCount = course.Lessons.Count
+            LessonCount = course.Tracks.SelectMany(t => t.Chapters).SelectMany(ch => ch.Lessons).Count()
         });
     }
 
     // GET /api/courses/my — teacher's own courses
     [HttpGet("my")]
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Policy = "ApprovedTeacher")]
     public async Task<IActionResult> GetMyCourses()
     {
         var teacherId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var courses = await _db.Courses
             .Include(c => c.Teacher)
             .Include(c => c.Enrollments)
-            .Include(c => c.Lessons)
+            .Include(c => c.Tracks)
+                .ThenInclude(t => t.Chapters)
+                .ThenInclude(ch => ch.Lessons)
             .Where(c => c.TeacherId == teacherId)
             .OrderByDescending(c => c.CreatedAt)
             .Select(c => new CourseResponseDto
@@ -101,7 +107,7 @@ public class CoursesController : ControllerBase
                 TeacherId = c.TeacherId,
                 TeacherName = c.Teacher.FullNameAr,
                 EnrollmentCount = c.Enrollments.Count,
-                LessonCount = c.Lessons.Count
+                LessonCount = c.Tracks.SelectMany(t => t.Chapters).SelectMany(ch => ch.Lessons).Count()
             })
             .ToListAsync();
 
@@ -110,7 +116,7 @@ public class CoursesController : ControllerBase
 
     // POST /api/courses
     [HttpPost]
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Policy = "ApprovedTeacher")]
     public async Task<IActionResult> Create([FromBody] CreateCourseDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Title))
@@ -134,7 +140,7 @@ public class CoursesController : ControllerBase
 
     // PUT /api/courses/{id}
     [HttpPut("{id}")]
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Policy = "ApprovedTeacher")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCourseDto dto)
     {
         var teacherId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -153,7 +159,7 @@ public class CoursesController : ControllerBase
 
     // DELETE /api/courses/{id}
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Policy = "ApprovedTeacher")]
     public async Task<IActionResult> Delete(int id)
     {
         var teacherId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -190,7 +196,7 @@ public class CoursesController : ControllerBase
         var studentId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var enrollments = await _db.Enrollments
             .Include(e => e.Course).ThenInclude(c => c.Teacher)
-            .Include(e => e.Course).ThenInclude(c => c.Lessons)
+            .Include(e => e.Course).ThenInclude(c => c.Tracks).ThenInclude(t => t.Chapters).ThenInclude(ch => ch.Lessons)
             .Where(e => e.StudentId == studentId)
             .Select(e => new EnrollmentResponseDto
             {

@@ -106,7 +106,7 @@ public class AdminController : ControllerBase
         var courses = await _db.Courses
             .Include(c => c.Teacher)
             .Include(c => c.Enrollments)
-            .Include(c => c.Lessons)
+            .Include(c => c.Tracks).ThenInclude(t => t.Chapters).ThenInclude(ch => ch.Lessons)
             .Include(c => c.Exams)
             .OrderByDescending(c => c.CreatedAt)
             .Select(c => new
@@ -115,7 +115,7 @@ public class AdminController : ControllerBase
                 c.IsPublished, c.CreatedAt,
                 TeacherName = c.Teacher.FullNameAr,
                 EnrollmentCount = c.Enrollments.Count,
-                LessonCount = c.Lessons.Count,
+                LessonCount = c.Tracks.SelectMany(t => t.Chapters).SelectMany(ch => ch.Lessons).Count(),
                 ExamCount = c.Exams.Count
             })
             .ToListAsync();
@@ -200,6 +200,45 @@ public class AdminController : ControllerBase
             })
             .ToListAsync();
         return Ok(users);
+    }
+
+    // ─── GET /api/admin/pending-teachers ────────────────────────
+    [HttpGet("pending-teachers")]
+    public async Task<IActionResult> GetPendingTeachers()
+    {
+        var users = await _db.Users
+            .Where(u => u.Role == "Teacher" && u.ApprovalStatus == "Pending")
+            .OrderByDescending(u => u.CreatedAt)
+            .Select(u => new
+            {
+                u.Id, u.FullNameAr, u.FullNameEn, u.Email, u.PhoneNumber, u.CreatedAt
+            })
+            .ToListAsync();
+        return Ok(users);
+    }
+
+    // ─── PUT /api/admin/teachers/{id}/approve ───────────────────
+    [HttpPut("teachers/{id}/approve")]
+    public async Task<IActionResult> ApproveTeacher(int id)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id && u.Role == "Teacher");
+        if (user == null) return NotFound(new { message = "المعلم غير موجود" });
+
+        user.ApprovalStatus = "Approved";
+        await _db.SaveChangesAsync();
+        return Ok(new { message = "تم الموافقة على المعلم بنجاح" });
+    }
+
+    // ─── PUT /api/admin/teachers/{id}/reject ────────────────────
+    [HttpPut("teachers/{id}/reject")]
+    public async Task<IActionResult> RejectTeacher(int id)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id && u.Role == "Teacher");
+        if (user == null) return NotFound(new { message = "المعلم غير موجود" });
+
+        user.ApprovalStatus = "Rejected";
+        await _db.SaveChangesAsync();
+        return Ok(new { message = "تم رفض المعلم" });
     }
 
     // ─── POST /api/admin/courses ────────────────────────────────

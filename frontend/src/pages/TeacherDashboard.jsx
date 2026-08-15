@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import {
-  getMyCourses, createCourse, updateCourse, deleteCourse,
-  getLessonsByCourse, createLesson, deleteLesson,
-  getExamsByCourse, createExam
+  getMyCourses, createCourse, updateCourse, deleteCourse
 } from '../services/api';
+import CurriculumBuilder from '../features/courses/builder/CurriculumBuilder';
 import './Dashboard.css';
 
 const LEVELS = [
@@ -28,32 +27,15 @@ export default function TeacherDashboard() {
   const [editingCourse, setEditingCourse]     = useState(null);
   const [courseForm, setCourseForm]           = useState({ title:'', description:'', level:'Bac1' });
 
-  // Lessons
-  const [lessons, setLessons]         = useState([]);
-  const [showLessonModal, setShowLessonModal] = useState(false);
-  const [lessonForm, setLessonForm]   = useState({ title:'', content:'', videoUrl:'', pdfUrl:'', order:1 });
-
-  // Exams
-  const [exams, setExams]   = useState([]);
-  const [showExamModal, setShowExamModal] = useState(false);
-  const [examForm, setExamForm] = useState({ title:'', description:'', durationMinutes:30, questions:[] });
-  const [newQuestion, setNewQuestion] = useState({ text:'', score:1, options:['','','',''], correctIndex:0 });
+  // Remove old lessons and exams state
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => { loadCourses(); }, []);
-  useEffect(() => {
-    if (selectedCourse) { loadLessons(); loadExams(); }
-  }, [selectedCourse]);
+  // We no longer load lessons/exams here, CurriculumBuilder handles it
 
   const loadCourses = async () => {
     try { const r = await getMyCourses(); setCourses(r.data); } catch {}
-  };
-  const loadLessons = async () => {
-    try { const r = await getLessonsByCourse(selectedCourse.id); setLessons(r.data); } catch {}
-  };
-  const loadExams = async () => {
-    try { const r = await getExamsByCourse(selectedCourse.id); setExams(r.data); } catch {}
   };
 
   const handleSaveCourse = async () => {
@@ -80,53 +62,13 @@ export default function TeacherDashboard() {
     catch (e) { toast.error(e.response?.data?.message || 'حدث خطأ'); }
   };
 
-  const handleSaveLesson = async () => {
-    if (!lessonForm.title.trim()) { toast.error('عنوان الدرس مطلوب'); return; }
-    setLoading(true);
-    try {
-      await createLesson({ ...lessonForm, courseId: selectedCourse.id });
-      toast.success('تم إضافة الدرس ✅');
-      setShowLessonModal(false);
-      setLessonForm({ title:'', content:'', videoUrl:'', pdfUrl:'', order:lessons.length+1 });
-      loadLessons();
-    } catch (e) { toast.error(e.response?.data?.message || 'حدث خطأ'); }
-    setLoading(false);
-  };
-
-  const handleDeleteLesson = async (id) => {
-    if (!confirm('هل تريد حذف هذا الدرس؟')) return;
-    try { await deleteLesson(id); toast.success('تم الحذف'); loadLessons(); }
-    catch (e) { toast.error('حدث خطأ'); }
-  };
-
-  const addQuestion = () => {
-    if (!newQuestion.text.trim()) { toast.error('نص السؤال مطلوب'); return; }
-    const options = newQuestion.options.map((text, i) => ({ text, isCorrect: i === newQuestion.correctIndex }));
-    setExamForm(f => ({ ...f, questions: [...f.questions, { text: newQuestion.text, score: newQuestion.score, order: f.questions.length+1, options }] }));
-    setNewQuestion({ text:'', score:1, options:['','','',''], correctIndex:0 });
-    toast.success('تم إضافة السؤال');
-  };
-
-  const handleSaveExam = async () => {
-    if (!examForm.title.trim()) { toast.error('عنوان الاختبار مطلوب'); return; }
-    if (examForm.questions.length === 0) { toast.error('أضف سؤالاً واحداً على الأقل'); return; }
-    setLoading(true);
-    try {
-      await createExam({ ...examForm, courseId: selectedCourse.id });
-      toast.success('تم إنشاء الاختبار ✅');
-      setShowExamModal(false);
-      setExamForm({ title:'', description:'', durationMinutes:30, questions:[] });
-      loadExams();
-    } catch (e) { toast.error(e.response?.data?.message || 'حدث خطأ'); }
-    setLoading(false);
-  };
+  // Removed legacy save/delete lesson and exam methods
 
   const handleLogout = () => { logout(); navigate('/'); };
 
   const SIDEBAR_ITEMS = [
     { id:'courses', icon:'📚', label:'كورساتي' },
-    { id:'lessons', icon:'📖', label:'الدروس', disabled:!selectedCourse },
-    { id:'exams',   icon:'📝', label:'الاختبارات', disabled:!selectedCourse },
+    { id:'curriculum', icon:'📋', label:'إدارة المحتوى', disabled:!selectedCourse },
   ];
 
   return (
@@ -254,8 +196,8 @@ export default function TeacherDashboard() {
                     </div>
                     <div className="item-card__actions">
                       <button className="btn-primary" style={{flex:1,padding:'8px',fontSize:'13px'}}
-                        onClick={() => { setSelected(c); setTab('lessons'); }}>
-                        إدارة →
+                        onClick={() => { setSelected(c); setTab('curriculum'); }}>
+                        إدارة المحتوى →
                       </button>
                       <button className="btn-ghost" style={{padding:'8px 10px',fontSize:'13px'}}
                         onClick={() => { setEditingCourse(c); setCourseForm({title:c.title,description:c.description||'',level:c.level||'Bac1'}); setShowCourseModal(true); }}>
@@ -270,80 +212,10 @@ export default function TeacherDashboard() {
           </div>
         )}
 
-        {/* ── LESSONS TAB ── */}
-        {tab === 'lessons' && selectedCourse && (
+        {/* ── CURRICULUM TAB ── */}
+        {tab === 'curriculum' && selectedCourse && (
           <div className="dash-section">
-            <div className="dash-section__head">
-              <h2>دروس: {selectedCourse.title}</h2>
-              <button className="btn-primary" onClick={() => { setLessonForm({title:'',content:'',videoUrl:'',pdfUrl:'',order:lessons.length+1}); setShowLessonModal(true); }}>
-                + إضافة درس
-              </button>
-            </div>
-            {lessons.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon">📖</div>
-                <h3>لا توجد دروس بعد</h3>
-                <p>أضف أول درس لهذا الكورس</p>
-                <button className="btn-primary" onClick={() => setShowLessonModal(true)}>إضافة درس</button>
-              </div>
-            ) : (
-              <div style={{overflowX:'auto'}}>
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>#</th><th>عنوان الدرس</th><th>فيديو</th><th>PDF</th><th>إجراءات</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {lessons.map((l,i) => (
-                      <tr key={l.id}>
-                        <td>{i+1}</td>
-                        <td style={{fontWeight:600}}>{l.title}</td>
-                        <td>{l.videoUrl ? <a href={l.videoUrl} target="_blank" className="auth-link" style={{fontSize:'12px'}}>رابط ▶</a> : <span style={{color:'var(--text-dim)'}}>—</span>}</td>
-                        <td>{l.pdfUrl ? <a href={l.pdfUrl} target="_blank" className="auth-link" style={{fontSize:'12px'}}>PDF 📄</a> : <span style={{color:'var(--text-dim)'}}>—</span>}</td>
-                        <td><button className="btn-danger" style={{padding:'6px 10px',fontSize:'12px'}} onClick={() => handleDeleteLesson(l.id)}>حذف</button></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── EXAMS TAB ── */}
-        {tab === 'exams' && selectedCourse && (
-          <div className="dash-section">
-            <div className="dash-section__head">
-              <h2>اختبارات: {selectedCourse.title}</h2>
-              <button className="btn-primary" onClick={() => { setExamForm({title:'',description:'',durationMinutes:30,questions:[]}); setShowExamModal(true); }}>
-                + إضافة اختبار
-              </button>
-            </div>
-            {exams.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon">📝</div>
-                <h3>لا توجد اختبارات</h3>
-                <p>أنشئ أول اختبار لهذا الكورس</p>
-                <button className="btn-primary" onClick={() => setShowExamModal(true)}>إنشاء اختبار</button>
-              </div>
-            ) : (
-              <div className="cards-grid">
-                {exams.map(e => (
-                  <div className="item-card" key={e.id}>
-                    <div className="item-card__header">
-                      <span className="item-card__icon">📝</span>
-                      <span className="badge badge--violet">{e.durationMinutes} دقيقة</span>
-                    </div>
-                    <div className="item-card__title">{e.title}</div>
-                    <div className="item-card__meta">
-                      <span className="badge badge--mint">❓ {e.questionCount} سؤال</span>
-                      <span className="badge badge--amber">⭐ {e.totalScore} نقطة</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <CurriculumBuilder courseId={selectedCourse.id} />
           </div>
         )}
       </main>
@@ -379,107 +251,7 @@ export default function TeacherDashboard() {
         </div>
       )}
 
-      {/* ── Lesson Modal ── */}
-      {showLessonModal && (
-        <div className="modal-overlay" onClick={e => e.target===e.currentTarget&&setShowLessonModal(false)}>
-          <div className="modal">
-            <h3>إضافة درس جديد</h3>
-            <div className="auth-form">
-              <div className="form-group">
-                <label className="form-label">عنوان الدرس *</label>
-                <input className="form-input" value={lessonForm.title} onChange={e=>setLessonForm({...lessonForm,title:e.target.value})} placeholder="عنوان الدرس..." />
-              </div>
-              <div className="form-group">
-                <label className="form-label">المحتوى النصي</label>
-                <textarea className="form-input" rows="4" value={lessonForm.content} onChange={e=>setLessonForm({...lessonForm,content:e.target.value})} placeholder="اكتب محتوى الدرس هنا..." style={{resize:'vertical'}} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">رابط الفيديو (YouTube أو غيره)</label>
-                <input className="form-input" type="url" dir="ltr" value={lessonForm.videoUrl} onChange={e=>setLessonForm({...lessonForm,videoUrl:e.target.value})} placeholder="https://youtube.com/..." />
-              </div>
-              <div className="form-group">
-                <label className="form-label">رابط ملف PDF</label>
-                <input className="form-input" type="url" dir="ltr" value={lessonForm.pdfUrl} onChange={e=>setLessonForm({...lessonForm,pdfUrl:e.target.value})} placeholder="https://example.com/lesson.pdf" />
-              </div>
-              <div className="modal-actions">
-                <button className="btn-primary" onClick={handleSaveLesson} disabled={loading}>
-                  {loading ? 'جارٍ الحفظ...' : 'إضافة الدرس'}
-                </button>
-                <button className="btn-ghost" onClick={() => setShowLessonModal(false)}>إلغاء</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* ── Exam Modal ── */}
-      {showExamModal && (
-        <div className="modal-overlay" onClick={e => e.target===e.currentTarget&&setShowExamModal(false)}>
-          <div className="modal" style={{maxWidth:'640px'}}>
-            <h3>إنشاء اختبار جديد</h3>
-            <div className="auth-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">عنوان الاختبار *</label>
-                  <input className="form-input" value={examForm.title} onChange={e=>setExamForm({...examForm,title:e.target.value})} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">المدة (دقائق)</label>
-                  <input className="form-input" type="number" min="5" value={examForm.durationMinutes} onChange={e=>setExamForm({...examForm,durationMinutes:+e.target.value})} />
-                </div>
-              </div>
-
-              {/* Added questions list */}
-              {examForm.questions.length > 0 && (
-                <div style={{background:'var(--bg-field)',border:'1px solid var(--line-soft)',borderRadius:'var(--r-sm)',padding:'12px'}}>
-                  <p style={{fontSize:'13px',fontWeight:700,marginBottom:'8px',color:'var(--mint)'}}>الأسئلة المضافة ({examForm.questions.length})</p>
-                  {examForm.questions.map((q,i) => (
-                    <div key={i} style={{fontSize:'13px',padding:'6px 0',borderBottom:'1px solid var(--line-soft)',display:'flex',justifyContent:'space-between'}}>
-                      <span>({i+1}) {q.text.slice(0,50)}</span>
-                      <span style={{color:'var(--mint)'}}>{q.score} نقطة</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* New question form */}
-              <div style={{background:'var(--bg-field)',border:'1px solid var(--mint-line)',borderRadius:'var(--r-sm)',padding:'14px'}}>
-                <p style={{fontSize:'13px',fontWeight:700,marginBottom:'10px',color:'var(--mint-text)'}}>إضافة سؤال جديد</p>
-                <div className="form-group" style={{marginBottom:'10px'}}>
-                  <label className="form-label">نص السؤال</label>
-                  <textarea className="form-input" rows="2" value={newQuestion.text} onChange={e=>setNewQuestion({...newQuestion,text:e.target.value})} placeholder="اكتب نص السؤال..." style={{resize:'vertical'}} />
-                </div>
-                <div className="form-group" style={{marginBottom:'10px'}}>
-                  <label className="form-label">النقاط</label>
-                  <input className="form-input" type="number" min="1" value={newQuestion.score} onChange={e=>setNewQuestion({...newQuestion,score:+e.target.value})} style={{width:'100px'}} />
-                </div>
-                <div style={{marginBottom:'10px'}}>
-                  <label className="form-label" style={{marginBottom:'8px',display:'block'}}>الخيارات (اختر الصحيح)</label>
-                  {newQuestion.options.map((opt,i) => (
-                    <div key={i} style={{display:'flex',gap:'8px',alignItems:'center',marginBottom:'6px'}}>
-                      <input type="radio" name="correct" checked={newQuestion.correctIndex===i}
-                        onChange={() => setNewQuestion({...newQuestion,correctIndex:i})}
-                        style={{accentColor:'var(--mint)',width:'16px',height:'16px'}} />
-                      <input className="form-input" value={opt} placeholder={`الخيار ${i+1}`}
-                        onChange={e => { const opts=[...newQuestion.options]; opts[i]=e.target.value; setNewQuestion({...newQuestion,options:opts}); }} />
-                    </div>
-                  ))}
-                </div>
-                <button type="button" className="btn-ghost" style={{width:'100%',justifyContent:'center'}} onClick={addQuestion}>
-                  + إضافة هذا السؤال
-                </button>
-              </div>
-
-              <div className="modal-actions">
-                <button className="btn-primary" onClick={handleSaveExam} disabled={loading || examForm.questions.length===0}>
-                  {loading ? 'جارٍ الحفظ...' : `حفظ الاختبار (${examForm.questions.length} سؤال)`}
-                </button>
-                <button className="btn-ghost" onClick={() => setShowExamModal(false)}>إلغاء</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

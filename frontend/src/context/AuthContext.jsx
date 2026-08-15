@@ -32,9 +32,10 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!token && !!user;
   const role = user?.role || null;
+  const approvalStatus = user?.approvalStatus || 'Approved';
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, role, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, role, approvalStatus, loading }}>
       {children}
     </AuthContext.Provider>
   );

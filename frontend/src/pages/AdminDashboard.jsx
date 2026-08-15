@@ -9,6 +9,7 @@ import {
 } from '../services/api';
 import UsersManagement from '../components/UsersManagement';
 import CoursesManagement from '../components/CoursesManagement';
+import PendingTeachersManagement from '../components/PendingTeachersManagement';
 
 /* ── tiny StatCard ── */
 function StatCard({ icon, num, label, color = 'var(--mint)' }) {
@@ -134,6 +135,7 @@ export default function AdminDashboard() {
   const TABS = [
     { id: 'overview',     icon: '📊', label: 'نظرة عامة' },
     { id: 'users',        icon: '👥', label: 'المستخدمون' },
+    { id: 'pending',      icon: '⏳', label: 'طلبات المعلمين' },
     { id: 'courses',      icon: '📚', label: 'الكورسات' },
     { id: 'submissions',  icon: '📝', label: 'نتائج الاختبارات' },
   ];
@@ -342,6 +344,9 @@ export default function AdminDashboard() {
             </div>
           </>
         )}
+
+        {/* ══ PENDING TEACHERS TAB ══ */}
+        {tab === 'pending' && <PendingTeachersManagement />}
 
       </main>
     </div>

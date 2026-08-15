@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import {
   getAllCourses, getEnrolled, enrollCourse,
-  getLessonsByCourse, getExamsByCourse,
   takeExam, submitExam, getResult, getMyResults
 } from '../services/api';
 import './Dashboard.css';
@@ -50,10 +49,10 @@ export default function StudentDashboard() {
   };
 
   const loadLessons = async (cId) => {
-    try { const r = await getLessonsByCourse(cId); setLessons(r.data); } catch {}
+    // try { const r = await getLessonsByCourse(cId); setLessons(r.data); } catch {}
   };
   const loadExams = async (cId) => {
-    try { const r = await getExamsByCourse(cId); setExams(r.data); } catch {}
+    // try { const r = await getExamsByCourse(cId); setExams(r.data); } catch {}
   };
 
   const handleEnroll = async (courseId) => {

@@ -35,6 +35,7 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
+    public string ApprovalStatus { get; set; } = "Approved"; // Pending | Approved | Rejected
 
     // Navigation
     public ICollection<Course> Courses { get; set; } = new List<Course>();

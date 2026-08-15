@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function ProtectedRoute({ children, allowedRoles }) {
-  const { isAuthenticated, role, loading } = useAuth();
+  const { isAuthenticated, role, approvalStatus, loading } = useAuth();
 
   if (loading) {
     return (
@@ -20,6 +20,10 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   if (allowedRoles && !allowedRoles.includes(role)) {
     const dashboardPath = role === 'Teacher' ? '/teacher' : role === 'Parent' ? '/parent' : '/student';
     return <Navigate to={dashboardPath} replace />;
+  }
+
+  if (role === 'Teacher' && approvalStatus !== 'Approved') {
+    return <Navigate to="/pending-approval" replace />;
   }
 
   return children;

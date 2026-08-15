@@ -40,21 +40,26 @@ export const deleteCourse    = (id)    => API.delete(`/courses/${id}`);
 export const enrollCourse    = (cId)   => API.post('/courses/enroll', { courseId: cId });
 export const getEnrolled     = ()      => API.get('/courses/enrolled');
 
-// Lessons
-export const getLessonsByCourse = (cId) => API.get(`/lessons/course/${cId}`);
-export const getLessonById      = (id)  => API.get(`/lessons/${id}`);
-export const createLesson       = (d)   => API.post('/lessons', d);
-export const updateLesson       = (id, d) => API.put(`/lessons/${id}`, d);
-export const deleteLesson       = (id)  => API.delete(`/lessons/${id}`);
+// Curriculum (Instructor)
+export const getCourseCurriculum = (cId, includeDrafts) => API.get(`/curriculum/course/${cId}`, { params: { includeDrafts } });
+export const createTrack       = (d)   => API.post('/curriculum/tracks', d);
+export const createChapter     = (d)   => API.post('/curriculum/chapters', d);
+export const updateChapter     = (id, d) => API.put(`/curriculum/chapters/${id}`, d);
+export const deleteChapter     = (id)  => API.delete(`/curriculum/chapters/${id}`);
+export const createLesson      = (d)   => API.post('/curriculum/lessons', d);
+export const updateLesson      = (id, d) => API.put(`/curriculum/lessons/${id}`, d);
+export const deleteLesson      = (id)  => API.delete(`/curriculum/lessons/${id}`);
+export const addResource       = (d)   => API.post('/curriculum/resources', d);
 
 // Exams
 export const getExamsByCourse = (cId) => API.get(`/exams/course/${cId}`);
-export const takeExam         = (id)  => API.get(`/exams/${id}/take`);
-export const submitExam       = (d)   => API.post('/exams/submit', d);
-export const getMyResults     = ()    => API.get('/exams/my-results');
+export const getExamDetail    = (id)  => API.get(`/exams/${id}`);
+export const submitExam       = (id, d)   => API.post(`/exams/${id}/submit`, d);
+export const getMyResults     = ()    => API.get('/exams/results/me');
 export const getResult        = (id)  => API.get(`/exams/results/${id}`);
-export const getStudentResults = (sId) => API.get(`/exams/student/${sId}/results`);
 export const createExam       = (d)   => API.post('/exams', d);
+export const updateExam       = (id, d) => API.put(`/exams/${id}`, d);
+export const deleteExam       = (id)  => API.delete(`/exams/${id}`);
 
 // Admin
 export const adminGetStats         = ()        => API.get('/admin/stats');
@@ -62,6 +67,9 @@ export const adminGetUsers         = (role, search) => API.get('/admin/users', {
 export const adminToggleUser       = (id)      => API.put(`/admin/users/${id}/toggle`);
 export const adminDeleteUser       = (id)      => API.delete(`/admin/users/${id}`);
 export const adminMakeAdmin        = (id)      => API.post(`/admin/make-admin/${id}`);
+export const adminGetPendingTeachers = ()      => API.get('/admin/pending-teachers');
+export const adminApproveTeacher   = (id)      => API.put(`/admin/teachers/${id}/approve`);
+export const adminRejectTeacher    = (id)      => API.put(`/admin/teachers/${id}/reject`);
 export const adminGetTeachers      = ()        => API.get('/admin/teachers');
 export const adminGetCourses       = ()        => API.get('/admin/courses');
 export const adminToggleCourse     = (id)      => API.put(`/admin/courses/${id}/toggle`);
