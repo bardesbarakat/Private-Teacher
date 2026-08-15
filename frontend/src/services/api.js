@@ -56,4 +56,16 @@ export const getResult        = (id)  => API.get(`/exams/results/${id}`);
 export const getStudentResults = (sId) => API.get(`/exams/student/${sId}/results`);
 export const createExam       = (d)   => API.post('/exams', d);
 
+// Admin
+export const adminGetStats       = ()      => API.get('/admin/stats');
+export const adminGetUsers       = (role, search) => API.get('/admin/users', { params: { role, search } });
+export const adminToggleUser     = (id)    => API.put(`/admin/users/${id}/toggle`);
+export const adminDeleteUser     = (id)    => API.delete(`/admin/users/${id}`);
+export const adminGetCourses     = ()      => API.get('/admin/courses');
+export const adminToggleCourse   = (id)    => API.put(`/admin/courses/${id}/toggle`);
+export const adminDeleteCourse   = (id)    => API.delete(`/admin/courses/${id}`);
+export const adminGetSubmissions = ()      => API.get('/admin/submissions');
+export const adminMakeAdmin      = (id)    => API.post(`/admin/make-admin/${id}`);
+
 export default API;
+

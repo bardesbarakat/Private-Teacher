@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -10,12 +11,14 @@ import StudentDashboard from './pages/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import ParentDashboard from './pages/ParentDashboard';
 import Courses from './pages/Courses';
+import AdminDashboard from './pages/AdminDashboard';
 
 function AppRoutes() {
   const { isAuthenticated, role } = useAuth();
 
+  // التوجيه التلقائي حسب صلاحية المستخدم (شامل دور الأدمن)
   const dashboardRedirect = isAuthenticated
-    ? (role === 'Teacher' ? '/teacher' : role === 'Parent' ? '/parent' : '/student')
+    ? (role === 'Admin' ? '/admin' : role === 'Teacher' ? '/teacher' : role === 'Parent' ? '/parent' : '/student')
     : '/login';
 
   return (
@@ -23,28 +26,37 @@ function AppRoutes() {
       <Route path="/" element={<><Navbar /><Home /></>} />
       <Route path="/courses" element={<><Navbar /><Courses /></>} />
 
-      {/* Auth pages — redirect if already logged in */}
+      {/* Auth pages — إعادة التوجيه لو المستخدم مسجل دخول بالفعل */}
       <Route path="/login" element={isAuthenticated ? <Navigate to={dashboardRedirect} replace /> : <Login />} />
       <Route path="/register" element={isAuthenticated ? <Navigate to={dashboardRedirect} replace /> : <Register />} />
 
-      {/* Protected dashboards */}
+      {/* Protected dashboards — اللوحات المحمية بصلاحياتها */}
       <Route path="/student" element={
         <ProtectedRoute allowedRoles={['Student']}>
           <><Navbar /><StudentDashboard /></>
         </ProtectedRoute>
       } />
+      
       <Route path="/teacher" element={
         <ProtectedRoute allowedRoles={['Teacher']}>
           <><Navbar /><TeacherDashboard /></>
         </ProtectedRoute>
       } />
+      
       <Route path="/parent" element={
         <ProtectedRoute allowedRoles={['Parent']}>
           <><Navbar /><ParentDashboard /></>
         </ProtectedRoute>
       } />
 
-      {/* Fallback */}
+      {/* لوحة تحكم الأدمن (محمية ومؤمنة بالكامل) */}
+      <Route path="/admin" element={
+        <ProtectedRoute allowedRoles={['Admin']}>
+          <><Navbar /><AdminDashboard /></>
+        </ProtectedRoute>
+      } />
+
+      {/* Fallback — أي مسار خطأ يرجع للصفحة الرئيسية */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
