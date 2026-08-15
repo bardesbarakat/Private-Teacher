@@ -14,6 +14,7 @@ import ParentDashboard from './pages/ParentDashboard';
 import Courses from './pages/Courses';
 import AdminDashboard from './pages/AdminDashboard';
 import PendingApproval from './pages/PendingApproval';
+import LearningTheater from './features/learning/LearningTheater';
 
 function AppRoutes() {
   const { isAuthenticated, role } = useAuth();
@@ -36,6 +37,12 @@ function AppRoutes() {
       <Route path="/student" element={
         <ProtectedRoute allowedRoles={['Student']}>
           <><Navbar /><StudentDashboard /></>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/learn/:courseId" element={
+        <ProtectedRoute allowedRoles={['Student']}>
+          <LearningTheater />
         </ProtectedRoute>
       } />
       
