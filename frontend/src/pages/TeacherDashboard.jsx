@@ -198,7 +198,12 @@ export default function TeacherDashboard() {
         {tab === 'courses' && (
           <div className="dash-section">
             <div className="dash-section__head">
-              <h2>كورساتي</h2>
+              <div>
+                <h2>كورساتي</h2>
+                <p style={{fontSize:'13px',color:'var(--text-dim)',marginTop:4}}>
+                  المعلم المسؤول: <strong style={{color:'var(--mint)'}}>{user?.fullNameAr}</strong>
+                </p>
+              </div>
               <button className="btn-primary" onClick={() => { setEditingCourse(null); setCourseForm({title:'',description:'',level:'Bac1'}); setShowCourseModal(true); }}>
                 + إضافة كورس
               </button>
@@ -221,9 +226,31 @@ export default function TeacherDashboard() {
                     </div>
                     <div className="item-card__title">{c.title}</div>
                     <div className="item-card__sub">{c.description?.slice(0,80)}</div>
+
+                    {/* ── المعلم المسؤول ── */}
+                    <div style={{
+                      display:'flex', alignItems:'center', gap:8, margin:'8px 0',
+                      background:'rgba(52,211,153,.06)', border:'1px solid rgba(52,211,153,.18)',
+                      borderRadius:8, padding:'7px 12px'
+                    }}>
+                      <div style={{
+                        width:28, height:28, borderRadius:'50%', flexShrink:0,
+                        background:'linear-gradient(135deg,var(--mint),#0a4a2e)',
+                        display:'flex', alignItems:'center', justifyContent:'center',
+                        fontSize:12, fontWeight:800, color:'#fff'
+                      }}>{(c.teacherName || user?.fullNameAr || '?')[0]}</div>
+                      <div>
+                        <div style={{fontSize:11, color:'var(--text-dim)', lineHeight:1}}>المعلم المسؤول</div>
+                        <div style={{fontSize:13, fontWeight:700, color:'var(--mint-text)'}}>{c.teacherName || user?.fullNameAr}</div>
+                      </div>
+                    </div>
+
                     <div className="item-card__meta">
                       <span className="badge badge--amber">📖 {c.lessonCount} درس</span>
                       <span className="badge badge--violet">👥 {c.enrollmentCount} طالب</span>
+                      <span className={`badge ${c.isPublished ? 'badge--mint' : 'badge--amber'}`}>
+                        {c.isPublished ? '✅ منشور' : '🚫 مخفي'}
+                      </span>
                     </div>
                     <div className="item-card__actions">
                       <button className="btn-primary" style={{flex:1,padding:'8px',fontSize:'13px'}}

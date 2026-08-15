@@ -180,4 +180,75 @@ public class AdminController : ControllerBase
         await _db.SaveChangesAsync();
         return Ok(new { message = "تم منح صلاحيات الأدمن" });
     }
+
+    // ─── GET /api/admin/teachers ────────────────────────────────
+    // Returns all active users that can be assigned as instructors
+    [HttpGet("teachers")]
+    public async Task<IActionResult> GetTeachers()
+    {
+        var users = await _db.Users
+            .Where(u => u.IsActive && (u.Role == "Teacher" || u.Role == "Admin"))
+            .OrderBy(u => u.Role)
+            .ThenBy(u => u.FullNameAr)
+            .Select(u => new
+            {
+                u.Id,
+                u.FullNameAr,
+                u.FullNameEn,
+                u.Email,
+                u.Role
+            })
+            .ToListAsync();
+        return Ok(users);
+    }
+
+    // ─── POST /api/admin/courses ────────────────────────────────
+    [HttpPost("courses")]
+    public async Task<IActionResult> AdminCreateCourse([FromBody] AdminCreateCourseDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            return BadRequest(new { message = "عنوان الكورس مطلوب" });
+
+        var teacherExists = await _db.Users.AnyAsync(u => u.Id == dto.TeacherId && u.IsActive && (u.Role == "Teacher" || u.Role == "Admin"));
+        if (!teacherExists)
+            return BadRequest(new { message = "يجب اختيار مدرّس أو أدمن كمعلم مسؤول" });
+
+        var course = new Course
+        {
+            Title        = dto.Title.Trim(),
+            Description  = dto.Description,
+            Level        = dto.Level,
+            ThumbnailUrl = dto.ThumbnailUrl,
+            TeacherId    = dto.TeacherId,
+            IsPublished  = dto.IsPublished
+        };
+        _db.Courses.Add(course);
+        await _db.SaveChangesAsync();
+        return Ok(new { message = "تم إنشاء الكورس بنجاح", id = course.Id });
+    }
+
+    // ─── PUT /api/admin/courses/{id}/edit ───────────────────────
+    [HttpPut("courses/{id}/edit")]
+    public async Task<IActionResult> AdminUpdateCourse(int id, [FromBody] AdminUpdateCourseDto dto)
+    {
+        var course = await _db.Courses.FindAsync(id);
+        if (course == null) return NotFound(new { message = "الكورس غير موجود" });
+
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            return BadRequest(new { message = "عنوان الكورس مطلوب" });
+
+        var teacherExists = await _db.Users.AnyAsync(u => u.Id == dto.TeacherId && u.IsActive && (u.Role == "Teacher" || u.Role == "Admin"));
+        if (!teacherExists)
+            return BadRequest(new { message = "يجب اختيار مدرّس أو أدمن كمعلم مسؤول" });
+
+        course.Title        = dto.Title.Trim();
+        course.Description  = dto.Description;
+        course.Level        = dto.Level;
+        course.ThumbnailUrl = dto.ThumbnailUrl;
+        course.TeacherId    = dto.TeacherId;
+        course.IsPublished  = dto.IsPublished;
+
+        await _db.SaveChangesAsync();
+        return Ok(new { message = "تم تحديث الكورس بنجاح" });
+    }
 }

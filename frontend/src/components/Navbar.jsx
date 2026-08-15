@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout, role } = useAuth();
+  const { theme, toggle } = useTheme();
   const navigate = useNavigate();
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
@@ -52,6 +54,17 @@ export default function Navbar() {
               <Link to="/register" className="btn-primary" style={{padding:'10px 18px',fontSize:'14px'}}>سجّل الآن</Link>
             </>
           )}
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggle}
+            className="btn-ghost"
+            style={{ padding: '8px', borderRadius: '11px', width: '42px', height: '42px', display: 'flex', justifyContent: 'center' }}
+            title={theme === 'dark' ? 'تفعيل الوضع النهاري' : 'تفعيل الوضع الليلي'}
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
           <button
             className="nav__burger" id="burgerBtn" type="button"
             aria-label="القائمة" onClick={() => setMenuOpen(o => !o)}

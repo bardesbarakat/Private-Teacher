@@ -9,15 +9,15 @@ import {
    CONSTANTS
 ══════════════════════════════════════════════════════════ */
 const LEVELS = [
-  { value: 'bac1',   label: 'أولى بكالوريا',  color: '#7ee7b6', icon: '📗' },
-  { value: 'bac2',   label: 'تانية بكالوريا', color: '#c4b5fd', icon: '📘' },
-  { value: 'review', label: 'مراجعة مكثفة',   color: '#fcd34d', icon: '📙' },
+  { value: 'bac1',   label: 'أولى بكالوريا',  color: 'var(--mint-text)', icon: '📗' },
+  { value: 'bac2',   label: 'تانية بكالوريا', color: 'var(--violet)', icon: '📘' },
+  { value: 'review', label: 'مراجعة مكثفة',   color: 'var(--amber)', icon: '📙' },
 ];
 
 const LEVEL_META = {
-  bac1:   { color: '#7ee7b6', bg: 'rgba(52,211,153,.10)',  border: 'rgba(52,211,153,.28)',   label: '📗 أولى بك.' },
-  bac2:   { color: '#c4b5fd', bg: 'rgba(167,139,250,.10)', border: 'rgba(167,139,250,.28)',  label: '📘 تانية بك.' },
-  review: { color: '#fcd34d', bg: 'rgba(251,191,36,.10)',  border: 'rgba(251,191,36,.28)',   label: '📙 مراجعة' },
+  bac1:   { color: 'var(--mint-text)', bg: 'var(--mint-soft)',  border: 'var(--mint-line)',   label: '📗 أولى بك.' },
+  bac2:   { color: 'var(--violet)', bg: 'var(--violet-soft)', border: 'var(--violet-line)',  label: '📘 تانية بك.' },
+  review: { color: 'var(--amber)', bg: 'var(--amber-soft)',  border: 'var(--amber-line)',   label: '📙 مراجعة' },
 };
 
 const EMPTY_FORM = {
@@ -46,12 +46,12 @@ function PublishBadge({ published }) {
   return (
     <span style={{
       padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700,
-      background: published ? 'rgba(52,211,153,.10)' : 'rgba(239,68,68,.10)',
-      color: published ? '#7ee7b6' : '#fca5a5',
-      border: `1px solid ${published ? 'rgba(52,211,153,.28)' : 'rgba(239,68,68,.28)'}`,
+      background: published ? 'var(--mint-soft)' : 'rgba(239,68,68,.10)',
+      color: published ? 'var(--mint-text)' : 'var(--danger)',
+      border: `1px solid ${published ? 'var(--mint-line)' : 'var(--danger-line)'}`,
       display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap'
     }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: published ? '#34d399' : '#ef4444', display: 'inline-block' }} />
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: published ? 'var(--mint-text)' : 'var(--danger-solid)', display: 'inline-block' }} />
       {published ? 'منشور' : 'مخفي'}
     </span>
   );
@@ -66,20 +66,20 @@ function DeleteDialog({ course, onConfirm, onCancel }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24
     }}>
       <div style={{
-        background: '#0f1a14', border: '1px solid rgba(239,68,68,.35)',
+        background: 'var(--bg-card)', border: '1px solid var(--danger-line)',
         borderRadius: 22, padding: 36, maxWidth: 440, width: '100%',
         boxShadow: '0 40px 80px rgba(0,0,0,.65)', animation: 'scaleIn .2s ease'
       }}>
         <div style={{ fontSize: 52, textAlign: 'center', marginBottom: 14 }}>🗑️</div>
-        <h3 style={{ textAlign: 'center', fontSize: 20, fontWeight: 800, marginBottom: 8 }}>حذف الكورس</h3>
+        <h3 style={{ textAlign: 'center', fontSize: 20, fontWeight: 800, marginBottom: 8, color: 'var(--text)' }}>حذف الكورس</h3>
         <p style={{ textAlign: 'center', color: 'var(--text-soft)', fontSize: 15, marginBottom: 8 }}>
           هل أنت متأكد من حذف الكورس
         </p>
-        <p style={{ textAlign: 'center', fontWeight: 800, color: '#fca5a5', fontSize: 17, marginBottom: 22 }}>
+        <p style={{ textAlign: 'center', fontWeight: 800, color: 'var(--danger)', fontSize: 17, marginBottom: 22 }}>
           "{course.title}"
         </p>
         <div style={{
-          background: 'rgba(239,68,68,.07)', border: '1px solid rgba(239,68,68,.2)',
+          background: 'rgba(239,68,68,.07)', border: '1px solid var(--danger-line)',
           borderRadius: 12, padding: '12px 16px', marginBottom: 26, fontSize: 13.5,
           color: 'var(--text-dim)', textAlign: 'center', lineHeight: 1.6
         }}>
@@ -139,8 +139,8 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
 
   const fieldStyle = (err) => ({
     width: '100%', boxSizing: 'border-box',
-    background: 'rgba(255,255,255,.05)',
-    border: `1px solid ${err ? 'rgba(239,68,68,.5)' : 'var(--line)'}`,
+    background: 'var(--bg-field)',
+    border: `1px solid ${err ? 'var(--danger)' : 'var(--line)'}`,
     borderRadius: 11, padding: '11px 14px', color: 'var(--text)',
     fontFamily: 'var(--font-body)', fontSize: 14.5, outline: 'none',
     transition: 'border-color .2s, box-shadow .2s'
@@ -154,7 +154,7 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
       overflowY: 'auto'
     }}>
       <div style={{
-        background: '#0d1810', border: '1px solid var(--mint-line)',
+        background: 'var(--bg-card)', border: '1px solid var(--mint-line)',
         borderRadius: 22, padding: 32, maxWidth: 580, width: '100%',
         boxShadow: '0 40px 80px rgba(0,0,0,.65)', animation: 'scaleIn .22s ease',
         margin: 'auto'
@@ -162,7 +162,7 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
           <div>
-            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>
+            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>
               {isEdit ? '✏️ تعديل الكورس' : '➕ إضافة كورس جديد'}
             </h3>
             <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>
@@ -171,7 +171,7 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
           </div>
           <button onClick={onClose} style={{
             width: 38, height: 38, borderRadius: 10, border: '1px solid var(--line)',
-            background: 'rgba(255,255,255,.05)', cursor: 'pointer', fontSize: 18,
+            background: 'var(--bg-field)', cursor: 'pointer', fontSize: 18,
             color: 'var(--text-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}>✕</button>
         </div>
@@ -189,9 +189,9 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
               placeholder="مثال: أولى بكالوريا — Python والذكاء الاصطناعي"
               style={fieldStyle(errors.title)}
               onFocus={e => { e.target.style.borderColor = 'var(--mint)'; e.target.style.boxShadow = '0 0 0 3px rgba(52,211,153,.12)'; }}
-              onBlur={e  => { e.target.style.borderColor = errors.title ? 'rgba(239,68,68,.5)' : 'var(--line)'; e.target.style.boxShadow = 'none'; }}
+              onBlur={e  => { e.target.style.borderColor = errors.title ? 'var(--danger)' : 'var(--line)'; e.target.style.boxShadow = 'none'; }}
             />
-            {errors.title && <p style={{ color: '#fca5a5', fontSize: 12.5, marginTop: 5 }}>⚠ {errors.title}</p>}
+            {errors.title && <p style={{ color: 'var(--danger)', fontSize: 12.5, marginTop: 5 }}>⚠ {errors.title}</p>}
           </div>
 
           {/* Description */}
@@ -227,7 +227,7 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
                       cursor: 'pointer', fontFamily: 'var(--font-body)', textAlign: 'right',
                       display: 'flex', alignItems: 'center', gap: 8, transition: 'all .2s',
                       border: `1.5px solid ${form.level === lv.value ? LEVEL_META[lv.value]?.border : 'var(--line)'}`,
-                      background: form.level === lv.value ? LEVEL_META[lv.value]?.bg : 'rgba(255,255,255,.03)',
+                      background: form.level === lv.value ? LEVEL_META[lv.value]?.bg : 'var(--bg-muted)',
                       color: form.level === lv.value ? LEVEL_META[lv.value]?.color : 'var(--text-soft)',
                     }}
                   >
@@ -248,16 +248,16 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
                   onChange={e => ch('teacherId', e.target.value)}
                   style={{ ...fieldStyle(errors.teacherId), color: form.teacherId ? 'var(--text)' : '#888' }}
                   onFocus={e => { e.target.style.borderColor = 'var(--mint)'; e.target.style.boxShadow = '0 0 0 3px rgba(52,211,153,.12)'; }}
-                  onBlur={e  => { e.target.style.borderColor = errors.teacherId ? 'rgba(239,68,68,.5)' : 'var(--line)'; e.target.style.boxShadow = 'none'; }}
+                  onBlur={e  => { e.target.style.borderColor = errors.teacherId ? 'var(--danger)' : 'var(--line)'; e.target.style.boxShadow = 'none'; }}
                 >
-                  <option value="">اختر المعلم...</option>
+                  <option value="">اختر المعلم المسؤول...</option>
                   {teachers.map(t => (
-                    <option key={t.id} value={t.id} style={{ color: '#000', background: '#fff' }}>
-                      {t.fullNameAr}
+                    <option key={t.id} value={t.id} style={{ color: 'var(--text)', background: 'var(--bg-1)' }}>
+                      {t.fullNameAr} — {t.role === 'Teacher' ? '👩‍🏫 مدرّس' : t.role === 'Admin' ? '⚙️ أدمن' : t.role === 'Student' ? '👨‍🎓 طالب' : t.role}
                     </option>
                   ))}
                 </select>
-                {errors.teacherId && <p style={{ color: '#fca5a5', fontSize: 12.5, marginTop: 5 }}>⚠ {errors.teacherId}</p>}
+                {errors.teacherId && <p style={{ color: 'var(--danger)', fontSize: 12.5, marginTop: 5 }}>⚠ {errors.teacherId}</p>}
               </div>
 
               {/* Thumbnail URL */}
@@ -279,7 +279,7 @@ function CourseModal({ mode, initial, teachers, onSave, onClose }) {
               {/* Published toggle */}
               <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                background: 'rgba(255,255,255,.03)', border: '1px solid var(--line)',
+                background: 'var(--bg-muted)', border: '1px solid var(--line)',
                 borderRadius: 12, padding: '12px 14px'
               }}>
                 <div>
@@ -460,11 +460,11 @@ export default function CoursesManagement() {
       {/* ── PAGE HEADER ── */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14, marginBottom: 24 }}>
         <div>
-          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>إدارة الكورسات</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>إدارة الكورسات</h2>
           <p style={{ fontSize: 13.5, color: 'var(--text-dim)' }}>
-            <strong style={{ color: 'var(--mint)' }}>{allCourses.length}</strong> كورس ·{' '}
-            <strong style={{ color: '#7ee7b6' }}>{published}</strong> منشور ·{' '}
-            <strong style={{ color: '#fcd34d' }}>{totalEnrolled}</strong> تسجيل إجمالي
+            <strong style={{ color: 'var(--mint-text)' }}>{allCourses.length}</strong> كورس ·{' '}
+            <strong style={{ color: 'var(--mint-text)' }}>{published}</strong> منشور ·{' '}
+            <strong style={{ color: 'var(--amber)' }}>{totalEnrolled}</strong> تسجيل إجمالي
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
