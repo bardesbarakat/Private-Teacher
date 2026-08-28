@@ -140,3 +140,4 @@ D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\refint\BEdu.API.dll
 D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\BEdu.API.pdb
 D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\BEdu.API.genruntimeconfig.cache
 D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\ref\BEdu.API.dll
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\BEdu.API.staticwebassets.runtime.json

@@ -25,6 +25,14 @@ API.interceptors.response.use(
   }
 );
 
+export const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return API.post('/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+};
+
 // Auth
 export const registerUser = (data) => API.post('/auth/register', data);
 export const loginUser   = (data) => API.post('/auth/login', data);
@@ -57,6 +65,7 @@ export const getExamDetail    = (id)  => API.get(`/exams/${id}`);
 export const submitExam       = (id, d)   => API.post(`/exams/${id}/submit`, d);
 export const getMyResults     = ()    => API.get('/exams/results/me');
 export const getResult        = (id)  => API.get(`/exams/results/${id}`);
+export const getStudentResults = (sId) => API.get(`/exams/student/${sId}/results`);
 export const createExam       = (d)   => API.post('/exams', d);
 export const updateExam       = (id, d) => API.put(`/exams/${id}`, d);
 export const deleteExam       = (id)  => API.delete(`/exams/${id}`);

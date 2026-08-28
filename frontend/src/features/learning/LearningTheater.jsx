@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { getCourseCurriculum, getExamsByCourse, getCourseDetails } from '../../services/api';
+import { getCourseCurriculum, getExamsByCourse, getCourseById } from '../../services/api';
 import QuizPlayer from './QuizPlayer';
 import './LearningTheater.css';
 
@@ -29,12 +29,12 @@ export default function LearningTheater() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [cRes, currRes, examsRes] = await Promise.all([
-        getCourseDetails(courseId),
-        getCourseCurriculum(courseId),
-        getExamsByCourse(courseId)
+      const [currRes, examsRes, courseRes] = await Promise.all([
+        getCourseCurriculum(courseId, false),
+        getExamsByCourse(courseId),
+        getCourseById(courseId)
       ]);
-      setCourse(cRes.data);
+      setCourse(courseRes.data);
       setTracks(currRes.data);
       setExams(examsRes.data);
 
@@ -169,32 +169,38 @@ export default function LearningTheater() {
                 <p className="lesson-desc">{lang === 'ar' ? activeItem.data.contentAr : (activeItem.data.contentEn || activeItem.data.contentAr)}</p>
                 
                 {/* VIDEO PLAYER */}
-                {activeItem.data.videoUrl && (
+                {((lang === 'ar' ? activeItem.data.videoUrlAr : activeItem.data.videoUrlEn) || activeItem.data.videoUrlAr) && (
                   <div className="video-wrapper">
-                    {/* Just a simple iframe for now. If it's YouTube, it works. If it's raw MP4, we can use <video> */}
-                    {activeItem.data.videoUrl.includes('youtube.com') || activeItem.data.videoUrl.includes('youtu.be') ? (
-                       <iframe 
-                         src={activeItem.data.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} 
-                         frameBorder="0" 
-                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                         allowFullScreen
-                         title="Lesson Video"
-                       ></iframe>
-                    ) : (
-                      <video controls width="100%">
-                        <source src={activeItem.data.videoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    )}
+                    {(() => {
+                      const vUrl = (lang === 'ar' ? activeItem.data.videoUrlAr : activeItem.data.videoUrlEn) || activeItem.data.videoUrlAr;
+                      if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
+                        return (
+                          <iframe 
+                            src={vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} 
+                            frameBorder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen
+                            title="Lesson Video"
+                          ></iframe>
+                        );
+                      } else {
+                        return (
+                          <video controls width="100%" controlsList="nodownload">
+                            <source src={vUrl} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        );
+                      }
+                    })()}
                   </div>
                 )}
               </div>
 
               {/* PDF ATTACHMENT */}
-              {activeItem.data.pdfUrl && (
+              {((lang === 'ar' ? activeItem.data.pdfUrlAr : activeItem.data.pdfUrlEn) || activeItem.data.pdfUrlAr) && (
                 <div className="pdf-wrapper">
                   <h3>{lang === 'ar' ? 'المادة العلمية (PDF)' : 'Study Material (PDF)'}</h3>
-                  <iframe src={activeItem.data.pdfUrl} width="100%" height="600px" title="PDF Document"></iframe>
+                  <iframe src={(lang === 'ar' ? activeItem.data.pdfUrlAr : activeItem.data.pdfUrlEn) || activeItem.data.pdfUrlAr} width="100%" height="600px" title="PDF Document"></iframe>
                 </div>
               )}
             </div>

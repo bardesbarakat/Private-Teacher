@@ -347,6 +347,29 @@ public class ExamsController : ControllerBase
         return Ok(resultDto);
     }
 
+    [HttpGet("student/{studentId}/results")]
+    [Authorize(Roles = "Parent,Teacher,Admin")]
+    public async Task<ActionResult<IEnumerable<ExamResultDto>>> GetStudentResults(int studentId)
+    {
+        // TODO: In a real app, ensure Parent is actually linked to this student
+        var subs = await _context.ExamSubmissions
+            .Include(s => s.Exam)
+            .Where(s => s.StudentId == studentId)
+            .OrderByDescending(s => s.SubmittedAt)
+            .ToListAsync();
+
+        return subs.Select(s => new ExamResultDto
+        {
+            SubmissionId = s.Id,
+            ExamId = s.ExamId,
+            ExamTitle = s.Exam.Title,
+            Score = s.Score,
+            MaxScore = s.Exam.Questions?.Sum(q => q.Score) ?? 0,
+            Percentage = s.Percentage,
+            SubmittedAt = s.SubmittedAt
+        }).ToList();
+    }
+
     private ExamResponseDto ToResponseDto(Exam exam, string? courseTitle)
     {
         return new ExamResponseDto

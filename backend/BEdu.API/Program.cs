@@ -5,8 +5,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// --- Large File Upload Settings ---
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 524288000; // 500 MB
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 524288000; // 500 MB
+});
 
 // --- Database ---
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -103,6 +115,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("BEduPolicy");
+app.UseStaticFiles(); // Enable serving files from wwwroot
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

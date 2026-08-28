@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { updateLesson } from '../../../services/api';
+import { updateLesson, uploadFile } from '../../../services/api';
 
 export default function LessonEditorModal({ lesson, onClose, onSave }) {
   const [formData, setFormData] = useState({ ...lesson });
@@ -16,6 +16,23 @@ export default function LessonEditorModal({ lesson, onClose, onSave }) {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const [uploadingField, setUploadingField] = useState(null);
+
+  const handleFileUpload = async (e, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingField(fieldName);
+    try {
+      const res = await uploadFile(file);
+      setFormData(prev => ({ ...prev, [fieldName]: res.data.url }));
+      toast.success('تم رفع الملف بنجاح!');
+    } catch (err) {
+      toast.error('فشل رفع الملف. تأكد من حجم الملف والاتصال بالشبكة.');
+    }
+    setUploadingField(null);
   };
 
   const handleSubmit = async (e) => {
@@ -62,13 +79,25 @@ export default function LessonEditorModal({ lesson, onClose, onSave }) {
 
               <div className="form-group">
                 <label className="form-label">رابط الفيديو (عربي)</label>
-                <input className="form-input" type="url" dir="ltr" name="videoUrlAr" value={formData.videoUrlAr || ''} onChange={handleChange} placeholder="https://..." />
-                <small style={{ color: 'var(--text-dim)' }}>YouTube, Vimeo, أو BunnyCDN</small>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input className="form-input" style={{flex:1}} type="url" dir="ltr" name="videoUrlAr" value={formData.videoUrlAr || ''} onChange={handleChange} placeholder="https://..." />
+                  <label className="btn btn-ghost" style={{cursor:'pointer', whiteSpace:'nowrap', display:'flex', alignItems:'center'}}>
+                    {uploadingField === 'videoUrlAr' ? 'يتم الرفع...' : 'رفع 📁'}
+                    <input type="file" accept="video/mp4,video/x-m4v,video/*" style={{display:'none'}} onChange={e => handleFileUpload(e, 'videoUrlAr')} disabled={uploadingField === 'videoUrlAr'} />
+                  </label>
+                </div>
+                <small style={{ color: 'var(--text-dim)' }}>أدخل رابط خارجي أو قم برفع ملف من جهازك</small>
               </div>
 
               <div className="form-group">
                 <label className="form-label">رابط الـ PDF (عربي)</label>
-                <input className="form-input" type="url" dir="ltr" name="pdfUrlAr" value={formData.pdfUrlAr || ''} onChange={handleChange} placeholder="https://..." />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input className="form-input" style={{flex:1}} type="url" dir="ltr" name="pdfUrlAr" value={formData.pdfUrlAr || ''} onChange={handleChange} placeholder="https://..." />
+                  <label className="btn btn-ghost" style={{cursor:'pointer', whiteSpace:'nowrap', display:'flex', alignItems:'center'}}>
+                    {uploadingField === 'pdfUrlAr' ? 'يتم الرفع...' : 'رفع 📁'}
+                    <input type="file" accept="application/pdf" style={{display:'none'}} onChange={e => handleFileUpload(e, 'pdfUrlAr')} disabled={uploadingField === 'pdfUrlAr'} />
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -82,13 +111,25 @@ export default function LessonEditorModal({ lesson, onClose, onSave }) {
 
               <div className="form-group">
                 <label className="form-label">رابط الفيديو (إنجليزي)</label>
-                <input className="form-input" type="url" dir="ltr" name="videoUrlEn" value={formData.videoUrlEn || ''} onChange={handleChange} placeholder="https://..." />
-                <small style={{ color: 'var(--text-dim)' }}>YouTube, Vimeo, أو BunnyCDN</small>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input className="form-input" style={{flex:1}} type="url" dir="ltr" name="videoUrlEn" value={formData.videoUrlEn || ''} onChange={handleChange} placeholder="https://..." />
+                  <label className="btn btn-ghost" style={{cursor:'pointer', whiteSpace:'nowrap', display:'flex', alignItems:'center'}}>
+                    {uploadingField === 'videoUrlEn' ? 'يتم الرفع...' : 'رفع 📁'}
+                    <input type="file" accept="video/mp4,video/x-m4v,video/*" style={{display:'none'}} onChange={e => handleFileUpload(e, 'videoUrlEn')} disabled={uploadingField === 'videoUrlEn'} />
+                  </label>
+                </div>
+                <small style={{ color: 'var(--text-dim)' }}>أدخل رابط خارجي أو قم برفع ملف من جهازك</small>
               </div>
 
               <div className="form-group">
                 <label className="form-label">رابط الـ PDF (إنجليزي)</label>
-                <input className="form-input" type="url" dir="ltr" name="pdfUrlEn" value={formData.pdfUrlEn || ''} onChange={handleChange} placeholder="https://..." />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input className="form-input" style={{flex:1}} type="url" dir="ltr" name="pdfUrlEn" value={formData.pdfUrlEn || ''} onChange={handleChange} placeholder="https://..." />
+                  <label className="btn btn-ghost" style={{cursor:'pointer', whiteSpace:'nowrap', display:'flex', alignItems:'center'}}>
+                    {uploadingField === 'pdfUrlEn' ? 'يتم الرفع...' : 'رفع 📁'}
+                    <input type="file" accept="application/pdf" style={{display:'none'}} onChange={e => handleFileUpload(e, 'pdfUrlEn')} disabled={uploadingField === 'pdfUrlEn'} />
+                  </label>
+                </div>
               </div>
             </div>
           </div>

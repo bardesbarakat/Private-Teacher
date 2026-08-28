@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import {
-  getAllCourses, getEnrolled, enrollCourse,
-  takeExam, submitExam, getResult, getMyResults
+  getAllCourses, getEnrolled, enrollCourse, getMyResults
 } from '../services/api';
 import './Dashboard.css';
 
