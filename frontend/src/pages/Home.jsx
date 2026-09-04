@@ -162,41 +162,176 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right portrait — original design */}
-          <div className="hero-portrait">
-            <div className="portrait-glow" />
-            <div className="portrait-ring" />
-            <div style={{position:'relative',width:'auto',height:'min(500px,58vh)',maxWidth:'100%',display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
-              <div style={{width:'300px',height:'440px',background:'linear-gradient(180deg,var(--mint-soft) 0%,rgba(0,0,0,0) 100%)',borderRadius:'140px 140px 0 0',border:'1px solid var(--mint-line)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'16px',WebkitMaskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)',maskImage:'linear-gradient(to bottom,#000 80%,transparent 99%)'}}>
-                <div style={{fontSize:'80px',lineHeight:1}}>🧑‍💻</div>
-                <div style={{textAlign:'center',padding:'0 20px'}}>
-                  <div style={{fontSize:'18px',fontWeight:700,color:'var(--mint-text)'}}>المدرّس المتخصص</div>
-                  <div style={{fontSize:'13px',color:'var(--text-dim)',marginTop:'4px'}}>برمجة · ذكاء اصطناعي</div>
-                </div>
+          {/* Right visual — Abstract IDE & Student Badges */}
+          <div className="hero-portrait" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 'min(500px, 60vh)', perspective: '1000px' }}>
+            <style>
+              {`
+                @keyframes floatUp {
+                  0% { transform: translateY(40px) scale(0.95); opacity: 0; }
+                  100% { transform: translateY(0) scale(1); opacity: 1; }
+                }
+                @keyframes pulseGlowHero {
+                  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+                  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.7; }
+                  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+                }
+                @keyframes floatBadge {
+                  0% { transform: translateY(0px); }
+                  50% { transform: translateY(-12px); }
+                  100% { transform: translateY(0px); }
+                }
+                .hero-image-container {
+                  animation: floatUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+                  transition: transform 0.5s ease;
+                }
+                .hero-image-container:hover {
+                  transform: scale(1.02) rotateY(-5deg) rotateX(5deg);
+                  box-shadow: 0 30px 60px rgba(52, 211, 153, 0.2);
+                }
+                .badge-delay-1 { animation: floatBadge 4s ease-in-out infinite, floatUp 1s ease-out 0.4s both; }
+                .badge-delay-2 { animation: floatBadge 5s ease-in-out infinite reverse, floatUp 1s ease-out 0.6s both; }
+              `}
+            </style>
+
+            <div className="portrait-glow" style={{ position: 'absolute', width: '150%', height: '150%', background: 'radial-gradient(circle, var(--mint-soft) 0%, transparent 60%)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none', animation: 'pulseGlowHero 6s infinite ease-in-out' }} />
+            
+            {/* Abstract IDE Interface */}
+            <div className="hero-image-container" style={{ position: 'relative', width: '380px', height: '420px', borderRadius: '20px', border: '1px solid var(--mint-line)', background: 'var(--bg-card)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', zIndex: 2, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              
+              {/* IDE Header */}
+              <div style={{ height: '45px', background: 'var(--bg-1)', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }} />
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }} />
+                <span style={{ margin: '0 auto', fontSize: '13px', color: 'var(--text-soft)', fontFamily: 'monospace' }}>student_journey.py</span>
+              </div>
+
+              {/* IDE Body */}
+              <div style={{ padding: '28px 24px', flex: 1, position: 'relative', overflow: 'hidden', background: 'var(--bg-0)' }}>
+                 <div style={{ fontSize: '14.5px', fontFamily: 'monospace', color: '#a78bfa', lineHeight: 1.8, textAlign: 'left', direction: 'ltr', position: 'relative', zIndex: 2 }}>
+                     <span style={{ color: '#c4b5fd' }}>class</span> <span style={{ color: '#fff', fontWeight: 'bold' }}>FutureProgrammer</span>:<br/>
+                     &nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>def</span> <span style={{ color: '#34d399' }}>__init__</span>(self, <span style={{ color: '#93c5fd' }}>student</span>):<br/>
+                     &nbsp;&nbsp;&nbsp;&nbsp;self.name = <span style={{ color: '#93c5fd' }}>student</span><br/>
+                     &nbsp;&nbsp;&nbsp;&nbsp;self.skills = [<span style={{ color: '#fbbf24' }}>'Python'</span>, <span style={{ color: '#fbbf24' }}>'AI'</span>, <span style={{ color: '#fbbf24' }}>'Logic'</span>]<br/>
+                     &nbsp;&nbsp;&nbsp;&nbsp;self.exam_ready = <span style={{ color: '#34d399', fontWeight: 'bold' }}>True</span><br/><br/>
+                     &nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>def</span> <span style={{ color: '#34d399' }}>start_learning</span>(self):<br/>
+                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>return</span> <span style={{ color: '#fbbf24' }}>"Building the Future! 🚀"</span>
+                 </div>
+
+                 {/* Abstract glowing shapes inside IDE */}
+                 <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(52,211,153,0.15), transparent 70%)', filter: 'blur(30px)', borderRadius: '50%', pointerEvents: 'none' }} />
+                 <div style={{ position: 'absolute', left: '-20px', top: '20px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)', filter: 'blur(30px)', borderRadius: '50%', pointerEvents: 'none' }} />
+              </div>
+
+              {/* IDE Status Bar */}
+              <div style={{ height: '36px', background: 'var(--mint-soft)', borderTop: '1px solid var(--mint-line)', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--mint-text)', fontWeight: 'bold' }}>✓ Terminal: Execution Successful - Grade: 100%</span>
               </div>
             </div>
-            <div className="float-chip float-chip--1">&lt;/&gt; Python</div>
-            <div className="float-chip float-chip--2">🧠 AI / ML</div>
-            <div className="float-chip float-chip--3">{'{ }'} Code</div>
+
+            {/* Student & Learning Badges */}
+            <div className="badge-delay-1" style={{ position: 'absolute', top: '10%', right: '-15%', background: 'var(--bg-1)', border: '1px solid var(--mint)', color: 'var(--mint)', padding: '12px 18px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 3, backdropFilter: 'blur(10px)' }}>
+               <div style={{ fontSize: '26px' }}>🎓</div>
+               <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 'bold', color: 'var(--text)' }}>مستقبل واعد</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-soft)', marginTop: '2px' }}>لطلاب البكالوريا</div>
+               </div>
+            </div>
+            
+            <div className="badge-delay-2" style={{ position: 'absolute', bottom: '15%', left: '-15%', background: 'var(--bg-1)', border: '1px solid var(--violet)', color: 'var(--violet)', padding: '12px 18px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 3, backdropFilter: 'blur(10px)' }}>
+               <div style={{ fontSize: '26px' }}>💡</div>
+               <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 'bold', color: 'var(--text)' }}>تطبيق عملي</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-soft)', marginTop: '2px' }}>مشاريع برمجة حقيقية</div>
+               </div>
+            </div>
+            
+            {/* Spinning background elements */}
+            <div className="portrait-ring" style={{ position: 'absolute', width: '450px', height: '450px', borderRadius: '50%', border: '1px dashed var(--mint)', opacity: 0.3, animation: 'spin 30s linear infinite', pointerEvents: 'none', zIndex: 1 }} />
+            <div className="portrait-ring" style={{ position: 'absolute', width: '350px', height: '350px', borderRadius: '50%', border: '1px solid var(--violet)', opacity: 0.15, animation: 'spin 20s linear infinite reverse', pointerEvents: 'none', zIndex: 1 }} />
           </div>
         </div>
       </section>
 
-      {/* ▸ STATS BAND ─────────────────────────────────────── */}
-      <section className="section section--alt">
+
+
+      {/* ▸ TRUST SECTION (Barakat Platform Advanced Courses) ───────────────────────── */}
+      <section className="section" style={{ padding: '20px 0 60px' }}>
         <div className="container">
-          <div className="stats-grid">
-            {[
-              { num:'+10K', label:'طالب مستفيد' },
-              { num:'8+',   label:'سنوات خبرة' },
-              { num:'3',    label:'كورسات متاحة' },
-              { num:'98%',  label:'نسبة نجاح الطلاب' },
-            ].map((s, i) => (
-              <Reveal key={i} delay={i * 80} className="stat-item">
-                <div className="stat-num">{s.num}</div>
-                <div className="stat-label">{s.label}</div>
-              </Reveal>
-            ))}
+          <div style={{ background: 'var(--bg-card)', borderRadius: '24px', border: '1px solid var(--line)', padding: '40px', display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-50%', left: '-10%', width: '400px', height: '400px', background: 'radial-gradient(circle, var(--mint-soft) 0%, transparent 70%)', filter: 'blur(40px)', pointerEvents: 'none' }} />
+            
+            {/* Content Left (RTL) */}
+            <div style={{ flex: '1 1 500px', zIndex: 2 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                <span style={{ display: 'inline-block', background: 'var(--mint-soft)', color: 'var(--mint-text)', padding: '8px 16px', borderRadius: 'var(--r-pill)', fontSize: '13px', fontWeight: 'bold' }}>كورسـات متقدمة بعد التأسيس</span>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <span style={{ background: 'var(--bg-0)', padding: '4px 12px', borderRadius: '16px', border: '1px solid var(--line)', fontSize: '12px', fontWeight: 'bold', color: 'var(--text)' }}>TOFAS</span>
+                  <span style={{ background: 'var(--bg-0)', padding: '4px 12px', borderRadius: '16px', border: '1px solid var(--line)', fontSize: '12px', fontWeight: 'bold', color: 'var(--text)' }}>Sprix</span>
+                </div>
+              </div>
+              
+              <h2 style={{ fontSize: 'clamp(26px, 4vw, 34px)', fontWeight: '900', marginBottom: '18px', lineHeight: 1.3, color: 'var(--text)' }}>
+                منصة بركات تقدم الكورسات المتقدمة لطلاب البكالوريا على TOFAS
+              </h2>
+              
+              <div style={{ color: 'var(--text-soft)', fontSize: '16px', lineHeight: 1.8, marginBottom: '28px' }}>
+                <p style={{ marginBottom: '12px' }}>منصة بركات لا تكتفي بشرح Programming & AI بطريقة تقليدية، بل تقدم الكورسات المتقدمة المعتمدة الموجودة على منصة TOFAS العالمية من خلال مؤسسة Sprix.</p>
+                <p>هذا يعني أن الطالب لا يتعلم المنهج فقط، بل يخطو خطوة أكبر في طريق البرمجة ويكتسب مهارات حقيقية تساعده بعد البكالوريا.</p>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'var(--bg-1)', padding: '16px 20px', borderRadius: '12px', border: '1px solid var(--line)', marginBottom: '32px' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                <span style={{ fontSize: '14px', color: 'var(--text)', fontWeight: '600', lineHeight: 1.6 }}>الكورسات المتقدمة التي تظهر على TOFAS مصممة ومقدمة عبر منصة بركات بالتعاون مع Sprix.</span>
+              </div>
+
+              {/* Path / Journey */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '36px' }}>
+                <span style={{ padding: '8px 16px', background: 'var(--bg-0)', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', border: '1px dashed var(--line)', color: 'var(--text-soft)' }}>أساس البكالوريا</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" strokeWidth="2"><path d="m15 19-7-7 7-7"></path></svg>
+                <span style={{ padding: '8px 16px', background: 'var(--bg-0)', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', border: '1px dashed var(--line)', color: 'var(--mint)' }}>Programming & AI</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" strokeWidth="2"><path d="m15 19-7-7 7-7"></path></svg>
+                <span style={{ padding: '8px 16px', background: 'var(--mint-soft)', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', color: 'var(--mint-text)' }}>كورسات TOFAS المتقدمة</span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                <Link to={isAuthenticated ? '/student' : '/register'} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px' }}>
+                  ابدأ رحلتك مع بركات
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+                </Link>
+                <Link to="/courses" className="btn-outline" style={{ padding: '12px 24px' }}>اكتشف مساراتنا</Link>
+              </div>
+            </div>
+
+            {/* Visual Right (Abstract Dashboard/Ecosystem) */}
+            <div style={{ flex: '1 1 350px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+              <div style={{ width: '100%', maxWidth: '420px', height: 'auto', minHeight: '380px', background: 'linear-gradient(145deg, var(--bg-1), var(--bg-0))', borderRadius: '24px', border: '1px solid var(--line)', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+                {/* Abstract Window Header */}
+                <div style={{ padding: '16px', background: 'var(--bg-card)', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }} />
+                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
+                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }} />
+                  </div>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-dim)', fontFamily: 'monospace' }}>Barakat_Ecosystem.exe</span>
+                </div>
+                {/* Grid Elements */}
+                <div style={{ padding: '24px', flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignContent: 'center' }}>
+                  <div style={{ background: 'var(--bg-card)', padding: '24px 16px', borderRadius: '16px', border: '1px solid var(--line)', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform='translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform='translateY(0)'}>
+                    <div style={{ fontSize: '38px', marginBottom: '16px' }}>🧠</div>
+                    <div style={{ fontSize: '14.5px', fontWeight: 'bold', color: 'var(--text)' }}>الذكاء الاصطناعي</div>
+                  </div>
+                  <div style={{ background: 'var(--bg-card)', padding: '24px 16px', borderRadius: '16px', border: '1px solid var(--line)', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform='translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform='translateY(0)'}>
+                    <div style={{ fontSize: '38px', marginBottom: '16px' }}>💻</div>
+                    <div style={{ fontSize: '14.5px', fontWeight: 'bold', color: 'var(--text)' }}>برمجة بايثون</div>
+                  </div>
+                  <div style={{ background: 'var(--mint-soft)', padding: '24px', borderRadius: '16px', border: '1px solid var(--mint-line)', gridColumn: 'span 2', textAlign: 'center', color: 'var(--mint-text)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ fontSize: '22px', fontWeight: '900', marginBottom: '6px' }}>100%</div>
+                    <div style={{ fontSize: '14px', fontWeight: '600' }}>جاهزية تامة لاختبارات البكالوريا</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
