@@ -59,7 +59,10 @@ export const deleteChapter     = (id)  => API.delete(`/curriculum/chapters/${id}
 export const createLesson      = (d)   => API.post('/curriculum/lessons', d);
 export const updateLesson      = (id, d) => API.put(`/curriculum/lessons/${id}`, d);
 export const deleteLesson      = (id)  => API.delete(`/curriculum/lessons/${id}`);
-export const addResource       = (d)   => API.post('/curriculum/resources', d);
+
+export const seedOfficialCurriculum = (cId) => API.post(`/curriculum/course/${cId}/seed-official`);
+export const addResource = (d) => API.post('/curriculum/resources', d);
+export const deleteResource = (id) => API.delete(`/curriculum/resources/${id}`);
 
 // Exams
 export const getExamsByCourse = (cId) => API.get(`/exams/course/${cId}`);

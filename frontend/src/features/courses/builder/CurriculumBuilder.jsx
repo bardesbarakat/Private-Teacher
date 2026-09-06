@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { getCourseCurriculum, createTrack, createChapter, createLesson, deleteChapter, deleteLesson, getExamsByCourse, deleteExam } from '../../../services/api';
+import { getCourseCurriculum, createTrack, createChapter, createLesson, deleteChapter, deleteLesson, getExamsByCourse, deleteExam, seedOfficialCurriculum } from '../../../services/api';
 import LessonEditorModal from './LessonEditorModal';
 import QuizBuilderModal from './QuizBuilderModal';
 import './CurriculumBuilder.css';
@@ -8,6 +8,7 @@ import './CurriculumBuilder.css';
 export default function CurriculumBuilder({ courseId }) {
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTrackTab, setActiveTrackTab] = useState('Arabic'); // 'Arabic' or 'Languages'
   const [expandedTracks, setExpandedTracks] = useState({});
   const [expandedChapters, setExpandedChapters] = useState({});
   const [editingLesson, setEditingLesson] = useState(null);
@@ -34,6 +35,19 @@ export default function CurriculumBuilder({ courseId }) {
       toast.error('حدث خطأ أثناء تحميل المنهج');
     }
     setLoading(false);
+  };
+
+  const handleSeedOfficial = async () => {
+    if (!window.confirm('هل أنت متأكد من تهيئة المنهج الرسمي؟ سيتم إضافة الوحدات والدروس تلقائياً.')) return;
+    try {
+      setLoading(true);
+      await seedOfficialCurriculum(courseId);
+      toast.success('تمت تهيئة المنهج بنجاح!');
+      await loadCurriculum();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'حدث خطأ أثناء التهيئة');
+      setLoading(false);
+    }
   };
 
   const handleAddTrack = async () => {
@@ -123,16 +137,43 @@ export default function CurriculumBuilder({ courseId }) {
 
   if (loading) return <div className="curriculum-loading">جاري تحميل المنهج...</div>;
 
+  const currentTracks = tracks.filter(t => t.type === activeTrackTab);
+
   return (
     <div className="curriculum-builder">
+      {/* TRACK SWITCHER */}
+      <div className="curriculum-tabs" style={{ marginBottom: '1rem', borderBottom: '1px solid var(--line)', display: 'flex', gap: '1rem' }}>
+        <button 
+          className={`curriculum-tab ${activeTrackTab === 'Arabic' ? 'active' : ''}`}
+          onClick={() => setActiveTrackTab('Arabic')}
+          style={{ background: 'transparent', border: 'none', borderBottom: activeTrackTab === 'Arabic' ? '3px solid var(--mint)' : '3px solid transparent', padding: '0.75rem 1.5rem', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', color: activeTrackTab === 'Arabic' ? 'var(--mint)' : 'var(--text-soft)' }}
+        >
+          المنهج العربي (Arabic Track)
+        </button>
+        <button 
+          className={`curriculum-tab ${activeTrackTab === 'Languages' ? 'active' : ''}`}
+          onClick={() => setActiveTrackTab('Languages')}
+          style={{ background: 'transparent', border: 'none', borderBottom: activeTrackTab === 'Languages' ? '3px solid var(--mint)' : '3px solid transparent', padding: '0.75rem 1.5rem', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', color: activeTrackTab === 'Languages' ? 'var(--mint)' : 'var(--text-soft)' }}
+        >
+          Languages Curriculum
+        </button>
+      </div>
+
       <div className="builder-header">
-        <h2>بناء المنهج (المسارات والفصول)</h2>
-        <button className="btn btn--primary" onClick={handleAddTrack}>+ إضافة مسار جديد</button>
+        <h2>بناء المنهج ({activeTrackTab === 'Arabic' ? 'عربي' : 'لغات'})</h2>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {tracks.length === 0 && (
+            <button className="btn btn--primary" onClick={handleSeedOfficial} style={{ background: '#f59e0b' }}>
+              ✨ تهيئة المنهج الرسمي
+            </button>
+          )}
+          <button className="btn btn--primary" onClick={handleAddTrack}>+ إضافة مسار مخصص</button>
+        </div>
       </div>
 
       <div className="tracks-list">
-        {tracks.length === 0 && <p className="empty-state">لم يتم إضافة أي مسارات بعد.</p>}
-        {tracks.map(track => (
+        {currentTracks.length === 0 && <p className="empty-state">لم يتم إضافة أي بيانات في هذا المسار.</p>}
+        {currentTracks.map(track => (
           <div key={track.id} className="track-card">
             <div className="track-header" onClick={() => toggleTrack(track.id)}>
               <h3>📁 مسار: {track.type}</h3>

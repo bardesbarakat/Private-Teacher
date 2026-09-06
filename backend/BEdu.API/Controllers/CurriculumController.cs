@@ -250,4 +250,196 @@ public class CurriculumController : ControllerBase
         await _db.SaveChangesAsync();
         return Ok(new { message = "تم حذف الدرس" });
     }
+
+    [HttpDelete("resources/{id}")]
+    [Authorize(Policy = "ApprovedTeacher")]
+    public async Task<IActionResult> DeleteResource(int id)
+    {
+        var teacherId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var resource = await _db.SupplementaryResources
+            .Include(r => r.Chapter).ThenInclude(ch => ch.Track).ThenInclude(t => t.Course)
+            .Include(r => r.Lesson).ThenInclude(l => l.Chapter).ThenInclude(ch => ch.Track).ThenInclude(t => t.Course)
+            .FirstOrDefaultAsync(r => r.Id == id);
+            
+        if (resource == null) return NotFound();
+
+        // Check ownership via either Chapter or Lesson
+        var course = resource.Chapter?.Track?.Course ?? resource.Lesson?.Chapter?.Track?.Course;
+        if (course == null || course.TeacherId != teacherId) return Forbid();
+
+        _db.SupplementaryResources.Remove(resource);
+        await _db.SaveChangesAsync();
+        return Ok(new { message = "تم حذف المصدر" });
+    }
+
+    [HttpPost("course/{courseId}/seed-official")]
+    [Authorize(Policy = "ApprovedTeacher")]
+    public async Task<IActionResult> SeedOfficialCurriculum(int courseId)
+    {
+        var teacherId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var course = await _db.Courses.Include(c => c.Tracks).FirstOrDefaultAsync(c => c.Id == courseId);
+        if (course == null || course.TeacherId != teacherId) return Forbid();
+
+        if (course.Tracks.Any(t => t.Type == "Arabic" || t.Type == "Languages"))
+        {
+            return BadRequest(new { message = "المنهج الرسمي موجود بالفعل لهذا الكورس" });
+        }
+
+        // Chapters Data
+        var syllabus = new[]
+        {
+            new {
+                Ar = "الوحدة الأولى: ما هي المعلومات؟", En = "Chapter 1: What is Information?",
+                Lessons = new[] {
+                    new { Ar = "الدرس 1-1: المعلومات والوسائط", En = "Lesson 1-1: Information and Media" },
+                    new { Ar = "الدرس 1-2: أخلاقيات المعلومات", En = "Lesson 1-2: Information Ethics" }
+                }
+            },
+            new {
+                Ar = "الوحدة الثانية: القوانين والحقوق في مجتمع المعلومات", En = "Chapter 2: Regulations and Rights in the Information Society",
+                Lessons = new[] {
+                    new { Ar = "الدرس 2-1: البيانات الشخصية", En = "Lesson 2-1: Personal Information" },
+                    new { Ar = "الدرس 2-2: حقوق الملكية الفكرية", En = "Lesson 2-2: Intellectual Property Rights" },
+                    new { Ar = "الدرس 2-3: الاستخدام والإفصاح عن المعلومات", En = "Lesson 2-3: Utilization and Disclosure of Information" }
+                }
+            },
+            new {
+                Ar = "الوحدة الثالثة: أمن المعلومات", En = "Chapter 3: Information Security",
+                Lessons = new[] {
+                    new { Ar = "الدرس 3-1: تهديدات وإجراءات مواجهة أمن المعلومات 1", En = "Lesson 3-1: Threats and Countermeasures [1]" },
+                    new { Ar = "الدرس 3-2: تهديدات وإجراءات مواجهة أمن المعلومات 2", En = "Lesson 3-2: Threats and Countermeasures [2]" },
+                    new { Ar = "الدرس 3-3: التهديدات والتدابير المضادة 3", En = "Lesson 3-3: Threats and Countermeasures [3]" },
+                    new { Ar = "الدرس 3-4: تقنيات المعلومات للسلامة 1", En = "Lesson 3-4: Information Technology for Safety [1]" },
+                    new { Ar = "الدرس 3-5: تقنيات المعلومات للسلامة 2", En = "Lesson 3-5: Information Technology for Safety [2]" }
+                }
+            },
+            new {
+                Ar = "الوحدة الرابعة: تكنولوجيا المعلومات والمجتمع", En = "Chapter 4: Information Technology and Society",
+                Lessons = new[] {
+                    new { Ar = "الدرس 4-1: تطور تكنولوجيا المعلومات", En = "Lesson 4-1: Development of Information Technology" }
+                }
+            },
+            new {
+                Ar = "الوحدة الخامسة: الاتصالات", En = "Chapter 5: Communication",
+                Lessons = new[] {
+                    new { Ar = "الدرس 5-1: تطور وسائل الاتصال", En = "Lesson 5-1: Development of Communication Methods" },
+                    new { Ar = "الدرس 5-2: أشكال الاتصال", En = "Lesson 5-2: Communication and Its Forms" },
+                    new { Ar = "الدرس 5-3: الإنترنت والاتصال", En = "Lesson 5-3: Internet and Communication" }
+                }
+            },
+            new {
+                Ar = "الوحدة السادسة: تصميم المعلومات", En = "Chapter 6: Information Design",
+                Lessons = new[] {
+                    new { Ar = "الدرس 6-1: التناظري والرقمي", En = "Lesson 6-1: Analog and Digital" },
+                    new { Ar = "الدرس 6-2: النظام الثنائي وكمية البيانات", En = "Lesson 6-2: Binary and Amount of Information" },
+                    new { Ar = "الدرس 6-3: نظام السادس عشر", En = "Lesson 6-3: Hexadecimal" },
+                    new { Ar = "الدرس 6-4: التمثيل الرقمي للأحرف", En = "Lesson 6-4: Digital Representation of Characters" },
+                    new { Ar = "الدرس 6-5: العمليات الحسابية العددية 1", En = "Lesson 6-5: Numerical Calculations [1]" },
+                    new { Ar = "الدرس 6-6: العمليات الحسابية العددية 2", En = "Lesson 6-6: Numerical Calculations [2]" },
+                    new { Ar = "الدرس 6-7: رقمنة الصوت", En = "Lesson 6-7: Digitalization of Sound" },
+                    new { Ar = "الدرس 6-8: رقمنة الصور", En = "Lesson 6-8: Digitization of Images" },
+                    new { Ar = "الدرس 6-9: ضغط الفيديو", En = "Lesson 6-9: Compression for Videos" },
+                    new { Ar = "الدرس 6-10: تصميم البيانات", En = "Lesson 6-10: Information Design" }
+                }
+            },
+            new {
+                Ar = "الوحدة السابعة: أجهزة وبرامج الكمبيوتر", En = "Chapter 7: Computers",
+                Lessons = new[] {
+                    new { Ar = "الدرس 7-1: بنية الكمبيوتر", En = "Lesson 7-1: Computer Configuration" },
+                    new { Ar = "الدرس 7-2: برامج الكمبيوتر", En = "Lesson 7-2: Computer Software" },
+                    new { Ar = "الدرس 7-3: الدوائر المنطقية", En = "Lesson 7-3: Logic Circuits" }
+                }
+            },
+            new {
+                Ar = "الوحدة الثامنة: الشبكات", En = "Chapter 8: Networks",
+                Lessons = new[] {
+                    new { Ar = "الدرس 8-1: شبكات الكمبيوتر", En = "Lesson 8-1: Computer Networks" },
+                    new { Ar = "الدرس 8-2: عناوين IP وأسماء النطاقات", En = "Lesson 8-2: IP Addresses and Domain Names" },
+                    new { Ar = "الدرس 8-3: بروتوكولات الاتصال", En = "Lesson 8-3: Communication Protocols" },
+                    new { Ar = "الدرس 8-4: آلية عمل صفحات الويب", En = "Lesson 8-4: Mechanism of Web Pages" },
+                    new { Ar = "الدرس 8-5: سرعة نقل البيانات", En = "Lesson 8-5: Network Transfer Speed" }
+                }
+            },
+            new {
+                Ar = "الوحدة التاسعة: قواعد البيانات", En = "Chapter 9: Databases",
+                Lessons = new[] {
+                    new { Ar = "الدرس 9-1: قواعد البيانات 1", En = "Lesson 9-1: Database [1]" },
+                    new { Ar = "الدرس 9-2: قواعد البيانات 2", En = "Lesson 9-2: Database [2]" },
+                    new { Ar = "الدرس 9-3: نظم المعلومات المختلفة", En = "Lesson 9-3: Various Information Systems" }
+                }
+            },
+            new {
+                Ar = "الوحدة العاشرة: تحليل البيانات", En = "Chapter 10: Data Analysis",
+                Lessons = new[] {
+                    new { Ar = "الدرس 10-1: أنواع البيانات والتحليل", En = "Lesson 10-1: Types of Data and Analysis" },
+                    new { Ar = "الدرس 10-2: تقنيات تحليل البيانات 1", En = "Lesson 10-2: Data Analysis [1]" },
+                    new { Ar = "الدرس 10-3: تقنيات تحليل البيانات 2", En = "Lesson 10-3: Data Analysis [2]" },
+                    new { Ar = "الدرس 10-4: تقنيات تحليل البيانات 3", En = "Lesson 10-4: Data Analysis [3]" },
+                    new { Ar = "الدرس 10-5: تقنيات تحليل البيانات 4", En = "Lesson 10-5: Data Analysis [4]" },
+                    new { Ar = "الدرس 10-6: تقنيات تحليل البيانات 5", En = "Lesson 10-6: Data Analysis [5]" }
+                }
+            },
+            new {
+                Ar = "الوحدة الحادية عشر: المحاكاة", En = "Chapter 11: Simulations",
+                Lessons = new[] {
+                    new { Ar = "الدرس 11-1: النمذجة", En = "Lesson 11-1: Modeling" },
+                    new { Ar = "الدرس 11-2: تجارب المحاكاة 1", En = "Lesson 11-2: Simulations [1]" },
+                    new { Ar = "الدرس 11-3: تجارب المحاكاة 2", En = "Lesson 11-3: Simulations [2]" },
+                    new { Ar = "الدرس 11-4: طوابير الانتظار", En = "Lesson 11-4: Queues" }
+                }
+            },
+            new {
+                Ar = "الوحدة الثانية عشر: البرمجة (بايثون)", En = "Chapter 12: Programming (Python)",
+                Lessons = new[] {
+                    new { Ar = "الدرس 12-1: الخوارزميات وتدفق العمليات", En = "Lesson 12-1: Algorithm & Flowcharts" },
+                    new { Ar = "الدرس 12-2: أساسيات البرمجة 1", En = "Lesson 12-2: Programming Basics [1]" },
+                    new { Ar = "الدرس 12-3: أساسيات البرمجة 2", En = "Lesson 12-3: Programming Basics [2]" },
+                    new { Ar = "الدرس 12-4: البرمجة التطبيقية 1", En = "Lesson 12-4: Applied Programming [1]" },
+                    new { Ar = "الدرس 12-5: البرمجة التطبيقية 2", En = "Lesson 12-5: Applied Programming [2]" }
+                }
+            },
+            new {
+                Ar = "الوحدة الثالثة عشر: الذكاء الاصطناعي التوليدي والويب", En = "Chapter 13: Generative AI & Web Development",
+                Lessons = new[] {
+                    new { Ar = "الدرس 13-1: الذكاء الاصطناعي التوليدي", En = "Lesson 13-1: Generative AI Concepts" },
+                    new { Ar = "الدرس 13-2: إنشاء صفحات ثابتة بـ HTML & CSS", En = "Lesson 13-2: Static Pages HTML & CSS" },
+                    new { Ar = "الدرس 13-3: صفحات تفاعلية بـ JavaScript", En = "Lesson 13-3: Interactive Pages JS" },
+                    new { Ar = "الدرس 13-4: عرض تقديمي لموقع الويب", En = "Lesson 13-4: Presenting Your Website" },
+                    new { Ar = "الدرس 13-5: تطوير تطبيق اختبارات", En = "Lesson 13-5: Developing Quiz App" },
+                    new { Ar = "الدرس 13-6: مراجعة تطبيق الاختبارات", En = "Lesson 13-6: Review Quiz App" },
+                    new { Ar = "الدرس 13-7: تطوير لعبة تكسير القوالب 1", En = "Lesson 13-7: Block Breaker Game [1]" },
+                    new { Ar = "الدرس 13-8: تطوير لعبة تكسير القوالب 2", En = "Lesson 13-8: Block Breaker Game [2]" },
+                    new { Ar = "الدرس 13-9: ملخص لعبة تكسير القوالب", En = "Lesson 13-9: Review Block Breaker Game" }
+                }
+            }
+        };
+
+        var tracks = new[] { "Arabic", "Languages" };
+
+        foreach (var trackType in tracks)
+        {
+            var track = new Track { CourseId = courseId, Type = trackType };
+            _db.Tracks.Add(track);
+            await _db.SaveChangesAsync(); // save to get ID
+
+            int chIndex = 1;
+            foreach (var unit in syllabus)
+            {
+                var title = trackType == "Arabic" ? unit.Ar : unit.En;
+                var chapter = new Chapter { TrackId = track.Id, TitleAr = title, TitleEn = title, OrderIndex = chIndex++, IsPublished = true };
+                _db.Chapters.Add(chapter);
+                await _db.SaveChangesAsync();
+
+                int lIndex = 1;
+                foreach (var lesson in unit.Lessons)
+                {
+                    var lTitle = trackType == "Arabic" ? lesson.Ar : lesson.En;
+                    _db.Lessons.Add(new Lesson { ChapterId = chapter.Id, TitleAr = lTitle, TitleEn = lTitle, OrderIndex = lIndex++, IsPublished = true });
+                }
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        return Ok(new { message = "تمت تهيئة المنهج بنجاح" });
+    }
 }
