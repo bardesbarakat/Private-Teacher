@@ -59,6 +59,7 @@ privateTeacher/
     │   └── services/         # API integration (Axios)
     ├── package.json
     └── vite.config.js
+<<<<<<< HEAD
 ```
 
 ---
@@ -125,3 +126,5 @@ privateTeacher/
 * 📧 Email: yousef@example.com *(Add your email)*
 * 💼 LinkedIn: [LinkedIn Profile](#) *(Add your link)*
 * 🐙 GitHub: [@YourUsername](#) *(Add your link)*
+=======
+>>>>>>> db89ac07ebfbfcb0a2c8e120a3149b8f37ce8087
