@@ -19,6 +19,10 @@ public class AppDbContext : DbContext
     public DbSet<AnswerOption> AnswerOptions => Set<AnswerOption>();
     public DbSet<ExamSubmission> ExamSubmissions => Set<ExamSubmission>();
     public DbSet<StudentAnswer> StudentAnswers => Set<StudentAnswer>();
+    
+    public DbSet<LiveSession> LiveSessions => Set<LiveSession>();
+    public DbSet<SessionAttendance> SessionAttendances => Set<SessionAttendance>();
+    public DbSet<LessonProgress> LessonProgresses => Set<LessonProgress>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -99,8 +103,7 @@ public class AppDbContext : DbContext
             .HasOne(s => s.Chapter)
             .WithMany(c => c.Resources)
             .HasForeignKey(s => s.ChapterId)
-            .OnDelete(DeleteBehavior.NoAction)
-            .IsRequired(false);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<SupplementaryResource>()
             .HasOne(s => s.Lesson)
@@ -122,5 +125,31 @@ public class AppDbContext : DbContext
             .HasForeignKey(e => e.LessonId)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired(false);
+
+        // SessionAttendance
+        builder.Entity<SessionAttendance>()
+            .HasOne(sa => sa.Student)
+            .WithMany()
+            .HasForeignKey(sa => sa.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<SessionAttendance>()
+            .HasOne(sa => sa.Session)
+            .WithMany(s => s.Attendances)
+            .HasForeignKey(sa => sa.SessionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // LessonProgress
+        builder.Entity<LessonProgress>()
+            .HasOne(lp => lp.Student)
+            .WithMany()
+            .HasForeignKey(lp => lp.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<LessonProgress>()
+            .HasOne(lp => lp.Lesson)
+            .WithMany()
+            .HasForeignKey(lp => lp.LessonId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

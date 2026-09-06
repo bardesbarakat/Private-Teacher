@@ -48,6 +48,8 @@ export const deleteCourse    = (id)    => API.delete(`/courses/${id}`);
 export const enrollCourse    = (cId)   => API.post('/courses/enroll', { courseId: cId });
 export const getEnrolled     = ()      => API.get('/courses/enrolled');
 
+export const getStudentStats = ()      => API.get('/student/stats');
+
 // Curriculum (Instructor)
 export const getCourseCurriculum = (cId, includeDrafts) => API.get(`/curriculum/course/${cId}`, { params: { includeDrafts } });
 export const createTrack       = (d)   => API.post('/curriculum/tracks', d);
