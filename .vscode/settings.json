@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/b392d4aa-bb42-411a-b3c7-2f50c7b9bc5e/resourceGroups/BEdu-RG/providers/Microsoft.Web/sites/bedu",
+    "appService.deploySubpath": "backend\\BEdu.API\\publish"
+}
