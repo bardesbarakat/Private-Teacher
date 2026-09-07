@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BEdu.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+358b327ae9458f00250ec93c5104f796c55e2f8c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+007e9216ac8685ebd9c1d62c3bf2cb1baf088314")]
 [assembly: System.Reflection.AssemblyProductAttribute("BEdu.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BEdu.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
