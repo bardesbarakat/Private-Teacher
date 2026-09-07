@@ -49,16 +49,12 @@ builder.Services.AddAuthorization(options =>
 });
 
 // --- CORS ---
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-    ?? new[] { "http://localhost:5173" };
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("BEduPolicy", policy =>
-        policy.WithOrigins(allowedOrigins)
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials());
+              .AllowAnyHeader());
 });
 
 // --- Services ---
