@@ -195,38 +195,9 @@ export default function Home() {
 
             <div className="portrait-glow" style={{ position: 'absolute', width: '150%', height: '150%', background: 'radial-gradient(circle, var(--mint-soft) 0%, transparent 60%)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none', animation: 'pulseGlowHero 6s infinite ease-in-out' }} />
             
-            {/* Abstract IDE Interface */}
-            <div className="hero-image-container" style={{ position: 'relative', width: '380px', height: '420px', borderRadius: '20px', border: '1px solid var(--mint-line)', background: 'var(--bg-card)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', zIndex: 2, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              
-              {/* IDE Header */}
-              <div style={{ height: '45px', background: 'var(--bg-1)', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '8px' }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }} />
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }} />
-                <span style={{ margin: '0 auto', fontSize: '13px', color: 'var(--text-soft)', fontFamily: 'monospace' }}>student_journey.py</span>
-              </div>
-
-              {/* IDE Body */}
-              <div style={{ padding: '28px 24px', flex: 1, position: 'relative', overflow: 'hidden', background: 'var(--bg-0)' }}>
-                 <div style={{ fontSize: '14.5px', fontFamily: 'monospace', color: '#a78bfa', lineHeight: 1.8, textAlign: 'left', direction: 'ltr', position: 'relative', zIndex: 2 }}>
-                     <span style={{ color: '#c4b5fd' }}>class</span> <span style={{ color: '#fff', fontWeight: 'bold' }}>FutureProgrammer</span>:<br/>
-                     &nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>def</span> <span style={{ color: '#34d399' }}>__init__</span>(self, <span style={{ color: '#93c5fd' }}>student</span>):<br/>
-                     &nbsp;&nbsp;&nbsp;&nbsp;self.name = <span style={{ color: '#93c5fd' }}>student</span><br/>
-                     &nbsp;&nbsp;&nbsp;&nbsp;self.skills = [<span style={{ color: '#fbbf24' }}>'Python'</span>, <span style={{ color: '#fbbf24' }}>'AI'</span>, <span style={{ color: '#fbbf24' }}>'Logic'</span>]<br/>
-                     &nbsp;&nbsp;&nbsp;&nbsp;self.exam_ready = <span style={{ color: '#34d399', fontWeight: 'bold' }}>True</span><br/><br/>
-                     &nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>def</span> <span style={{ color: '#34d399' }}>start_learning</span>(self):<br/>
-                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#c4b5fd' }}>return</span> <span style={{ color: '#fbbf24' }}>"Building the Future! 🚀"</span>
-                 </div>
-
-                 {/* Abstract glowing shapes inside IDE */}
-                 <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(52,211,153,0.15), transparent 70%)', filter: 'blur(30px)', borderRadius: '50%', pointerEvents: 'none' }} />
-                 <div style={{ position: 'absolute', left: '-20px', top: '20px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)', filter: 'blur(30px)', borderRadius: '50%', pointerEvents: 'none' }} />
-              </div>
-
-              {/* IDE Status Bar */}
-              <div style={{ height: '36px', background: 'var(--mint-soft)', borderTop: '1px solid var(--mint-line)', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--mint-text)', fontWeight: 'bold' }}>✓ Terminal: Execution Successful - Grade: 100%</span>
-              </div>
+            {/* Hero Image Illustration */}
+            <div className="hero-image-container" style={{ position: 'relative', width: '100%', maxWidth: '480px', borderRadius: '20px', border: '1px solid var(--line-soft)', background: 'var(--bg-card)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', zIndex: 2, display: 'flex', overflow: 'hidden' }}>
+               <img src="/hero_illustration.jpg" alt="Student learning programming and AI" style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
             </div>
 
             {/* Student & Learning Badges */}
