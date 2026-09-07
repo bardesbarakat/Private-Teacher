@@ -10,6 +10,8 @@
 
 A comprehensive, scalable EdTech ecosystem bridging the gap between private teachers and students through intelligent dashboards, real-time tracking, and interactive curriculum management.
 
+### 🌐 **[View Live Demo](https://bedu-sigma.vercel.app/)** 🌐
+
 </div>
 
 ## 📌 Project Overview
