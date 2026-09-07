@@ -45,13 +45,13 @@ export default function Navbar() {
         <div className="nav__actions">
           {isAuthenticated ? (
             <>
-              <span style={{fontSize:'13.5px',color:'var(--text-soft)',padding:'8px 0'}}>{user?.fullNameAr?.split(' ')[0]}</span>
-              <button className="btn-ghost" onClick={handleLogout}>خروج</button>
+              <span className="hide-mobile" style={{fontSize:'13.5px',color:'var(--text-soft)',padding:'8px 0'}}>{user?.fullNameAr?.split(' ')[0]}</span>
+              <button className="btn-ghost hide-mobile" onClick={handleLogout}>خروج</button>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-ghost">تسجيل الدخول</Link>
-              <Link to="/register" className="btn-primary" style={{padding:'10px 18px',fontSize:'14px'}}>سجّل الآن</Link>
+              <Link to="/login" className="btn-ghost hide-mobile">تسجيل الدخول</Link>
+              <Link to="/register" className="btn-primary hide-mobile" style={{padding:'10px 18px',fontSize:'14px'}}>سجّل الآن</Link>
             </>
           )}
 
