@@ -65,6 +65,11 @@ export const seedOfficialCurriculum = (cId) => API.post(`/curriculum/course/${cI
 export const addResource = (d) => API.post('/curriculum/resources', d);
 export const deleteResource = (id) => API.delete(`/curriculum/resources/${id}`);
 
+// Lesson Access Codes
+export const generateLessonCodes = (lessonId, count) => API.post(`/teacher/lessons/${lessonId}/generate-codes`, { count });
+export const getLessonCodes = (lessonId) => API.get(`/teacher/lessons/${lessonId}/codes`);
+export const redeemLessonCode = (code) => API.post('/student/lessons/redeem-code', { code });
+
 // Exams
 export const getExamsByCourse = (cId) => API.get(`/exams/course/${cId}`);
 export const getExamDetail    = (id)  => API.get(`/exams/${id}`);

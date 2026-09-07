@@ -20,6 +20,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import PendingApproval from './pages/PendingApproval';
 import LearningTheater from './features/learning/LearningTheater';
 import StudentLayout from './components/StudentLayout';
+import RedeemPage from './pages/RedeemPage';
 
 function AppRoutes() {
   const { isAuthenticated, role } = useAuth();
@@ -37,6 +38,7 @@ function AppRoutes() {
       {/* Auth pages — إعادة التوجيه لو المستخدم مسجل دخول بالفعل */}
       <Route path="/login" element={isAuthenticated ? <Navigate to={dashboardRedirect} replace /> : <Login />} />
       <Route path="/register" element={isAuthenticated ? <Navigate to={dashboardRedirect} replace /> : <Register />} />
+      <Route path="/redeem" element={<><Navbar /><RedeemPage /></>} />
 
       {/* Protected dashboards — اللوحات المحمية بصلاحياتها */}
       {/* Student App Shell */}

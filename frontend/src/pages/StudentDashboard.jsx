@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getEnrolled, getCourseCurriculum } from '../services/api';
+import RedeemCodeModal from './RedeemCodeModal';
 import './StudentDashboard.css';
 
 export default function StudentDashboard() {
@@ -14,6 +15,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [tracks, setTracks] = useState([]);
   const [openChapters, setOpenChapters] = useState({});
+  const [redeemingLesson, setRedeemingLesson] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('bedu_curriculum_pref', activeTrackTab);
@@ -174,31 +176,43 @@ export default function StudentDashboard() {
               {isOpen && (
                 <div className="chapter-content">
                   {chapter.lessons?.map(lesson => (
-                    <div key={lesson.id} style={{ marginBottom: '2rem' }}>
-                      <h4 style={{ color: 'var(--text)', marginBottom: '1rem', borderBottom: '1px dashed var(--line)', paddingBottom: '0.5rem' }}>
+                    <div key={lesson.id} style={{ marginBottom: '2rem', padding: '1rem', background: lesson.isUnlocked ? 'transparent' : 'rgba(139, 92, 246, 0.05)', borderRadius: '12px', border: lesson.isUnlocked ? 'none' : '1px solid var(--violet-line)' }}>
+                      <h4 style={{ color: 'var(--text)', marginBottom: '1rem', borderBottom: '1px dashed var(--line)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {!lesson.isUnlocked && <span>🔒</span>}
                         {isArabic ? lesson.titleAr : lesson.titleEn}
                       </h4>
                       
-                      {lesson.resources && lesson.resources.length > 0 ? (
-                        <div className="materials-list">
-                          {lesson.resources.map(mat => (
-                            <div key={mat.id} className="mat-card">
-                              <div className="mat-header">
-                                <span className="mat-icon">{renderIcon(mat.type)}</span>
-                                <div className="mat-info">
-                                  <h4>{isArabic ? mat.titleAr : mat.titleEn}</h4>
-                                  <p>{mat.type.toUpperCase()}</p>
+                      {lesson.isUnlocked ? (
+                        lesson.resources && lesson.resources.length > 0 ? (
+                          <div className="materials-list">
+                            {lesson.resources.map(mat => (
+                              <div key={mat.id} className="mat-card">
+                                <div className="mat-header">
+                                  <span className="mat-icon">{renderIcon(mat.type)}</span>
+                                  <div className="mat-info">
+                                    <h4>{isArabic ? mat.titleAr : mat.titleEn}</h4>
+                                    <p>{mat.type.toUpperCase()}</p>
+                                  </div>
+                                </div>
+                                <div className="mat-actions">
+                                  {renderActions(mat)}
                                 </div>
                               </div>
-                              <div className="mat-actions">
-                                {renderActions(mat)}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ display: 'inline-block', background: 'var(--bg-muted)', padding: '0.5rem 1rem', borderRadius: 'var(--r-sm)', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+                            ⏳ {isArabic ? 'قريباً / Coming Soon' : 'Coming Soon'}
+                          </div>
+                        )
                       ) : (
-                        <div style={{ display: 'inline-block', background: 'var(--bg-muted)', padding: '0.5rem 1rem', borderRadius: 'var(--r-sm)', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
-                          ⏳ {isArabic ? 'قريباً / Coming Soon' : 'Coming Soon'}
+                        <div className="locked-lesson" style={{ textAlign: 'center', padding: '1rem' }}>
+                          <p style={{ color: 'var(--text-soft)', marginBottom: '1rem' }}>
+                            {isArabic ? 'هذا الدرس مقفل. يرجى إدخال كود التفعيل للوصول إلى المحتوى.' : 'This lesson is locked. Please enter an activation code.'}
+                          </p>
+                          <button className="btn btn-primary" onClick={() => setRedeemingLesson(lesson.id)}>
+                            {isArabic ? 'أدخل كود التفعيل' : 'Enter Activation Code'}
+                          </button>
                         </div>
                       )}
                     </div>
@@ -216,6 +230,16 @@ export default function StudentDashboard() {
           );
         })}
       </div>
+
+      {redeemingLesson && (
+        <RedeemCodeModal 
+          onClose={() => setRedeemingLesson(null)} 
+          onSuccess={() => {
+            setRedeemingLesson(null);
+            loadStudentCurriculum(); // Re-fetch to unlock
+          }} 
+        />
+      )}
     </div>
   );
 }

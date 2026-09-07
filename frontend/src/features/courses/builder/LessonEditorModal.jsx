@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { updateLesson, uploadFile, addResource, deleteResource } from '../../../services/api';
+import LessonCodeManager from './LessonCodeManager';
 
 export default function LessonEditorModal({ lesson, onClose, onSave }) {
   const [formData, setFormData] = useState({ 
@@ -245,6 +246,11 @@ export default function LessonEditorModal({ lesson, onClose, onSave }) {
             </div>
           </div>
         )}
+
+        <hr style={{ borderTop: '1px solid var(--line)', margin: '2rem 0' }} />
+        
+        {/* ACCESS CODES MANAGER */}
+        <LessonCodeManager lessonId={lesson.id} />
 
       </div>
     </div>
