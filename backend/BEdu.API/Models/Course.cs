@@ -102,6 +102,10 @@ public class Lesson
 
     public ICollection<Exam> Exams { get; set; } = new List<Exam>();
     public ICollection<SupplementaryResource> Resources { get; set; } = new List<SupplementaryResource>();
+    
+    // Access Control
+    public ICollection<LessonActivationCode> ActivationCodes { get; set; } = new List<LessonActivationCode>();
+    public ICollection<StudentLessonAccess> StudentAccesses { get; set; } = new List<StudentLessonAccess>();
 }
 
 public class SupplementaryResource

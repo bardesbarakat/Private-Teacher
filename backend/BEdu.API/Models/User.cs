@@ -41,4 +41,5 @@ public class User
     public ICollection<Course> Courses { get; set; } = new List<Course>();
     public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     public ICollection<ExamSubmission> ExamSubmissions { get; set; } = new List<ExamSubmission>();
+    public ICollection<StudentLessonAccess> UnlockedLessons { get; set; } = new List<StudentLessonAccess>();
 }

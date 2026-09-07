@@ -35,6 +35,8 @@ public class LessonDto
     
     public List<ResourceDto> Resources { get; set; } = new();
     public int? ExamId { get; set; }
+    
+    public bool IsUnlocked { get; set; } = true;
 }
 
 public class ResourceDto

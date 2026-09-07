@@ -141,3 +141,9 @@ D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\BEdu.API.pdb
 D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\BEdu.API.genruntimeconfig.cache
 D:\privateTeacher\backend\BEdu.API\obj\Debug\net8.0\ref\BEdu.API.dll
 D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\BEdu.API.staticwebassets.runtime.json
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\web.config
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\appsettings.Development.json
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\appsettings.json
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\BEdu.API.deps.json
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\BEdu.API.runtimeconfig.json
+D:\privateTeacher\backend\BEdu.API\bin\Debug\net8.0\publish\BEdu.API.staticwebassets.endpoints.json

@@ -23,6 +23,8 @@ public class AppDbContext : DbContext
     public DbSet<LiveSession> LiveSessions => Set<LiveSession>();
     public DbSet<SessionAttendance> SessionAttendances => Set<SessionAttendance>();
     public DbSet<LessonProgress> LessonProgresses => Set<LessonProgress>();
+    public DbSet<LessonActivationCode> LessonActivationCodes => Set<LessonActivationCode>();
+    public DbSet<StudentLessonAccess> StudentLessonAccesses => Set<StudentLessonAccess>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -150,6 +152,40 @@ public class AppDbContext : DbContext
             .HasOne(lp => lp.Lesson)
             .WithMany()
             .HasForeignKey(lp => lp.LessonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Lesson Activation Codes
+        builder.Entity<LessonActivationCode>()
+            .HasIndex(c => c.Code)
+            .IsUnique();
+
+        builder.Entity<LessonActivationCode>()
+            .HasOne(c => c.Lesson)
+            .WithMany(l => l.ActivationCodes)
+            .HasForeignKey(c => c.LessonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<LessonActivationCode>()
+            .HasOne(c => c.RedeemedByStudent)
+            .WithMany()
+            .HasForeignKey(c => c.RedeemedByStudentId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Student Lesson Access
+        builder.Entity<StudentLessonAccess>()
+            .HasIndex(a => new { a.StudentId, a.LessonId })
+            .IsUnique();
+
+        builder.Entity<StudentLessonAccess>()
+            .HasOne(a => a.Student)
+            .WithMany(u => u.UnlockedLessons)
+            .HasForeignKey(a => a.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<StudentLessonAccess>()
+            .HasOne(a => a.Lesson)
+            .WithMany(l => l.StudentAccesses)
+            .HasForeignKey(a => a.LessonId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

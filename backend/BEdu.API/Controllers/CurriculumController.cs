@@ -36,7 +36,19 @@ public class CurriculumController : ControllerBase
         if (course == null) return NotFound(new { message = "الكورس غير موجود" });
 
         var isTeacher = User.Identity?.IsAuthenticated == true && User.IsInRole("Teacher") && course.TeacherId == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+        var isStudent = User.Identity?.IsAuthenticated == true && User.IsInRole("Student");
+        var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
         var showDrafts = includeDrafts && isTeacher;
+
+        // Fetch unlocked lessons for the student
+        var unlockedLessonIds = new HashSet<int>();
+        if (isStudent)
+        {
+            unlockedLessonIds = new HashSet<int>(await _db.StudentLessonAccesses
+                .Where(a => a.StudentId == currentUserId && a.Lesson.Chapter.Track.CourseId == courseId)
+                .Select(a => a.LessonId)
+                .ToListAsync());
+        }
 
         var tracks = course.Tracks.Select(t => new TrackDto
         {
@@ -57,22 +69,28 @@ public class CurriculumController : ControllerBase
                     }).ToList(),
                     Lessons = ch.Lessons
                         .Where(l => showDrafts || l.IsPublished)
-                        .Select(l => new LessonDto
+                        .Select(l => 
                         {
-                            Id = l.Id,
-                            TitleAr = l.TitleAr,
-                            TitleEn = l.TitleEn,
-                            OrderIndex = l.OrderIndex,
-                            IsPublished = l.IsPublished,
-                            VideoUrlAr = l.VideoUrlAr,
-                            VideoUrlEn = l.VideoUrlEn,
-                            PdfUrlAr = l.PdfUrlAr,
-                            PdfUrlEn = l.PdfUrlEn,
-                            ExamId = l.Exams.FirstOrDefault()?.Id,
-                            Resources = l.Resources.Select(r => new ResourceDto
+                            bool unlocked = isTeacher || !isStudent || unlockedLessonIds.Contains(l.Id);
+                            
+                            return new LessonDto
                             {
-                                Id = r.Id, Type = r.Type, TitleAr = r.TitleAr, TitleEn = r.TitleEn, UrlAr = r.UrlAr, UrlEn = r.UrlEn
-                            }).ToList()
+                                Id = l.Id,
+                                TitleAr = l.TitleAr,
+                                TitleEn = l.TitleEn,
+                                OrderIndex = l.OrderIndex,
+                                IsPublished = l.IsPublished,
+                                IsUnlocked = unlocked,
+                                VideoUrlAr = unlocked ? l.VideoUrlAr : null,
+                                VideoUrlEn = unlocked ? l.VideoUrlEn : null,
+                                PdfUrlAr = unlocked ? l.PdfUrlAr : null,
+                                PdfUrlEn = unlocked ? l.PdfUrlEn : null,
+                                ExamId = l.Exams.FirstOrDefault()?.Id,
+                                Resources = unlocked ? l.Resources.Select(r => new ResourceDto
+                                {
+                                    Id = r.Id, Type = r.Type, TitleAr = r.TitleAr, TitleEn = r.TitleEn, UrlAr = r.UrlAr, UrlEn = r.UrlEn
+                                }).ToList() : new List<ResourceDto>()
+                            };
                         }).ToList()
                 }).ToList()
         }).ToList();
