@@ -64,47 +64,6 @@ privateTeacher/
 ```
 
 ---
-
-## 💻 Installation & Running
-
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v16+)
-* [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
-* [SQL Server](https://www.microsoft.com/en-us/sql-server)
-
-### 1️⃣ Setting up the Backend
-1. Open a terminal and navigate to the backend directory:
-   ```bash
-   cd backend/BEdu.API
-   ```
-2. Update the database connection string in `appsettings.json` if necessary.
-3. Apply Entity Framework Migrations to create the database:
-   ```bash
-   dotnet ef database update
-   ```
-4. Run the server:
-   ```bash
-   dotnet run --urls "http://localhost:5000"
-   ```
-   *The backend will be available at `http://localhost:5000`*
-
-### 2️⃣ Setting up the Frontend
-1. Open a new terminal and navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   *The frontend will be available at `http://localhost:5173`*
-
----
-
 ## 👨‍💻 Author & Contact
 
 **Bardes Barakat**  
