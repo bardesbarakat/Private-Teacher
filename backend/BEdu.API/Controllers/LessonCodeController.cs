@@ -22,7 +22,7 @@ public class LessonCodeController : ControllerBase
 
     private string GenerateRandomCode(int length)
     {
-        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluded confusing chars like I,1,O,0
+        const string chars = "0123456789";
         var data = new byte[length];
         using (var crypto = RandomNumberGenerator.Create())
         {
