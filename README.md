@@ -59,7 +59,6 @@ privateTeacher/
     │   └── services/         # API integration (Axios)
     ├── package.json
     └── vite.config.js
-<<<<<<< HEAD
 ```
 
 ---
@@ -104,22 +103,12 @@ privateTeacher/
 
 ---
 
-## 📸 Screenshots (UI Demo)
-
-*(Replace the placeholder links below with actual images of your project)*
-
-| Student Dashboard | Course Materials |
-| :---: | :---: |
-| ![Student Dashboard](https://via.placeholder.com/400x250.png?text=Student+Dashboard) | ![Course Materials](https://via.placeholder.com/400x250.png?text=Course+Materials) |
-
-| Teacher Curriculum Builder | Lesson Editor & Uploads |
-| :---: | :---: |
-| ![Curriculum Builder](https://via.placeholder.com/400x250.png?text=Curriculum+Builder) | ![Upload Modal](https://via.placeholder.com/400x250.png?text=Upload+Modal) |
-
----
-
 ## 👨‍💻 Author & Contact
 
-**Bardes / Barakat Platform**  
-*Full Stack Developer*
+**Bardes Barakat**  
+*Full Stack Developer & Founder of BEdu Platform*
+
+* 📧 Email: bardesbarakat@hotmail.com
+* 🐙 GitHub: [@bardesbarakat](https://github.com/bardesbarakat)
+* 🌐 Live Platform: [BEdu Platform](https://bedu-sigma.vercel.app/)
 
