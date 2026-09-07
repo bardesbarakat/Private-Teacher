@@ -25,7 +25,7 @@ export default function Navbar() {
       <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="mainNav">
         <Link to="/" className="nav__brand">
           <div className="nav__mark">
-            <img src="/logo.jpg" alt="Barakat Education Platform logo" />
+            <img src={theme === 'dark' ? '/logo.jpg' : '/logo-light.jpg'} alt="Barakat Education Platform logo" />
           </div>
           <div className="nav__name-wrap">
             <span className="nav__name">Barakat Education Platform</span>
