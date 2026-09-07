@@ -120,11 +120,6 @@ privateTeacher/
 
 ## 👨‍💻 Author & Contact
 
-**Yousef / Barakat Platform**  
+**Bardes / Barakat Platform**  
 *Full Stack Developer*
 
-* 📧 Email: yousef@example.com *(Add your email)*
-* 💼 LinkedIn: [LinkedIn Profile](#) *(Add your link)*
-* 🐙 GitHub: [@YourUsername](#) *(Add your link)*
-=======
->>>>>>> db89ac07ebfbfcb0a2c8e120a3149b8f37ce8087
