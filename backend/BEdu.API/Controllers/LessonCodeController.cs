@@ -24,10 +24,7 @@ public class LessonCodeController : ControllerBase
     {
         const string chars = "0123456789";
         var data = new byte[length];
-        using (var crypto = RandomNumberGenerator.Create())
-        {
-            crypto.GetBytes(data);
-        }
+        RandomNumberGenerator.Fill(data);
         var result = new StringBuilder(length);
         foreach (byte b in data)
         {
