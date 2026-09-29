@@ -20,6 +20,26 @@ public class LessonCodeController : ControllerBase
         _context = context;
     }
 
+    [HttpGet("/api/admin/migrate")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForceMigrate()
+    {
+        try
+        {
+            await _context.Database.MigrateAsync();
+            return Ok(new { message = "Migrations applied successfully! The database is now up to date." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { 
+                message = "Migration failed", 
+                error = ex.Message, 
+                inner = ex.InnerException?.Message,
+                stack = ex.StackTrace
+            });
+        }
+    }
+
     private string GenerateRandomCode(int length)
     {
         const string chars = "0123456789";
