@@ -7,9 +7,9 @@ import './StudentDashboard.css';
 export default function StudentDashboard() {
   const { user } = useAuth();
   
-  // Track preference: 'Arabic' | 'Languages'
+  // Track preference: 'Arabic' | 'Languages' or null for not selected yet
   const [activeTrackTab, setActiveTrackTab] = useState(() => {
-    return localStorage.getItem('bedu_curriculum_pref') || 'Arabic';
+    return localStorage.getItem('bedu_curriculum_pref') || null;
   });
   
   const [loading, setLoading] = useState(true);
@@ -18,8 +18,15 @@ export default function StudentDashboard() {
   const [redeemingLesson, setRedeemingLesson] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('bedu_curriculum_pref', activeTrackTab);
-  }, [activeTrackTab]);
+    if (activeTrackTab) {
+      localStorage.setItem('bedu_curriculum_pref', activeTrackTab);
+      // Try to open the first chapter of the newly selected track
+      const currentTracks = tracks.filter(t => t.type === activeTrackTab);
+      if (currentTracks.length > 0 && currentTracks[0].chapters?.length > 0) {
+         setOpenChapters({ [currentTracks[0].chapters[0].id]: true });
+      }
+    }
+  }, [activeTrackTab, tracks]);
 
   useEffect(() => {
     loadStudentCurriculum();
@@ -28,23 +35,13 @@ export default function StudentDashboard() {
   const loadStudentCurriculum = async () => {
     try {
       setLoading(true);
-      // 1. Get enrolled courses
       const enrolledRes = await getEnrolled();
       const enrolledCourses = enrolledRes.data;
       
       if (enrolledCourses.length > 0) {
-        // Just pick the first enrolled course for now
         const courseId = enrolledCourses[0].courseId;
-        
-        // 2. Get curriculum for this course
         const currRes = await getCourseCurriculum(courseId, false);
         setTracks(currRes.data);
-        
-        // Open the first chapter by default
-        const currentTracks = currRes.data.filter(t => t.type === activeTrackTab);
-        if (currentTracks.length > 0 && currentTracks[0].chapters?.length > 0) {
-           setOpenChapters({ [currentTracks[0].chapters[0].id]: true });
-        }
       }
     } catch (err) {
       console.error(err);
@@ -57,7 +54,7 @@ export default function StudentDashboard() {
   };
 
   const isArabic = activeTrackTab === 'Arabic';
-  const currentTracks = tracks.filter(t => t.type === activeTrackTab);
+  const currentTracks = activeTrackTab ? tracks.filter(t => t.type === activeTrackTab) : [];
   const chapters = currentTracks.length > 0 ? currentTracks[0].chapters : [];
 
   const renderIcon = (type) => {
@@ -157,27 +154,50 @@ export default function StudentDashboard() {
     return <div style={{ padding: '4rem', textAlign: 'center' }}>جاري تحميل المادة العلمية...</div>;
   }
 
+  if (!activeTrackTab) {
+    return (
+      <div style={{ padding: '4rem 1rem', textAlign: 'center', direction: 'rtl', minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--violet)' }}>اختر لغة الدراسة المفضلة لديك</h2>
+        <p style={{ color: 'var(--text-soft)', marginBottom: '3rem', fontSize: '1.1rem' }}>Choose your preferred study language</p>
+        
+        <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button 
+            className="btn btn-primary" 
+            style={{ padding: '2rem 4rem', fontSize: '1.5rem', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}
+            onClick={() => setActiveTrackTab('Arabic')}
+          >
+            <span style={{ fontSize: '3rem' }}>🇸🇦</span>
+            <span>المنهج العربي</span>
+          </button>
+          
+          <button 
+            className="btn btn-primary" 
+            style={{ padding: '2rem 4rem', fontSize: '1.5rem', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', background: 'var(--bg-muted)', color: 'var(--text)', border: '2px solid var(--violet-line)' }}
+            onClick={() => setActiveTrackTab('Languages')}
+          >
+            <span style={{ fontSize: '3rem' }}>🇬🇧</span>
+            <span>Languages Curriculum</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ direction: isArabic ? 'rtl' : 'ltr' }}>
       {/* PAGE HEADER */}
-      <div className="page-header" style={{ paddingBottom: '1rem' }}>
-        <h1>{isArabic ? 'المادة العلمية' : 'Course Materials'}</h1>
-        <p>{isArabic ? 'استعرض الدروس، والملاحظات، والملحقات الخاصة بمنهجك الدراسي.' : 'Access lessons, study guides, and materials for your curriculum.'}</p>
-      </div>
-
-      {/* TRACK SWITCHER */}
-      <div className="curriculum-tabs">
+      <div className="page-header" style={{ paddingBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1>{isArabic ? 'المادة العلمية' : 'Course Materials'}</h1>
+          <p>{isArabic ? 'استعرض الدروس، والملاحظات، والملحقات الخاصة بمنهجك الدراسي.' : 'Access lessons, study guides, and materials for your curriculum.'}</p>
+        </div>
+        
         <button 
-          className={`curriculum-tab ${isArabic ? 'active' : ''}`}
-          onClick={() => setActiveTrackTab('Arabic')}
+          className="btn btn-ghost" 
+          onClick={() => setActiveTrackTab(null)}
+          style={{ border: '1px solid var(--line)', borderRadius: '8px', fontSize: '0.9rem' }}
         >
-          المنهج العربي
-        </button>
-        <button 
-          className={`curriculum-tab ${!isArabic ? 'active' : ''}`}
-          onClick={() => setActiveTrackTab('Languages')}
-        >
-          Languages Curriculum
+          {isArabic ? '🔄 تغيير لغة الدراسة' : '🔄 Change Study Language'}
         </button>
       </div>
 
