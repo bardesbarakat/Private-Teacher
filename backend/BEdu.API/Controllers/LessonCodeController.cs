@@ -102,22 +102,29 @@ public class LessonCodeController : ControllerBase
     [Authorize(Roles = "Teacher,Admin")]
     public async Task<IActionResult> GetLessonCodes(int lessonId)
     {
-        var codes = await _context.LessonActivationCodes
-            .Where(c => c.LessonId == lessonId)
-            .Select(c => new {
-                c.Id,
-                c.Code,
-                c.IsUsed,
-                c.CreatedAt,
-                c.RedeemedAt,
-                c.RedeemedByStudentId,
-                RedeemedByStudentName = c.RedeemedByStudent != null ? c.RedeemedByStudent.FullNameAr : null,
-                RedeemUrl = $"https://bedu-sigma.vercel.app/redeem?code={c.Code}"
-            })
-            .OrderByDescending(c => c.CreatedAt)
-            .ToListAsync();
+        try
+        {
+            var codes = await _context.LessonActivationCodes
+                .Where(c => c.LessonId == lessonId)
+                .Select(c => new {
+                    c.Id,
+                    c.Code,
+                    c.IsUsed,
+                    c.CreatedAt,
+                    c.RedeemedAt,
+                    c.RedeemedByStudentId,
+                    RedeemedByStudentName = c.RedeemedByStudent != null ? c.RedeemedByStudent.FullNameAr : null,
+                    RedeemUrl = $"https://bedu-sigma.vercel.app/redeem?code={c.Code}"
+                })
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
 
-        return Ok(codes);
+            return Ok(codes);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error fetching codes", error = ex.Message, inner = ex.InnerException?.Message });
+        }
     }
 
     [HttpPost("/api/student/lessons/redeem-code")]

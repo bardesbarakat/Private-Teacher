@@ -33,7 +33,8 @@ export default function LessonCodeManager({ lessonId }) {
       fetchCodes();
     } catch (err) {
       console.error('Error generating codes:', err.response?.data || err);
-      toast.error('فشل في توليد الأكواد');
+      const serverError = err.response?.data?.error || err.response?.data?.message || 'فشل في توليد الأكواد';
+      toast.error('خطأ: ' + serverError);
     }
     setGenerating(false);
   };
