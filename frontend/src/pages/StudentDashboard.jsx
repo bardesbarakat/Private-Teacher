@@ -125,6 +125,34 @@ export default function StudentDashboard() {
     return <a href={url} target="_blank" rel="noreferrer" className="mat-btn btn-primary">{isArabic ? 'فتح المادة' : 'Open Material'}</a>;
   };
 
+  const getLessonMaterials = (lesson) => {
+    const materials = [];
+    if (lesson.videoUrlAr || lesson.videoUrlEn) {
+      materials.push({
+        id: `vid-${lesson.id}`,
+        type: 'video',
+        titleAr: 'فيديو الدرس الرئيسي',
+        titleEn: 'Main Lesson Video',
+        urlAr: lesson.videoUrlAr,
+        urlEn: lesson.videoUrlEn
+      });
+    }
+    if (lesson.pdfUrlAr || lesson.pdfUrlEn) {
+      materials.push({
+        id: `pdf-${lesson.id}`,
+        type: 'pdf',
+        titleAr: 'ملف الدرس (PDF)',
+        titleEn: 'Lesson PDF',
+        urlAr: lesson.pdfUrlAr,
+        urlEn: lesson.pdfUrlEn
+      });
+    }
+    if (lesson.resources && lesson.resources.length > 0) {
+      materials.push(...lesson.resources);
+    }
+    return materials;
+  };
+
   if (loading) {
     return <div style={{ padding: '4rem', textAlign: 'center' }}>جاري تحميل المادة العلمية...</div>;
   }
@@ -175,7 +203,9 @@ export default function StudentDashboard() {
               {/* Content */}
               {isOpen && (
                 <div className="chapter-content">
-                  {chapter.lessons?.map(lesson => (
+                  {chapter.lessons?.map(lesson => {
+                    const allMaterials = getLessonMaterials(lesson);
+                    return (
                     <div key={lesson.id} style={{ marginBottom: '2rem', padding: '1rem', background: lesson.isUnlocked ? 'transparent' : 'rgba(139, 92, 246, 0.05)', borderRadius: '12px', border: lesson.isUnlocked ? 'none' : '1px solid var(--violet-line)' }}>
                       <h4 style={{ color: 'var(--text)', marginBottom: '1rem', borderBottom: '1px dashed var(--line)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         {!lesson.isUnlocked && <span>🔒</span>}
@@ -183,9 +213,9 @@ export default function StudentDashboard() {
                       </h4>
                       
                       {lesson.isUnlocked ? (
-                        lesson.resources && lesson.resources.length > 0 ? (
+                        allMaterials.length > 0 ? (
                           <div className="materials-list">
-                            {lesson.resources.map(mat => (
+                            {allMaterials.map(mat => (
                               <div key={mat.id} className="mat-card">
                                 <div className="mat-header">
                                   <span className="mat-icon">{renderIcon(mat.type)}</span>
@@ -216,7 +246,7 @@ export default function StudentDashboard() {
                         </div>
                       )}
                     </div>
-                  ))}
+                  )})}
                   
                   {(!chapter.lessons || chapter.lessons.length === 0) && (
                      <div className="empty-state">

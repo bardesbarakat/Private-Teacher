@@ -40,58 +40,65 @@ public class LessonCodeController : ControllerBase
     [Authorize(Roles = "Teacher,Admin")]
     public async Task<IActionResult> GenerateCodes(int lessonId, [FromBody] GenerateCodesRequest request)
     {
-        var lesson = await _context.Lessons.FindAsync(lessonId);
-        if (lesson == null) return NotFound("Lesson not found.");
-
-        int count = request.Count > 0 ? request.Count : 10;
-        int maxRetries = count * 2;
-        var generatedCodes = new List<LessonActivationCode>();
-
-        for (int i = 0; i < count; i++)
+        try 
         {
-            string newCode = "";
-            bool isUnique = false;
-            int retries = 0;
-            
-            while (!isUnique && retries < maxRetries)
+            var lesson = await _context.Lessons.FindAsync(lessonId);
+            if (lesson == null) return NotFound("Lesson not found.");
+
+            int count = request.Count > 0 ? request.Count : 10;
+            int maxRetries = count * 2;
+            var generatedCodes = new List<LessonActivationCode>();
+
+            for (int i = 0; i < count; i++)
             {
-                newCode = GenerateRandomCode(8);
-                bool exists = await _context.LessonActivationCodes.AnyAsync(c => c.Code == newCode);
-                if (!exists)
+                string newCode = "";
+                bool isUnique = false;
+                int retries = 0;
+                
+                while (!isUnique && retries < maxRetries)
                 {
-                    isUnique = true;
+                    newCode = GenerateRandomCode(8);
+                    bool exists = await _context.LessonActivationCodes.AnyAsync(c => c.Code == newCode);
+                    if (!exists)
+                    {
+                        isUnique = true;
+                    }
+                    retries++;
                 }
-                retries++;
+
+                if (!isUnique) return StatusCode(500, "Failed to generate unique codes.");
+
+                var codeEntity = new LessonActivationCode
+                {
+                    Code = newCode,
+                    LessonId = lessonId,
+                    ExpiresAt = request.ExpiresInDays.HasValue ? DateTime.UtcNow.AddDays(request.ExpiresInDays.Value) : null
+                };
+                
+                _context.LessonActivationCodes.Add(codeEntity);
+                generatedCodes.Add(codeEntity);
             }
 
-            if (!isUnique) return StatusCode(500, "Failed to generate unique codes.");
+            await _context.SaveChangesAsync();
 
-            var codeEntity = new LessonActivationCode
-            {
-                Code = newCode,
-                LessonId = lessonId,
-                ExpiresAt = request.ExpiresInDays.HasValue ? DateTime.UtcNow.AddDays(request.ExpiresInDays.Value) : null
-            };
+            var baseUrl = "https://bedu-sigma.vercel.app";
             
-            _context.LessonActivationCodes.Add(codeEntity);
-            generatedCodes.Add(codeEntity);
+            var response = generatedCodes.Select(c => new
+            {
+                c.Id,
+                c.Code,
+                c.IsUsed,
+                c.CreatedAt,
+                c.ExpiresAt,
+                RedeemUrl = $"{baseUrl}/redeem?code={c.Code}"
+            });
+
+            return Ok(response);
         }
-
-        await _context.SaveChangesAsync();
-
-        var baseUrl = "https://bedu-sigma.vercel.app";
-        
-        var response = generatedCodes.Select(c => new
+        catch (Exception ex)
         {
-            c.Id,
-            c.Code,
-            c.IsUsed,
-            c.CreatedAt,
-            c.ExpiresAt,
-            RedeemUrl = $"{baseUrl}/redeem?code={c.Code}"
-        });
-
-        return Ok(response);
+            return StatusCode(500, new { message = "Error generating codes", error = ex.Message, inner = ex.InnerException?.Message });
+        }
     }
 
     [HttpGet("/api/teacher/lessons/{lessonId}/codes")]
