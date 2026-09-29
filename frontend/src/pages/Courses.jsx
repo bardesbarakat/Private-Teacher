@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getAllCourses, enrollCourse } from '../services/api';
+import { getAllCourses, enrollCourse, getEnrolled } from '../services/api';
 import toast from 'react-hot-toast';
 import './Home.css';
 
@@ -10,21 +10,41 @@ const LEVELS = ['', 'Bac1', 'Bac2', 'General'];
 export default function Courses() {
   const { isAuthenticated, role } = useAuth();
   const [courses, setCourses]     = useState([]);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const [level, setLevel]         = useState('');
   const [loading, setLoading]     = useState(true);
 
-  useEffect(() => { load(); }, [level]);
+  useEffect(() => { load(); }, [level, isAuthenticated, role]);
 
   const load = async () => {
     setLoading(true);
-    try { const r = await getAllCourses(level || undefined); setCourses(r.data); }
-    catch {}
+    try { 
+      const r = await getAllCourses(level || undefined); 
+      setCourses(r.data); 
+
+      if (isAuthenticated && role === 'Student') {
+        try {
+          const enrolledRes = await getEnrolled();
+          const ids = enrolledRes.data.map(e => e.courseId || e.id || e._id);
+          setEnrolledCourseIds(ids);
+        } catch (err) {
+          console.error("Error fetching enrolled courses", err);
+        }
+      }
+    }
+    catch (e) {
+      console.error(e);
+    }
     setLoading(false);
   };
 
   const handleEnroll = async (courseId) => {
     if (!isAuthenticated) { window.location.href = '/login'; return; }
-    try { await enrollCourse(courseId); toast.success('تم التسجيل! ✅'); }
+    try { 
+      await enrollCourse(courseId); 
+      toast.success('تم التسجيل! ✅'); 
+      setEnrolledCourseIds(prev => [...prev, courseId]);
+    }
     catch (e) { toast.error(e.response?.data?.message || 'حدث خطأ'); }
   };
 
@@ -72,10 +92,15 @@ export default function Courses() {
                       <span>👥 {c.enrollmentCount} طالب</span>
                     </div>
                     <p className="course-card__teacher">المدرّس: {c.teacherName}</p>
-                    {role === 'Student' && (
+                    {role === 'Student' && !enrolledCourseIds.includes(c.id) && (
                       <button className="btn-primary" style={{width:'100%',justifyContent:'center'}} onClick={() => handleEnroll(c.id)}>
                         سجّل في الكورس
                       </button>
+                    )}
+                    {role === 'Student' && enrolledCourseIds.includes(c.id) && (
+                      <div style={{width:'100%', textAlign:'center', color:'var(--mint-text)', fontWeight:'bold', padding:'0.75rem 0', background:'var(--mint-soft)', borderRadius:'var(--r-sm)', border:'1px solid var(--mint)'}}>
+                        ✅ أنت مسجل في هذا الكورس بالفعل
+                      </div>
                     )}
                     {!isAuthenticated && (
                       <a href="/register" className="btn-primary" style={{width:'100%',justifyContent:'center',display:'flex'}}>
