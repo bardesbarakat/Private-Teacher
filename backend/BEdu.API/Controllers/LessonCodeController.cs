@@ -26,13 +26,53 @@ public class LessonCodeController : ControllerBase
     {
         try
         {
-            await _context.Database.MigrateAsync();
-            return Ok(new { message = "Migrations applied successfully! The database is now up to date." });
+            var sql = @"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'LessonActivationCodes')
+                BEGIN
+                    CREATE TABLE [LessonActivationCodes] (
+                        [Id] int NOT NULL IDENTITY,
+                        [Code] nvarchar(20) NOT NULL,
+                        [LessonId] int NOT NULL,
+                        [RedeemedByStudentId] int NULL,
+                        [RedeemedAt] datetime2 NULL,
+                        [IsUsed] bit NOT NULL,
+                        [CreatedAt] datetime2 NOT NULL,
+                        [ExpiresAt] datetime2 NULL,
+                        CONSTRAINT [PK_LessonActivationCodes] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_LessonActivationCodes_Lessons_LessonId] FOREIGN KEY ([LessonId]) REFERENCES [Lessons] ([Id]) ON DELETE CASCADE,
+                        CONSTRAINT [FK_LessonActivationCodes_Users_RedeemedByStudentId] FOREIGN KEY ([RedeemedByStudentId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL
+                    );
+
+                    CREATE UNIQUE INDEX [IX_LessonActivationCodes_Code] ON [LessonActivationCodes] ([Code]);
+                    CREATE INDEX [IX_LessonActivationCodes_LessonId] ON [LessonActivationCodes] ([LessonId]);
+                    CREATE INDEX [IX_LessonActivationCodes_RedeemedByStudentId] ON [LessonActivationCodes] ([RedeemedByStudentId]);
+                END
+
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudentLessonAccesses')
+                BEGIN
+                    CREATE TABLE [StudentLessonAccesses] (
+                        [Id] int NOT NULL IDENTITY,
+                        [StudentId] int NOT NULL,
+                        [LessonId] int NOT NULL,
+                        [UnlockedAt] datetime2 NOT NULL,
+                        CONSTRAINT [PK_StudentLessonAccesses] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_StudentLessonAccesses_Lessons_LessonId] FOREIGN KEY ([LessonId]) REFERENCES [Lessons] ([Id]) ON DELETE CASCADE,
+                        CONSTRAINT [FK_StudentLessonAccesses_Users_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [Users] ([Id])
+                    );
+
+                    CREATE INDEX [IX_StudentLessonAccesses_LessonId] ON [StudentLessonAccesses] ([LessonId]);
+                    CREATE UNIQUE INDEX [IX_StudentLessonAccesses_StudentId_LessonId] ON [StudentLessonAccesses] ([StudentId], [LessonId]);
+                END
+            ";
+            
+            await _context.Database.ExecuteSqlRawAsync(sql);
+            
+            return Ok(new { message = "Tables verified/created successfully using Raw SQL! You can now use the app." });
         }
         catch (Exception ex)
         {
             return StatusCode(500, new { 
-                message = "Migration failed", 
+                message = "Raw SQL Creation failed", 
                 error = ex.Message, 
                 inner = ex.InnerException?.Message,
                 stack = ex.StackTrace
