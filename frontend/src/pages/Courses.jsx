@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllCourses, enrollCourse, getEnrolled } from '../services/api';
 import toast from 'react-hot-toast';
@@ -9,6 +10,7 @@ const LEVELS = ['', 'Bac1', 'Bac2', 'General'];
 
 export default function Courses() {
   const { isAuthenticated, role } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses]     = useState([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const [level, setLevel]         = useState('');
@@ -98,8 +100,11 @@ export default function Courses() {
                       </button>
                     )}
                     {role === 'Student' && enrolledCourseIds.includes(c.id) && (
-                      <div style={{width:'100%', textAlign:'center', color:'var(--mint-text)', fontWeight:'bold', padding:'0.75rem 0', background:'var(--mint-soft)', borderRadius:'var(--r-sm)', border:'1px solid var(--mint)'}}>
-                        ✅ أنت مسجل في هذا الكورس بالفعل
+                      <div 
+                        onClick={() => navigate('/course-materials')}
+                        style={{width:'100%', textAlign:'center', color:'var(--mint-text)', fontWeight:'bold', padding:'0.75rem 0', background:'var(--mint-soft)', borderRadius:'var(--r-sm)', border:'1px solid var(--mint)', cursor: 'pointer'}}
+                      >
+                        ✅ أنت مسجل في هذا الكورس بالفعل (انقر للذهاب للدروس)
                       </div>
                     )}
                     {!isAuthenticated && (
