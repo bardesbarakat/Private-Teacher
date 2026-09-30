@@ -255,6 +255,15 @@ export default function StudentDashboard() {
                             ⏳ {isArabic ? 'قريباً / Coming Soon' : 'Coming Soon'}
                           </div>
                         )
+                      ) : lesson.isExamLocked ? (
+                        <div className="locked-lesson" style={{ textAlign: 'center', padding: '1rem', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px' }}>
+                          <p style={{ color: 'var(--danger-solid)', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                            ⛔ {isArabic ? 'درس مغلق - يتطلب اجتياز الامتحان السابق' : 'Locked - Previous Exam Required'}
+                          </p>
+                          <p style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>
+                            {isArabic ? 'يجب عليك إتمام امتحان الدرس السابق أولاً لفتح هذا الدرس.' : 'You must complete the previous lesson\'s exam first to unlock this lesson.'}
+                          </p>
+                        </div>
                       ) : (
                         <div className="locked-lesson" style={{ textAlign: 'center', padding: '1rem' }}>
                           <p style={{ color: 'var(--text-soft)', marginBottom: '1rem' }}>

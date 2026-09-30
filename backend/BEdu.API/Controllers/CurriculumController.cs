@@ -42,21 +42,29 @@ public class CurriculumController : ControllerBase
 
         // Fetch unlocked lessons for the student
         var unlockedLessonIds = new HashSet<int>();
+        var completedExamLessonIds = new HashSet<int>();
         if (isStudent)
         {
             unlockedLessonIds = new HashSet<int>(await _db.StudentLessonAccesses
                 .Where(a => a.StudentId == currentUserId)
                 .Select(a => a.LessonId)
                 .ToListAsync());
+            completedExamLessonIds = new HashSet<int>(await _db.ExamSubmissions
+                .Where(s => s.StudentId == currentUserId && s.Exam.LessonId != null && s.Percentage >= 50.0)
+                .Select(s => s.Exam.LessonId.Value)
+                .ToListAsync());
         }
 
-        var tracks = course.Tracks.Select(t => new TrackDto
+        var tracks = new List<TrackDto>();
+        foreach (var t in course.Tracks)
         {
-            Id = t.Id,
-            Type = t.Type,
-            Chapters = t.Chapters
-                .Where(ch => showDrafts || ch.IsPublished)
-                .Select(ch => new ChapterDto
+            var trackDto = new TrackDto { Id = t.Id, Type = t.Type };
+            bool examGateTriggered = false;
+
+            var chapters = t.Chapters.Where(ch => showDrafts || ch.IsPublished).ToList();
+            foreach (var ch in chapters)
+            {
+                var chapterDto = new ChapterDto
                 {
                     Id = ch.Id,
                     TitleAr = ch.TitleAr,
@@ -66,34 +74,44 @@ public class CurriculumController : ControllerBase
                     Resources = ch.Resources.Select(r => new ResourceDto
                     {
                         Id = r.Id, Type = r.Type, TitleAr = r.TitleAr, TitleEn = r.TitleEn, UrlAr = r.UrlAr, UrlEn = r.UrlEn
-                    }).ToList(),
-                    Lessons = ch.Lessons
-                        .Where(l => showDrafts || l.IsPublished)
-                        .Select(l => 
+                    }).ToList()
+                };
+
+                var lessons = ch.Lessons.Where(l => showDrafts || l.IsPublished).ToList();
+                foreach (var l in lessons)
+                {
+                    bool isExamLocked = examGateTriggered;
+                    bool unlocked = (isTeacher || !isStudent || unlockedLessonIds.Contains(l.Id)) && !isExamLocked;
+
+                    chapterDto.Lessons.Add(new LessonDto
+                    {
+                        Id = l.Id,
+                        TitleAr = l.TitleAr,
+                        TitleEn = l.TitleEn,
+                        OrderIndex = l.OrderIndex,
+                        IsPublished = l.IsPublished,
+                        IsUnlocked = unlocked,
+                        IsExamLocked = isExamLocked,
+                        VideoUrlAr = unlocked ? l.VideoUrlAr : null,
+                        VideoUrlEn = unlocked ? l.VideoUrlEn : null,
+                        PdfUrlAr = unlocked ? l.PdfUrlAr : null,
+                        PdfUrlEn = unlocked ? l.PdfUrlEn : null,
+                        ExamId = l.Exams.FirstOrDefault()?.Id,
+                        Resources = unlocked ? l.Resources.Select(r => new ResourceDto
                         {
-                            bool unlocked = isTeacher || !isStudent || unlockedLessonIds.Contains(l.Id);
-                            
-                            return new LessonDto
-                            {
-                                Id = l.Id,
-                                TitleAr = l.TitleAr,
-                                TitleEn = l.TitleEn,
-                                OrderIndex = l.OrderIndex,
-                                IsPublished = l.IsPublished,
-                                IsUnlocked = unlocked,
-                                VideoUrlAr = unlocked ? l.VideoUrlAr : null,
-                                VideoUrlEn = unlocked ? l.VideoUrlEn : null,
-                                PdfUrlAr = unlocked ? l.PdfUrlAr : null,
-                                PdfUrlEn = unlocked ? l.PdfUrlEn : null,
-                                ExamId = l.Exams.FirstOrDefault()?.Id,
-                                Resources = unlocked ? l.Resources.Select(r => new ResourceDto
-                                {
-                                    Id = r.Id, Type = r.Type, TitleAr = r.TitleAr, TitleEn = r.TitleEn, UrlAr = r.UrlAr, UrlEn = r.UrlEn
-                                }).ToList() : new List<ResourceDto>()
-                            };
-                        }).ToList()
-                }).ToList()
-        }).ToList();
+                            Id = r.Id, Type = r.Type, TitleAr = r.TitleAr, TitleEn = r.TitleEn, UrlAr = r.UrlAr, UrlEn = r.UrlEn
+                        }).ToList() : new List<ResourceDto>()
+                    });
+
+                    if (isStudent && l.Exams.Any() && !completedExamLessonIds.Contains(l.Id))
+                    {
+                        examGateTriggered = true;
+                    }
+                }
+                trackDto.Chapters.Add(chapterDto);
+            }
+            tracks.Add(trackDto);
+        }
 
         return Ok(tracks);
     }
