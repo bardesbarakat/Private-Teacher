@@ -45,7 +45,7 @@ public class CurriculumController : ControllerBase
         if (isStudent)
         {
             unlockedLessonIds = new HashSet<int>(await _db.StudentLessonAccesses
-                .Where(a => a.StudentId == currentUserId && a.Lesson.Chapter.Track.CourseId == courseId)
+                .Where(a => a.StudentId == currentUserId)
                 .Select(a => a.LessonId)
                 .ToListAsync());
         }
